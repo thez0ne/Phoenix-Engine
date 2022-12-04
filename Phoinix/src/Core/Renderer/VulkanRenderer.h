@@ -25,11 +25,12 @@ namespace Phoinix
       VulkanRenderer(VulkanRenderer&&) = delete;
       VulkanRenderer& operator=(VulkanRenderer&&) = delete;
 
-    //   void Run();
+      //   void Run();
       virtual void DrawFrame() override;
 
     private:
-    // TODO: currently creates 2 windows, set this up to connect with the VulkanWindow
+      // TODO: currently creates 2 windows, set this up to connect with the VulkanWindow created in
+      // Application
       VulkanWindow m_Window{width, height, "My Vulkan App"};
       VulkanInstance m_Instance{}; // TODO temp, might move to window class if this is per window
       VulkanDevice m_Device{m_Instance.GetInstance(), (GLFWwindow*)m_Window.GetWindow()};

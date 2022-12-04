@@ -33,5 +33,4 @@ namespace Phoinix
 #define DEBUG_WARN(...) Phoinix::Log::GetAppLog()->warn(__VA_ARGS__)
 #define DEBUG_ERR(...) Phoinix::Log::GetAppLog()->error(__VA_ARGS__)
 
-
 #define PRINT(...) DEBUG_LOG(__VA_ARGS__)

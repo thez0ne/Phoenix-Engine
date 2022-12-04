@@ -2,7 +2,7 @@
 
 #ifdef PHOINIX_WINDOWS
    // Assertion
-   #define PHOINIX_ASSERT(X, ...)   \
+   #define PHOINIX_ASSERT(X, ...) \
       if (!(X))                   \
       {                           \
          ENGINE_ERR(__VA_ARGS__); \
@@ -11,7 +11,7 @@
 
 #else
    // Assertion
-   #define PHOINIX_ASSERT(X, ...)   \
+   #define PHOINIX_ASSERT(X, ...) \
       if (!(X))                   \
       {                           \
          ENGINE_ERR(__VA_ARGS__); \

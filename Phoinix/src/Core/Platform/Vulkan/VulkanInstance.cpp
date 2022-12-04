@@ -114,11 +114,11 @@ namespace Phoinix
       }
    }
 
-   VkResult
-   VulkanInstance::CreateDebugUtilsMessengerExt(const VkInstance instance,
-                                          const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
-                                          const VkAllocationCallbacks* pAllocator,
-                                          VkDebugUtilsMessengerEXT* pDebugMessenger)
+   VkResult VulkanInstance::CreateDebugUtilsMessengerExt(
+      const VkInstance instance,
+      const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
+      const VkAllocationCallbacks* pAllocator,
+      VkDebugUtilsMessengerEXT* pDebugMessenger)
    {
       const auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(
          instance, "vkCreateDebugUtilsMessengerEXT");
@@ -131,9 +131,10 @@ namespace Phoinix
          return VK_ERROR_EXTENSION_NOT_PRESENT;
       }
    }
-   void VulkanInstance::DestroyDebugUtilsMessengerExt(const VkInstance instance,
-                                                const VkDebugUtilsMessengerEXT pDebugMessenger,
-                                                const VkAllocationCallbacks* pAllocator)
+   void
+   VulkanInstance::DestroyDebugUtilsMessengerExt(const VkInstance instance,
+                                                 const VkDebugUtilsMessengerEXT pDebugMessenger,
+                                                 const VkAllocationCallbacks* pAllocator)
    {
       const auto func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(
          instance, "vkDestroyDebugUtilsMessengerEXT");
@@ -142,7 +143,8 @@ namespace Phoinix
          func(instance, pDebugMessenger, pAllocator);
       }
    }
-   void VulkanInstance::PopulateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo)
+   void
+   VulkanInstance::PopulateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo)
    {
       createInfo = {};
       createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;

@@ -5,9 +5,9 @@
 namespace Phoinix
 {
    VulkanPipeline::VulkanPipeline(VulkanDevice& device,
-                      const std::string& vertFile,
-                      const std::string& fragFile,
-                      const PipelineConfigInfo& configInfo) :
+                                  const std::string& vertFile,
+                                  const std::string& fragFile,
+                                  const PipelineConfigInfo& configInfo) :
       m_Device(device)
    {
       CreateGraphicsPipeline(vertFile, fragFile, configInfo);
@@ -73,8 +73,8 @@ namespace Phoinix
    }
 
    void VulkanPipeline::CreateGraphicsPipeline(const std::string& vertFilePath,
-                                         const std::string& fragFilePath,
-                                         const PipelineConfigInfo& configInfo)
+                                               const std::string& fragFilePath,
+                                               const PipelineConfigInfo& configInfo)
    {
       const auto vertCode = ReadFile(vertFilePath);
       const auto fragCode = ReadFile(fragFilePath);
@@ -149,7 +149,7 @@ namespace Phoinix
    }
 
    void VulkanPipeline::CreateShaderModule(const std::vector<char>& code,
-                                     VkShaderModule* shaderModule) const
+                                           VkShaderModule* shaderModule) const
    {
       VkShaderModuleCreateInfo createInfo{};
       createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
@@ -170,7 +170,7 @@ namespace Phoinix
    }
 
    PipelineConfigInfo VulkanPipeline::DefaultPipelineConfigInfo(const uint32_t width,
-                                                          const uint32_t height)
+                                                                const uint32_t height)
    {
       PipelineConfigInfo configInfo{};
 
@@ -292,7 +292,6 @@ namespace Phoinix
       CreateFrameBuffers();
    }
 
-   
    void VulkanPipeline::CleanupSwapChain()
    {
       CleanupFrameBuffers();

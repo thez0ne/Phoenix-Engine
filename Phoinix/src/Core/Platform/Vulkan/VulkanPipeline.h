@@ -25,9 +25,9 @@ namespace Phoinix
    {
     public:
       VulkanPipeline(VulkanDevice& device,
-               const std::string& vertFile,
-               const std::string& fragFile,
-               const PipelineConfigInfo& configInfo);
+                     const std::string& vertFile,
+                     const std::string& fragFile,
+                     const PipelineConfigInfo& configInfo);
       ~VulkanPipeline();
 
       VulkanPipeline(const VulkanPipeline&) = delete;

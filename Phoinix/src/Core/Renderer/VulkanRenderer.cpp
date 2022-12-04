@@ -2,12 +2,12 @@
 
 namespace Phoinix
 {
-    static bool RendererInitialized = false;
+   static bool RendererInitialized = false;
 
-    Renderer* Renderer::Create()
-    {
-        return new VulkanRenderer();
-    }
+   Renderer* Renderer::Create()
+   {
+      return new VulkanRenderer();
+   }
 
    VulkanRenderer::VulkanRenderer()
    {
@@ -106,7 +106,8 @@ namespace Phoinix
 
       result = vkQueuePresentKHR(m_Device.GetPresentQueue(), &presentInfo);
 
-      if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || m_Window.m_FramebuffersResized)
+      if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR ||
+          m_Window.m_FramebuffersResized)
       {
          m_Window.m_FramebuffersResized = false;
          m_SimplePipeline->RecreateSwapChain((GLFWwindow*)m_Window.GetWindow());
@@ -120,15 +121,15 @@ namespace Phoinix
       m_CurrentFrame = (m_CurrentFrame + 1) % max_frames_in_flight;
    }
 
-//    void VulkanRenderer::Run()
-//    {
-//       while (!m_Window.ShouldClose())
-//       {
-//          glfwPollEvents();
-//          DrawFrame();
-//       }
-//       vkDeviceWaitIdle(m_Device.GetDevice());
-//    }
+   //    void VulkanRenderer::Run()
+   //    {
+   //       while (!m_Window.ShouldClose())
+   //       {
+   //          glfwPollEvents();
+   //          DrawFrame();
+   //       }
+   //       vkDeviceWaitIdle(m_Device.GetDevice());
+   //    }
 
    void VulkanRenderer::CreatePipelineLayout()
    {
@@ -150,8 +151,8 @@ namespace Phoinix
 
    void VulkanRenderer::CreatePipeline()
    {
-      auto pipelineConfig =
-         VulkanPipeline::DefaultPipelineConfigInfo(m_Device.GetExtentWidth(), m_Device.GetExtentHeight());
+      auto pipelineConfig = VulkanPipeline::DefaultPipelineConfigInfo(m_Device.GetExtentWidth(),
+                                                                      m_Device.GetExtentHeight());
       pipelineConfig.renderPass = m_Device.GetRenderPass();
       pipelineConfig.pipelineLayout = m_PipelineLayout;
       m_SimplePipeline = std::make_unique<VulkanPipeline>(
