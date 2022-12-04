@@ -4,6 +4,7 @@
 
 #include "Core/Core.h"
 #include "Core/Events/Event.h"
+#include "Window.h"
 
 namespace Phoinix
 {
@@ -26,6 +27,6 @@ namespace Phoinix
 
       //   virtual void* GetWindow() const = 0;
 
-      static Renderer* Create();
+      static Renderer* Create(Window* window);
    };
 }

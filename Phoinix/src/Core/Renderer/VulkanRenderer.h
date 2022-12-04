@@ -17,7 +17,7 @@ namespace Phoinix
       static constexpr int height = 600;
       const int max_frames_in_flight = 2;
 
-      VulkanRenderer();
+      VulkanRenderer(VulkanWindow* window);
       ~VulkanRenderer();
 
       VulkanRenderer(const VulkanRenderer&) = delete;
@@ -30,10 +30,13 @@ namespace Phoinix
 
     private:
       // TODO: currently creates 2 windows, set this up to connect with the VulkanWindow created in
+      // NOTE: make sure window is initialized b4 the device
       // Application
-      VulkanWindow m_Window{width, height, "My Vulkan App"};
+    //   VulkanWindow m_Window{width, height, "My Vulkan App"};
+      VulkanWindow* m_Window;
       VulkanInstance m_Instance{}; // TODO temp, might move to window class if this is per window
-      VulkanDevice m_Device{m_Instance.GetInstance(), (GLFWwindow*)m_Window.GetWindow()};
+    //   VulkanDevice m_Device{m_Instance.GetInstance(), (GLFWwindow*)m_Window.GetWindow()};
+      VulkanDevice m_Device;
       VkPipelineLayout m_PipelineLayout{};
       std::unique_ptr<VulkanPipeline> m_SimplePipeline;
 

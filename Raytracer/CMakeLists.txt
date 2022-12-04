@@ -14,7 +14,7 @@ add_executable(
     ${Raytracer_SHADER}
     )
 
-target_link_libraries(Raytracer PRIVATE Phoinix)
+target_link_libraries(Raytracer PUBLIC Phoinix)
 
 
 if(WIN32)

@@ -18,7 +18,7 @@ namespace Phoinix
         instance = this;
         window = Window::Create();
         window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
-        renderer = Renderer::Create();
+        renderer = Renderer::Create(window);
 
         // _ImGuiLayer = new ImGuiLayer();
         // addOverlay(_ImGuiLayer);

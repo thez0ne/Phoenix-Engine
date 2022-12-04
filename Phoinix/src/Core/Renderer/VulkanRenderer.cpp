@@ -4,12 +4,12 @@ namespace Phoinix
 {
    static bool RendererInitialized = false;
 
-   Renderer* Renderer::Create()
+   Renderer* Renderer::Create(Window* window)
    {
-      return new VulkanRenderer();
+      return new VulkanRenderer((VulkanWindow*)window);
    }
 
-   VulkanRenderer::VulkanRenderer()
+   VulkanRenderer::VulkanRenderer(VulkanWindow* window) : m_Window(window), m_Device(m_Instance.GetInstance(), (GLFWwindow*)window->GetWindow())
    {
       ENGINE_TRACE("Creating Renderer");
       CreatePipelineLayout();
@@ -20,6 +20,8 @@ namespace Phoinix
 
    VulkanRenderer::~VulkanRenderer()
    {
+      vkDeviceWaitIdle(m_Device.GetDevice());
+
       for (size_t i = 0; i < max_frames_in_flight; i++)
       {
          vkDestroySemaphore(m_Device.GetDevice(), m_RenderFinishedSemaphores[i], nullptr);
@@ -53,7 +55,7 @@ namespace Phoinix
 
       if (result == VK_ERROR_OUT_OF_DATE_KHR)
       {
-         m_SimplePipeline->RecreateSwapChain((GLFWwindow*)m_Window.GetWindow());
+         m_SimplePipeline->RecreateSwapChain((GLFWwindow*)m_Window->GetWindow());
          return;
       }
       else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
@@ -107,10 +109,10 @@ namespace Phoinix
       result = vkQueuePresentKHR(m_Device.GetPresentQueue(), &presentInfo);
 
       if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR ||
-          m_Window.m_FramebuffersResized)
+          m_Window->m_FramebuffersResized)
       {
-         m_Window.m_FramebuffersResized = false;
-         m_SimplePipeline->RecreateSwapChain((GLFWwindow*)m_Window.GetWindow());
+         m_Window->m_FramebuffersResized = false;
+         m_SimplePipeline->RecreateSwapChain((GLFWwindow*)m_Window->GetWindow());
       }
       else if (result != VK_SUCCESS)
       {
@@ -123,7 +125,7 @@ namespace Phoinix
 
    //    void VulkanRenderer::Run()
    //    {
-   //       while (!m_Window.ShouldClose())
+   //       while (!m_Window->ShouldClose())
    //       {
    //          glfwPollEvents();
    //          DrawFrame();
