@@ -52,7 +52,6 @@ namespace Phoinix
       }
 
       glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-      glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
       m_Window =
          glfwCreateWindow(m_Data.width, m_Data.height, m_Data.title.c_str(), nullptr, nullptr);
