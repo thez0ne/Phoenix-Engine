@@ -7,47 +7,43 @@
 
 namespace Phoinix
 {
-    class VulkanWindow : public Window
-    {
+   class VulkanWindow : public Window
+   {
     public:
+      VulkanWindow(const unsigned int w = 1280,
+                   const unsigned int h = 720,
+                   const std::string& title = "Vulkan Window");
+      ~VulkanWindow();
 
-        VulkanWindow(const unsigned int w = 1280,
-                     const unsigned int h = 720,
-                     const std::string& title = "Vulkan Window");
-        ~VulkanWindow();
+      VulkanWindow(const VulkanWindow&) = delete;
+      VulkanWindow& operator=(const VulkanWindow&) = delete;
+      VulkanWindow(VulkanWindow&&) = delete;
+      VulkanWindow& operator=(VulkanWindow&&) = delete;
 
-        VulkanWindow(const VulkanWindow&) = delete;
-        VulkanWindow& operator=(const VulkanWindow&) = delete;
-        VulkanWindow(VulkanWindow&&) = delete;
-        VulkanWindow& operator=(VulkanWindow&&) = delete;
+      void Update() override;
 
-        void Update() override;
+      inline unsigned int GetWidth() const override { return m_Data.width; }
+      inline unsigned int GetHeight() const override { return m_Data.height; }
 
-        inline unsigned int GetWidth() const override { return m_Data.width; }
-        inline unsigned int GetHeight() const override { return m_Data.height; }
+      inline void SetEventCallback(const EventCallback& _callback) override
+      {
+         m_Data.callback = _callback;
+      }
 
-        inline void SetEventCallback(const EventCallback& _callback) override
-        {
-            m_Data.callback = _callback;
-        }
+      void SetVSync(bool enabled) override
+      {
+         if (enabled)
+            glfwSwapInterval(1);
+         else
+            glfwSwapInterval(0);
 
-        void SetVSync(bool enabled) override 
-        {
-            if (enabled)
-                glfwSwapInterval(1);
-            else
-                glfwSwapInterval(0);
+         m_Data.vSync = enabled;
+      };
+      bool GetVSync() const override { return m_Data.vSync; };
 
-            m_Data.vSync = enabled;
-        };
-        bool GetVSync() const override { return m_Data.vSync; };
+      inline void* GetWindow() const override { return m_Window; }
 
-        inline void* GetWindow() const override { return m_Window; }
-
-        bool m_FramebuffersResized = false;
-
-    private:
-      GLFWwindow* m_Window;
+      bool m_FramebuffersResized = false;
 
       struct WindowData
       {
@@ -57,10 +53,12 @@ namespace Phoinix
          EventCallback callback;
       };
 
+    private:
+      GLFWwindow* m_Window;
       WindowData m_Data;
 
       void Initialize();
       void SetupCallbacks();
       static void FramebufferResizeCallback(GLFWwindow* window, int width, int height);
-    };
+   };
 }

@@ -9,7 +9,8 @@ namespace Phoinix
       return new VulkanRenderer((VulkanWindow*)window);
    }
 
-   VulkanRenderer::VulkanRenderer(VulkanWindow* window) : m_Window(window), m_Device(m_Instance.GetInstance(), (GLFWwindow*)window->GetWindow())
+   VulkanRenderer::VulkanRenderer(VulkanWindow* window) :
+      m_Window(window), m_Device(m_Instance.GetInstance(), (GLFWwindow*)window->GetWindow())
    {
       ENGINE_TRACE("Creating Renderer");
       CreatePipelineLayout();
