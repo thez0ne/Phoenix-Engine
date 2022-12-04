@@ -19,8 +19,8 @@ namespace Phoinix
       void PushLayer(Layer* layer);
       void PushOverlay(Layer* layer);
 
-      LayerIterator Begin() { return stack.begin(); }
-      LayerIterator End() { return stack.end(); }
+      LayerIterator begin() { return stack.begin(); }
+      LayerIterator end() { return stack.end(); }
 
     private:
       LayerVector stack;

@@ -50,11 +50,12 @@ namespace Phoinix
       }
       // glfwInit();
       glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-      // glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+      glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
       m_Window = glfwCreateWindow(m_Data.width, m_Data.height, m_Data.title.c_str(), nullptr, nullptr);
 
-      glfwSetWindowUserPointer(m_Window, this);
+      //glfwSetWindowUserPointer(m_Window, this);
+      glfwSetWindowUserPointer(m_Window, &m_Data);
       glfwSetFramebufferSizeCallback(m_Window, FramebufferResizeCallback);
       glfwMakeContextCurrent(m_Window); // TODO need to check if imgui with vulkan needs this
    }
@@ -67,6 +68,7 @@ namespace Phoinix
          data.callback(e);
       });
 
+      /*
       glfwSetWindowFocusCallback(m_Window, [](GLFWwindow* window, int focusStatus) {
          WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
@@ -152,12 +154,13 @@ namespace Phoinix
 
          MouseScrollEvent e((float)xDelta, (float)yDelta);
          data.callback(e);
-      });
+      });*/
    }
 
    void VulkanWindow::FramebufferResizeCallback(GLFWwindow* window, int width, int height)
    {
       // TODO move this into the SetupCallbacks function
+       // TODO FIX THIS TO WORK WITH THE OTHER CALLBACKS
       auto app = reinterpret_cast<VulkanWindow*>(glfwGetWindowUserPointer(window));
       app->m_FramebuffersResized = true;
    }

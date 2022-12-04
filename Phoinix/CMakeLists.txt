@@ -44,6 +44,7 @@ target_include_directories(Phoinix PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
 target_precompile_headers(Phoinix PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src/pch.h")
 
 # Shader Stuff
+# TODO shaders are not copied properly for using VS
 if (WIN32)
     message("${Vulkan_GLSLANG_VALIDATOR_EXECUTABLE}")
     message("${Vulkan_GLSLC_EXECUTABLE}")

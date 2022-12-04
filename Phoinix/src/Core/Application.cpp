@@ -16,9 +16,9 @@ namespace Phoinix
             "Application should be a singleton!"); // TODO can i move this into a base singleton class?
 
         instance = this;
-        // window = Window::create();
-        // window->setEventCallback(std::bind(&Application::onEvent, this, std::placeholders::_1));
-        // renderer = Renderer::create();
+        window = Window::Create();
+        window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
+        renderer = Renderer::Create();
 
         // _ImGuiLayer = new ImGuiLayer();
         // addOverlay(_ImGuiLayer);
@@ -28,32 +28,32 @@ namespace Phoinix
 
     Application::~Application()
     {
-        // delete window;
-        // delete renderer;
+        delete window;
+        delete renderer;
     }
 
     void Application::Run()
     {
         ENGINE_INFO("Application is starting up");
 
-        // while (isRunning)
-        // {
+        while (isRunning)
+        {
         //       renderer->startFrame();
 
-        //       for (Layer* layer : layerStack)
-        //          layer->onUpdate();
+              for (Layer* layer : layerStack)
+                 layer->OnUpdate();
 
         //       _ImGuiLayer->ImGuiInitFrame();
         //       for (Layer* layer : layerStack)
         //          layer->onImGUIUpdate();
         //       _ImGuiLayer->ImGuiRenderFrame();
 
-        //       renderer->render();
+              renderer->DrawFrame();
 
         //       renderer->endFrame();
 
-        //       window->update();
-        // }
+              window->Update();
+        }
     }
 
     void Application::OnEvent(Event& e)
@@ -62,7 +62,7 @@ namespace Phoinix
         dispatcher.dispatch<WindowCloseEvent>(
             std::bind(&Application::OnClose, this, std::placeholders::_1));
 
-        for (LayerIterator it = layerStack.End(); it != layerStack.Begin();)
+        for (LayerIterator it = layerStack.end(); it != layerStack.begin();)
         {
             (*--it)->OnEvent(e);
             if (e.handled)
