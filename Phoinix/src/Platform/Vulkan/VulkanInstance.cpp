@@ -1,6 +1,5 @@
 #include "VulkanInstance.h"
 
-// #include "Application.h"
 #include "VulkanValidation.h"
 
 namespace Phoinix

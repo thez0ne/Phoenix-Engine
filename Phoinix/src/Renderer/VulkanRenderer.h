@@ -1,12 +1,10 @@
 #pragma once
 #include "pch.h"
 
-// #include "Core/Window.h"
 #include "Core/Renderer.h"
-#include "Core/Platform/Vulkan/VulkanInstance.h"
-#include "Core/Platform/Vulkan/VulkanDevice.h"
-#include "Core/Platform/Vulkan/VulkanPipeline.h"
-#include "Core/Renderer.h"
+#include "Platform/Vulkan/VulkanInstance.h"
+#include "Platform/Vulkan/VulkanDevice.h"
+#include "Platform/Vulkan/VulkanPipeline.h"
 
 namespace Phoinix
 {
@@ -25,17 +23,11 @@ namespace Phoinix
       VulkanRenderer(VulkanRenderer&&) = delete;
       VulkanRenderer& operator=(VulkanRenderer&&) = delete;
 
-      //   void Run();
       virtual void DrawFrame() override;
 
     private:
-      // TODO: currently creates 2 windows, set this up to connect with the VulkanWindow created in
-      // NOTE: make sure window is initialized b4 the device
-      // Application
-    //   VulkanWindow m_Window{width, height, "My Vulkan App"};
       VulkanWindow* m_Window;
       VulkanInstance m_Instance{}; // TODO temp, might move to window class if this is per window
-    //   VulkanDevice m_Device{m_Instance.GetInstance(), (GLFWwindow*)m_Window.GetWindow()};
       VulkanDevice m_Device;
       VkPipelineLayout m_PipelineLayout{};
       std::unique_ptr<VulkanPipeline> m_SimplePipeline;

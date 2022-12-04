@@ -1,4 +1,3 @@
-// #if 0
 #pragma once
 
 #include "Core/Log.h"
@@ -38,5 +37,3 @@ int main(int argc, char** argv)
 
    return 0;
 }
-
-// #endif

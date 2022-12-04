@@ -3,9 +3,9 @@
 #include "Core.h"
 #include "Events/Event.h"
 #include "Events/ApplicationEvent.h"
-#include "Core/Window.h"
-#include "Core/Renderer.h"
-#include "Core/LayerStack.h"
+#include "Window.h"
+#include "Renderer.h"
+#include "LayerStack.h"
 // #include "Core/ImGui/ImGuiLayer.h"
 
 namespace Phoinix

@@ -1,15 +1,11 @@
 #include "pch.h"
 #include "Application.h"
-// #include "Core/Log.h"
-//#include "Core/ImGui/ImGuiLayer.h"
-
-// #include <GLFW/glfw3.h>
 
 namespace Phoinix
 {
     Application* Application::instance = nullptr;
 
-    Application::Application()// : layerStack()
+    Application::Application() : layerStack()
     {
         PHOINIX_ASSERT(
             !instance,

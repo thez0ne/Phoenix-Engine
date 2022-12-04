@@ -3,7 +3,7 @@
 #include "pch.h"
 
 #include "Core/Core.h"
-#include "Core/Events/Event.h"
+#include "Events/Event.h"
 
 namespace Phoinix
 {
