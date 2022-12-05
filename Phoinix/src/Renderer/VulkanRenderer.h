@@ -25,6 +25,18 @@ namespace Phoinix
 
       virtual void DrawFrame() override;
 
+      [[nodiscard]] const VkInstance& GetVkInstance() { return m_Instance.GetInstance(); }
+      [[nodiscard]] const VkPhysicalDevice& GetPhysicalDevice() { return m_Device.GetPhysicalDevice(); }
+      [[nodiscard]] const VkDevice& GetVkDevice() { return m_Device.GetDevice(); }
+      [[nodiscard]] const VkQueue& GetGraphicsQueue() { return m_Device.GetGraphicsQueue(); }
+      [[nodiscard]] QueueFamilyIndices GetGraphicsQueueFamily() { return m_Device.FindQueueFamilies(m_Device.GetPhysicalDevice()); }
+      [[nodiscard]] uint32_t GetImageCount() const { return m_ImageAvailableSemaphores.size(); }
+      [[nodiscard]] const VkRenderPass& GetRenderPass() { return m_Device.GetRenderPass(); }
+      [[nodiscard]] VkCommandBuffer& GetCurrentCommandBuffer() { return m_CommandBuffers[m_CurrentFrame]; }
+      [[nodiscard]] const VkPipeline& GetVkPipeline() { return m_SimplePipeline->GetVkPipeline(); }
+      [[nodiscard]] const VkDescriptorPool& GetDescriptorPool() { return m_DescriptorPool; }
+      [[nodiscard]] const VkCommandPool& GetCommandPool() { return m_Device.GetCommandPool(); }
+
     private:
       VulkanWindow* m_Window;
       VulkanInstance m_Instance{}; // TODO temp, might move to window class if this is per window
@@ -39,10 +51,13 @@ namespace Phoinix
       std::vector<VkSemaphore> m_RenderFinishedSemaphores;
       std::vector<VkFence> m_InFlightFences;
 
+      VkDescriptorPool m_DescriptorPool;
+
       void CreatePipelineLayout();
       void CreatePipeline();
       void CreateCommandBuffer();
       void RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
       void CreateSyncObject();
+      void CreateDescriptorPool();
    };
 }

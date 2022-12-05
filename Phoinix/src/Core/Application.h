@@ -6,7 +6,7 @@
 #include "Window.h"
 #include "Renderer.h"
 #include "LayerStack.h"
-// #include "Core/ImGui/ImGuiLayer.h"
+#include "ImGui/ImGuiLayer.h"
 
 namespace Phoinix
 {
@@ -25,6 +25,7 @@ namespace Phoinix
       void AddOverlay(Layer* layer);
 
       inline Window& GetWindow() { return *window; }
+      Renderer& GetRenderer() { return *renderer; }
       static Application* GetInstance() { return instance; }
 
     protected:
@@ -34,7 +35,7 @@ namespace Phoinix
       static Application* _instance;
       LayerStack layerStack;
 
-    //   ImGuiLayer* _ImGuiLayer;
+      ImGuiLayer* _ImGuiLayer;
 
       Window* window;
       Renderer* renderer;

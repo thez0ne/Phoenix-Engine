@@ -1,6 +1,7 @@
 #pragma once
 #include "pch.h"
 
+#define GLFW_INCLUDE_NONE
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
@@ -38,6 +39,7 @@ namespace Phoinix
       VulkanDevice& operator=(VulkanDevice&&) = delete;
 
       [[nodiscard]] VkDevice GetDevice() const { return m_Device; }
+      [[nodiscard]] const VkPhysicalDevice& GetPhysicalDevice() const { return m_PhysicalDevice; }
       [[nodiscard]] VkRenderPass GetRenderPass() const { return m_RenderPass; }
       [[nodiscard]] VkExtent2D GetExtent() const { return m_SwapChainExtent; }
       [[nodiscard]] uint32_t GetExtentWidth() const { return m_SwapChainExtent.width; }
@@ -55,6 +57,8 @@ namespace Phoinix
       void CreateImageViews();
 
       void CleanupSwapChain();
+
+      QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device) const;
 
     private:
       VkSwapchainKHR m_SwapChain{};
@@ -80,7 +84,6 @@ namespace Phoinix
       VkCommandPool m_CommandPool;
 
       bool IsDeviceSuitable(VkPhysicalDevice device);
-      QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device) const;
       void CreateLogicalDevice();
       void CreateSurface();
       bool CheckDeviceExtensionsSupport(VkPhysicalDevice device) const;

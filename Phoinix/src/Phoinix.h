@@ -1,6 +1,6 @@
 #pragma once
 
-// #include <imgui.h>
+#include <imgui.h>
 
 // To be imported in the Game
 #include "Core/Application.h"

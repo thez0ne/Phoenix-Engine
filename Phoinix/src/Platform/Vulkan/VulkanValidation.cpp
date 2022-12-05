@@ -37,6 +37,7 @@ namespace Phoinix
                  const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
                  void* pUserData)
    {
+      // TODO try to see if we can filter out non Phoinix related warnings
       ENGINE_ERR("Validation Layer: {}", pCallbackData->pMessage);
       return VK_FALSE;
    }

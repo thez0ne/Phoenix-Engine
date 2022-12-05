@@ -43,6 +43,7 @@ namespace Phoinix
       {
          return m_SwapChainFrameBuffers;
       }
+      [[nodiscard]] const VkPipeline& GetVkPipeline() const { return m_GraphicsPipeline; }
 
       void RecreateSwapChain(GLFWwindow* window);
 

@@ -3,84 +3,84 @@
 
 namespace Phoinix
 {
-    Application* Application::instance = nullptr;
+   Application* Application::instance = nullptr;
 
-    Application::Application() : layerStack()
-    {
-        PHOINIX_ASSERT(
-            !instance,
-            "Application should be a singleton!"); // TODO can i move this into a base singleton class?
+   Application::Application() : layerStack()
+   {
+      PHOINIX_ASSERT(
+         !instance,
+         "Application should be a singleton!"); // TODO can i move this into a base singleton class?
 
-        instance = this;
-        window = Window::Create();
-        window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
-        renderer = Renderer::Create(window);
+      instance = this;
+      window = Window::Create();
+      window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
+      renderer = Renderer::Create(window);
 
-        // _ImGuiLayer = new ImGuiLayer();
-        // addOverlay(_ImGuiLayer);
+      _ImGuiLayer = new ImGuiLayer();
+      AddOverlay(_ImGuiLayer);
 
-        // ImgGuiCtx = _ImGuiLayer->getImGuiCtx();
-    }
+      // ImgGuiCtx = _ImGuiLayer->getImGuiCtx();
+   }
 
-    Application::~Application()
-    {
-        delete window;
-        delete renderer;
-    }
+   Application::~Application()
+   {
+      delete window;
+      delete renderer;
+   }
 
-    void Application::Run()
-    {
-        ENGINE_INFO("Application is starting up");
+   void Application::Run()
+   {
+      ENGINE_INFO("Application is starting up");
 
-        while (isRunning)
-        {
-        //       renderer->startFrame();
+      while (isRunning)
+      {
+         window->Update();
+         // renderer->startFrame();
 
-              for (Layer* layer : layerStack)
-                 layer->OnUpdate();
+         for (Layer* layer : layerStack)
+            layer->OnUpdate();
 
-        //       _ImGuiLayer->ImGuiInitFrame();
-        //       for (Layer* layer : layerStack)
-        //          layer->onImGUIUpdate();
-        //       _ImGuiLayer->ImGuiRenderFrame();
+         _ImGuiLayer->ImGuiInitFrame();
+         for (Layer* layer : layerStack)
+         {
+            layer->OnImGUIUpdate();
+         }
+         _ImGuiLayer->ImGuiRenderFrame();
 
-              renderer->DrawFrame();
+         renderer->DrawFrame();
 
-        //       renderer->endFrame();
+         // renderer->endFrame();
+      }
+   }
 
-              window->Update();
-        }
-    }
+   void Application::OnEvent(Event& e)
+   {
+      EventDispatcher dispatcher(e);
+      dispatcher.dispatch<WindowCloseEvent>(
+         std::bind(&Application::OnClose, this, std::placeholders::_1));
 
-    void Application::OnEvent(Event& e)
-    {
-        EventDispatcher dispatcher(e);
-        dispatcher.dispatch<WindowCloseEvent>(
-            std::bind(&Application::OnClose, this, std::placeholders::_1));
+      for (LayerIterator it = layerStack.end(); it != layerStack.begin();)
+      {
+         (*--it)->OnEvent(e);
+         if (e.handled)
+            break;
+      }
+   }
 
-        for (LayerIterator it = layerStack.end(); it != layerStack.begin();)
-        {
-            (*--it)->OnEvent(e);
-            if (e.handled)
-                break;
-        }
-    }
+   void Application::AddLayer(Layer* layer)
+   {
+      layerStack.PushLayer(layer);
+   }
 
-    void Application::AddLayer(Layer* layer)
-    {
-        layerStack.PushLayer(layer);
-    }
+   void Application::AddOverlay(Layer* layer)
+   {
+      layerStack.PushOverlay(layer);
+   }
 
-    void Application::AddOverlay(Layer* layer)
-    {
-        layerStack.PushOverlay(layer);
-    }
-
-    bool Application::OnClose(WindowCloseEvent& e)
-    {
-        isRunning = false;
-        return true;
-    }
+   bool Application::OnClose(WindowCloseEvent& e)
+   {
+      isRunning = false;
+      return true;
+   }
 
 }
-
