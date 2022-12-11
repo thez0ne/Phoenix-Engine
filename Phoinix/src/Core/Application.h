@@ -23,6 +23,7 @@ namespace Phoinix
 
       void AddLayer(Layer* layer);
       void AddOverlay(Layer* layer);
+      void RemoveLayer(Layer* layer);
 
       inline Window& GetWindow() { return *window; }
       Renderer& GetRenderer() { return *renderer; }

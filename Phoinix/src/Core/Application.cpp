@@ -24,6 +24,7 @@ namespace Phoinix
 
    Application::~Application()
    {
+      RemoveLayer(_ImGuiLayer);
       delete window;
       delete renderer;
    }
@@ -35,10 +36,11 @@ namespace Phoinix
       while (isRunning)
       {
          window->Update();
-         // renderer->startFrame();
 
          for (Layer* layer : layerStack)
             layer->OnUpdate();
+
+         renderer->BeginRender();
 
          _ImGuiLayer->ImGuiInitFrame();
          for (Layer* layer : layerStack)
@@ -46,11 +48,15 @@ namespace Phoinix
             layer->OnImGUIUpdate();
          }
          _ImGuiLayer->ImGuiRenderFrame();
+         renderer->Render();
 
-         renderer->DrawFrame();
+         // renderer->DrawFrame();
 
-         // renderer->endFrame();
+         renderer->EndRender();
       }
+      // TODO make sure command buffer is emptied and cleaned up before exiting
+      //renderer->EndRender();
+      ENGINE_INFO("Application is closing down");
    }
 
    void Application::OnEvent(Event& e)
@@ -75,6 +81,11 @@ namespace Phoinix
    void Application::AddOverlay(Layer* layer)
    {
       layerStack.PushOverlay(layer);
+   }
+
+   void Application::RemoveLayer(Layer* layer)
+   {
+      layerStack.PopLayer(layer);
    }
 
    bool Application::OnClose(WindowCloseEvent& e)

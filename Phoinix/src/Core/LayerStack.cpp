@@ -22,4 +22,10 @@ namespace Phoinix
       stack.emplace_back(layer);
       layer->OnAttach();
    }
+
+   void LayerStack::PopLayer(Layer* layer)
+   {
+      stack.erase(std::ranges::find(stack, layer));
+      delete layer;
+   }
 }

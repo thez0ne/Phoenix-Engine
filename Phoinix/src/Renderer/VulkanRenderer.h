@@ -24,6 +24,9 @@ namespace Phoinix
       VulkanRenderer& operator=(VulkanRenderer&&) = delete;
 
       virtual void DrawFrame() override;
+      virtual void BeginRender() override;
+      virtual void Render() override;
+      virtual void EndRender() override;
 
       [[nodiscard]] const VkInstance& GetVkInstance() { return m_Instance.GetInstance(); }
       [[nodiscard]] const VkPhysicalDevice& GetPhysicalDevice() { return m_Device.GetPhysicalDevice(); }
@@ -52,6 +55,8 @@ namespace Phoinix
       std::vector<VkFence> m_InFlightFences;
 
       VkDescriptorPool m_DescriptorPool;
+
+      uint32_t imageIndex;
 
       void CreatePipelineLayout();
       void CreatePipeline();

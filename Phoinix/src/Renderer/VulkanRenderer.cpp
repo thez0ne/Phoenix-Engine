@@ -24,6 +24,7 @@ namespace Phoinix
    {
       vkDeviceWaitIdle(m_Device.GetDevice());
 
+      vkDestroyDescriptorPool(m_Device.GetDevice(), m_DescriptorPool, nullptr);
       for (size_t i = 0; i < max_frames_in_flight; i++)
       {
          vkDestroySemaphore(m_Device.GetDevice(), m_RenderFinishedSemaphores[i], nullptr);
@@ -183,8 +184,151 @@ namespace Phoinix
       }
    }
 
+   void VulkanRenderer::BeginRender()
+   {
+      vkWaitForFences(
+         m_Device.GetDevice(), 1, &m_InFlightFences[m_CurrentFrame], VK_TRUE, UINT64_MAX);
+
+      // uint32_t imageIndex;
+      VkResult result = vkAcquireNextImageKHR(m_Device.GetDevice(),
+                                              m_Device.GetSwapChain(),
+                                              UINT64_MAX,
+                                              m_ImageAvailableSemaphores[m_CurrentFrame],
+                                              VK_NULL_HANDLE,
+                                              &imageIndex);
+
+      if (result == VK_ERROR_OUT_OF_DATE_KHR)
+      {
+         m_SimplePipeline->RecreateSwapChain((GLFWwindow*)m_Window->GetWindow());
+         return;
+      }
+      else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
+      {
+         ENGINE_ERR("Failed to get swap chain image");
+         std::exit(-3);
+      }
+
+      vkResetFences(m_Device.GetDevice(), 1, &m_InFlightFences[m_CurrentFrame]);
+
+      vkResetCommandBuffer(m_CommandBuffers[m_CurrentFrame], 0);
+
+      // NOTE: setup CommandBuffer and RenderPass to start rendering
+      VkCommandBufferBeginInfo beginInfo{};
+      beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+      beginInfo.flags = 0;
+      beginInfo.pInheritanceInfo = nullptr;
+
+      if (vkBeginCommandBuffer(m_CommandBuffers[m_CurrentFrame], &beginInfo) != VK_SUCCESS)
+      {
+         ENGINE_ERR("Failed to begin recording command buffer");
+         std::exit(-3);
+      }
+
+      VkRenderPassBeginInfo renderPassInfo{};
+      renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+      renderPassInfo.renderPass = m_Device.GetRenderPass();
+      renderPassInfo.framebuffer = m_SimplePipeline->GetSwapChainFramebuffers()[imageIndex];
+      renderPassInfo.renderArea.offset = {0, 0};
+      renderPassInfo.renderArea.extent = m_Device.GetExtent();
+
+      VkClearValue clearColour{{{0.0f, 0.0f, 0.0f, 1.0f}}};
+      renderPassInfo.clearValueCount = 1;
+      renderPassInfo.pClearValues = &clearColour;
+
+      vkCmdBeginRenderPass(m_CommandBuffers[m_CurrentFrame], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+
+      VkViewport viewport{};
+      viewport.x = 0.0f;
+      viewport.y = 0.0f;
+      viewport.width = static_cast<float>(m_Device.GetExtentWidth());
+      viewport.height = static_cast<float>(m_Device.GetExtentHeight());
+      viewport.minDepth = 0.0f;
+      viewport.maxDepth = 1.0f;
+      vkCmdSetViewport(m_CommandBuffers[m_CurrentFrame], 0, 1, &viewport);
+
+      VkRect2D scissor{};
+      scissor.offset = {0, 0};
+      scissor.extent = m_Device.GetExtent();
+      vkCmdSetScissor(m_CommandBuffers[m_CurrentFrame], 0, 1, &scissor);
+   }
+
+   void VulkanRenderer::Render()
+   {
+      // NOTE: actual drawing of the geometry
+      {
+         m_SimplePipeline->Bind(m_CommandBuffers[m_CurrentFrame]);
+         vkCmdDraw(m_CommandBuffers[m_CurrentFrame], 3, 1, 0, 0);
+      }
+   }
+
+   void VulkanRenderer::EndRender()
+   {
+      // NOTE: cleanup of CommandBuffer and RenderPass
+      vkCmdEndRenderPass(m_CommandBuffers[m_CurrentFrame]);
+
+      if (vkEndCommandBuffer(m_CommandBuffers[m_CurrentFrame]) != VK_SUCCESS)
+      {
+         ENGINE_ERR("Failed to end recording command buffer");
+         std::exit(-3);
+      }
+
+      VkSubmitInfo submitInfo{};
+      submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+
+      VkSemaphore waitSemaphores[] = {m_ImageAvailableSemaphores[m_CurrentFrame]};
+      VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
+      submitInfo.waitSemaphoreCount = 1;
+      submitInfo.pWaitSemaphores = waitSemaphores;
+      submitInfo.pWaitDstStageMask = waitStages;
+
+      submitInfo.commandBufferCount = 1;
+      submitInfo.pCommandBuffers = &m_CommandBuffers[m_CurrentFrame];
+
+      VkSemaphore signalSemaphores[] = {m_RenderFinishedSemaphores[m_CurrentFrame]};
+      submitInfo.signalSemaphoreCount = 1;
+      submitInfo.pSignalSemaphores = signalSemaphores;
+
+      if (vkQueueSubmit(
+             m_Device.GetGraphicsQueue(), 1, &submitInfo, m_InFlightFences[m_CurrentFrame]) !=
+          VK_SUCCESS)
+      {
+         ENGINE_ERR("Failed to submit draw command");
+         std::exit(-3);
+      }
+
+      VkPresentInfoKHR presentInfo{};
+      presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+
+      presentInfo.waitSemaphoreCount = 1;
+      presentInfo.pWaitSemaphores = signalSemaphores;
+
+      VkSwapchainKHR swapChains[] = {m_Device.GetSwapChain()};
+      presentInfo.swapchainCount = 1;
+      presentInfo.pSwapchains = swapChains;
+      presentInfo.pImageIndices = &imageIndex;
+      presentInfo.pResults =
+         nullptr; // is used for checking status of individual swapchain presentation
+
+      VkResult result = vkQueuePresentKHR(m_Device.GetPresentQueue(), &presentInfo);
+
+      if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR ||
+          m_Window->m_FramebuffersResized)
+      {
+         m_Window->m_FramebuffersResized = false;
+         m_SimplePipeline->RecreateSwapChain((GLFWwindow*)m_Window->GetWindow());
+      }
+      else if (result != VK_SUCCESS)
+      {
+         ENGINE_ERR("Failed to present swap chain image");
+         std::exit(-3);
+      }
+
+      m_CurrentFrame = (m_CurrentFrame + 1) % max_frames_in_flight;
+   }
+
    void VulkanRenderer::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex)
    {
+      // NOTE: setup CommandBuffer and RenderPass to start rendering
       VkCommandBufferBeginInfo beginInfo{};
       beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
       beginInfo.flags = 0;
@@ -209,6 +353,8 @@ namespace Phoinix
 
       vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
+
+      // NOTE: actual drawing of the geometry
       {
          m_SimplePipeline->Bind(commandBuffer);
 
@@ -228,6 +374,7 @@ namespace Phoinix
          vkCmdDraw(commandBuffer, 3, 1, 0, 0);
       }
 
+      // NOTE: cleanup of CommandBuffer and RenderPass
       vkCmdEndRenderPass(commandBuffer);
 
       if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS)

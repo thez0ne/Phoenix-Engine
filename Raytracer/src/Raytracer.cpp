@@ -10,17 +10,16 @@ class RaytracerLayer : public Phoinix::Layer
       // PRINT("We in the app boys");
    }
 
-   void OnEvent(Phoinix::Event& e) override { PRINT("Application handling {}", e); }
+   void OnEvent(Phoinix::Event& e) override
+   {
+      // PRINT("Application handling {}", e);
+   }
 
    void OnImGUIUpdate() override
    {
-      // ImGui::Begin("Hello, world!"); // Create a window called "Hello, world!" and append into
-      // it.
-
-      // ImGui::Text(
-      //    "This is some useful text."); // Display some text (you can use a format strings too)
-
-      // ImGui::End();
+      ImGui::Begin("Hello, world!");
+      ImGui::Text("This is some useful text.");
+      ImGui::End();
    }
 };
 

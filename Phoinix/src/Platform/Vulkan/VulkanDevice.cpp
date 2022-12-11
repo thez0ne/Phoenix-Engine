@@ -406,7 +406,7 @@ namespace Phoinix
       colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
       colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
       colorAttachment.initialLayout =
-         VK_IMAGE_LAYOUT_UNDEFINED; // don't care what the previous format was
+          VK_IMAGE_LAYOUT_UNDEFINED; // don't care what the previous format was
       colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 
       VkAttachmentReference colorAttachmentRef{};
@@ -448,7 +448,7 @@ namespace Phoinix
 
       VkCommandPoolCreateInfo commandPoolCreateInfo{};
       commandPoolCreateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-      commandPoolCreateInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+      commandPoolCreateInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT | VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
       commandPoolCreateInfo.queueFamilyIndex = queueFamilyIndices.graphicsFamily.value();
 
       if (vkCreateCommandPool(m_Device, &commandPoolCreateInfo, nullptr, &m_CommandPool) !=

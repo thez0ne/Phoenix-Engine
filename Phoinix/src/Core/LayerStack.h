@@ -18,6 +18,7 @@ namespace Phoinix
 
       void PushLayer(Layer* layer);
       void PushOverlay(Layer* layer);
+      void PopLayer(Layer* layer);
 
       LayerIterator begin() { return stack.begin(); }
       LayerIterator end() { return stack.end(); }
