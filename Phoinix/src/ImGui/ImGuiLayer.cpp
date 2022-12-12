@@ -94,26 +94,6 @@ namespace Phoinix
             vkBeginCommandBuffer(commandBuffer, &beginInfo);
          }
 
-
-         //if (vkResetCommandPool(renderer->GetVkDevice(), command_pool, 0) != VK_SUCCESS)
-         //{
-         //   ENGINE_ERR("[ImGUI] error resetting command pool");
-         //   std::exit(-3);
-         //}
-         ////// err = vkResetCommandPool(g_Device, command_pool, 0);
-         ////// check_vk_result(err);
-         //VkCommandBufferBeginInfo begin_info = {};
-         //begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-         //begin_info.flags |= VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-
-         //if (vkBeginCommandBuffer(command_buffer, &begin_info) != VK_SUCCESS)
-         //{
-         //   ENGINE_ERR("[ImGUI] error beginning command buffer");
-         //   std::exit(-3);
-         //}
-         //// err = vkBeginCommandBuffer(command_buffer, &begin_info);
-         //// check_vk_result(err);
-
          ImGui_ImplVulkan_CreateFontsTexture(commandBuffer);
 
          // end and delete command buffer for the ImGUI fonts
@@ -129,37 +109,10 @@ namespace Phoinix
 
             vkQueueSubmit(renderer->GetGraphicsQueue(), 1, &submitInfo, VK_NULL_HANDLE);
             vkQueueWaitIdle(renderer->GetGraphicsQueue());
+            vkDeviceWaitIdle(renderer->GetVkDevice());
 
             vkFreeCommandBuffers(renderer->GetVkDevice(), command_pool, 1, &commandBuffer);
          }
-
-         //VkSubmitInfo end_info = {};
-         //end_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-         //end_info.commandBufferCount = 1;
-         //end_info.pCommandBuffers = &command_buffer;
-         //if (vkEndCommandBuffer(command_buffer) != VK_SUCCESS)
-         //{
-         //   ENGINE_ERR("[ImGUI] error ending command buffer");
-         //   std::exit(-3);
-         //}
-         ////// err = vkEndCommandBuffer(command_buffer);
-         ////// check_vk_result(err);
-         //if (vkQueueSubmit(renderer->GetGraphicsQueue(), 1, &end_info, VK_NULL_HANDLE) !=
-         //    VK_SUCCESS)
-         //{
-         //   ENGINE_ERR("[ImGUI] error submitting queue");
-         //   std::exit(-3);
-         //}
-         ////// err = vkQueueSubmit(g_Queue, 1, &end_info, VK_NULL_HANDLE);
-         ////// check_vk_result(err);
-
-         /*if (vkDeviceWaitIdle(renderer->GetVkDevice()) != VK_SUCCESS)
-         {
-            ENGINE_ERR("[ImGUI] error waiting for device");
-            std::exit(-3);
-         }*/
-         // err = vkDeviceWaitIdle(g_Device);
-         // check_vk_result(err);
          ImGui_ImplVulkan_DestroyFontUploadObjects();
       }
    }

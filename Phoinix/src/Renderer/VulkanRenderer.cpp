@@ -202,7 +202,8 @@ namespace Phoinix
          m_SimplePipeline->RecreateSwapChain((GLFWwindow*)m_Window->GetWindow());
          return;
       }
-      else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
+
+      if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
       {
          ENGINE_ERR("Failed to get swap chain image");
          std::exit(-3);
