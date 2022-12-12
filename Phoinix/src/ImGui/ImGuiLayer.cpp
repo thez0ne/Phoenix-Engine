@@ -148,11 +148,10 @@ namespace Phoinix
       io.DisplaySize = ImVec2(app->GetWindow().GetWidth(), app->GetWindow().GetHeight());
 
       ImGui::Render();
-      // TODO: Get VkCommandBuffer and VkPipeline
       auto renderer = (VulkanRenderer*)&app->GetRenderer();
       vkDeviceWaitIdle(renderer->GetVkDevice());
       ImGui_ImplVulkan_RenderDrawData(
-         ImGui::GetDrawData(), renderer->GetCurrentCommandBuffer(), renderer->GetVkPipeline());
+         ImGui::GetDrawData(), renderer->GetCurrentCommandBuffer());
 
       if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
       {
