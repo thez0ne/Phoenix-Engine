@@ -42,12 +42,12 @@ namespace Phoinix
 
          renderer->BeginRender();
 
-         _ImGuiLayer->ImGuiInitFrame();
-         for (Layer* layer : layerStack)
-         {
-            layer->OnImGUIUpdate();
-         }
-         _ImGuiLayer->ImGuiRenderFrame();
+         // _ImGuiLayer->ImGuiInitFrame();
+         // for (Layer* layer : layerStack)
+         // {
+         //    layer->OnImGUIUpdate();
+         // }
+         // _ImGuiLayer->ImGuiRenderFrame();
          renderer->Render();
 
          // renderer->DrawFrame();

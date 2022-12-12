@@ -1,5 +1,7 @@
 #include "VulkanPipeline.h"
 
+#include "Vertex.h"
+
 // TODO prob needs to be a part of the renderer
 
 namespace Phoinix
@@ -98,12 +100,15 @@ namespace Phoinix
       shaderStages[1].pNext = nullptr;
       shaderStages[1].pSpecializationInfo = nullptr;
 
+      auto bindingDescriptions = Vertex::GetBindingDescription();
+      auto attributeDescriptions = Vertex::GetAttributeDescription();
+
       VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
       vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-      vertexInputInfo.vertexBindingDescriptionCount = 0;
-      vertexInputInfo.pVertexBindingDescriptions = nullptr;
-      vertexInputInfo.vertexAttributeDescriptionCount = 0;
-      vertexInputInfo.pVertexAttributeDescriptions = nullptr;
+      vertexInputInfo.vertexBindingDescriptionCount = 1;
+      vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size());
+      vertexInputInfo.pVertexBindingDescriptions = &bindingDescriptions;
+      vertexInputInfo.pVertexAttributeDescriptions = attributeDescriptions.data();
 
       VkGraphicsPipelineCreateInfo pipelineInfo{};
       pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;

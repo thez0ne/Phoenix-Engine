@@ -6,6 +6,8 @@
 #include "Platform/Vulkan/VulkanDevice.h"
 #include "Platform/Vulkan/VulkanPipeline.h"
 
+#include "Platform/Vulkan/VertexBuffer.h"
+
 namespace Phoinix
 {
    class VulkanRenderer : public Renderer
@@ -57,6 +59,14 @@ namespace Phoinix
       VkDescriptorPool m_DescriptorPool;
 
       uint32_t imageIndex;
+
+      const std::vector<Vertex> vertices = {
+        {{0.0f, -0.5f}, {1.0f, 1.0f, 1.0f}},
+        {{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
+        {{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}
+      };
+
+      VertexBuffer temp{m_Device, vertices};
 
       void CreatePipelineLayout();
       void CreatePipeline();

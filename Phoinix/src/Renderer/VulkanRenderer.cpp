@@ -258,7 +258,8 @@ namespace Phoinix
       // NOTE: actual drawing of the geometry
       {
          m_SimplePipeline->Bind(m_CommandBuffers[m_CurrentFrame]);
-         vkCmdDraw(m_CommandBuffers[m_CurrentFrame], 3, 1, 0, 0);
+         temp.Bind(m_CommandBuffers[m_CurrentFrame]);
+         vkCmdDraw(m_CommandBuffers[m_CurrentFrame], static_cast<uint32_t>(vertices.size()), 1, 0, 0);
       }
    }
 
