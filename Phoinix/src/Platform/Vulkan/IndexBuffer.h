@@ -6,14 +6,18 @@
 
 namespace Phoinix
 {
+   // TODO: recommended code change from graphics drivers' devs
+   // Driver developers recommend that you also store multiple buffers, like the vertex and index
+   // buffer, into a single VkBuffer and use offsets in commands like vkCmdBindVertexBuffers
    class IndexBuffer
    {
-   public:
+    public:
       IndexBuffer(VulkanDevice& device, std::vector<uint16_t> indices);
       ~IndexBuffer();
 
       void Bind(VkCommandBuffer commandBuffer);
-   private:
+
+    private:
       VkBuffer m_IndexBuffer;
       VkDeviceMemory m_IndexBufferMemory;
       VulkanDevice& m_Device;
