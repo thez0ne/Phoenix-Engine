@@ -1,15 +1,8 @@
-#include "VulkanRenderer.h"
+#include "Graphics/Renderer/VulkanRenderer.h"
 
 namespace Phoinix
 {
-   static bool RendererInitialized = false;
-
-   Renderer* Renderer::Create(Window* window)
-   {
-      return new VulkanRenderer((VulkanWindow*)window);
-   }
-
-   VulkanRenderer::VulkanRenderer(VulkanWindow* window) :
+   VulkanRenderer::VulkanRenderer(GLFWWindow* window) :
       m_Window(window), m_Device(m_Instance.GetInstance(), (GLFWwindow*)window->GetWindow())
    {
       ENGINE_TRACE("Creating Renderer");
@@ -446,5 +439,16 @@ namespace Phoinix
          ENGINE_ERR("Failed to create descriptor pool");
          std::exit(-3);
       }
+   }
+
+
+   void VulkanRenderer::MakeDefault()
+   {
+      CreateFunc = CreateFuncVulkan;
+   }
+
+   Renderer* VulkanRenderer::CreateFuncVulkan(Window* window)
+   {
+      return new VulkanRenderer((GLFWWindow*)window);
    }
 }

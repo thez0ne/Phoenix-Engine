@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "VulkanWindow.h"
+#include "GLFWWindow.h"
 
 #include "Events/ApplicationEvent.h"
 #include "Events/KeyboardEvent.h"
@@ -11,10 +11,10 @@ namespace Phoinix
 
    Window* Window::Create()
    {
-      return new VulkanWindow();
+      return new GLFWWindow();
    }
 
-   VulkanWindow::VulkanWindow(const unsigned int w,
+   GLFWWindow::GLFWWindow(const unsigned int w,
                               const unsigned int h,
                               const std::string& name) // : m_Data(w, h, name)
    {
@@ -26,23 +26,23 @@ namespace Phoinix
                    m_Data.width,
                    m_Data.height);
       Initialize();
-      SetVSync(true);
+      // SetVSync(true);
       SetupCallbacks();
    }
 
-   VulkanWindow::~VulkanWindow()
+   GLFWWindow::~GLFWWindow()
    {
       glfwDestroyWindow(m_Window);
       glfwTerminate();
    }
 
-   void VulkanWindow::Update()
+   void GLFWWindow::Update()
    {
       glfwPollEvents();
       // glfwSwapBuffers(window); // TODO prob dont need this with our own swap chain code
    }
 
-   void VulkanWindow::Initialize()
+   void GLFWWindow::Initialize()
    {
       if (!GLFWInitialized)
       {
@@ -57,67 +57,66 @@ namespace Phoinix
          glfwCreateWindow(m_Data.width, m_Data.height, m_Data.title.c_str(), nullptr, nullptr);
 
       glfwSetWindowUserPointer(m_Window, this);
-      glfwMakeContextCurrent(m_Window); // TODO need to check if imgui with vulkan needs this
    }
 
-   void VulkanWindow::SetupCallbacks()
+   void GLFWWindow::SetupCallbacks()
    {
       glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window) {
-         auto vkWindow = reinterpret_cast<VulkanWindow*>(glfwGetWindowUserPointer(window));
+         auto glfwWindow = reinterpret_cast<GLFWWindow*>(glfwGetWindowUserPointer(window));
 
          WindowCloseEvent e;
-         vkWindow->m_Data.callback(e);
+         glfwWindow->m_Data.callback(e);
       });
 
       glfwSetWindowFocusCallback(m_Window, [](GLFWwindow* window, int focusStatus) {
-         auto vkWindow = reinterpret_cast<VulkanWindow*>(glfwGetWindowUserPointer(window));
+         auto glfwWindow = reinterpret_cast<GLFWWindow*>(glfwGetWindowUserPointer(window));
 
          switch (focusStatus)
          {
             case GLFW_TRUE:
             {
                WindowFocusEvent e;
-               vkWindow->m_Data.callback(e);
+               glfwWindow->m_Data.callback(e);
                break;
             }
             case GLFW_FALSE:
             {
                WindowUnfocusEvent e;
-               vkWindow->m_Data.callback(e);
+               glfwWindow->m_Data.callback(e);
                break;
             }
          }
       });
 
       glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height) {
-         auto vkWindow = reinterpret_cast<VulkanWindow*>(glfwGetWindowUserPointer(window));
+         auto glfwWindow = reinterpret_cast<GLFWWindow*>(glfwGetWindowUserPointer(window));
 
          WindowResizeEvent e(width, height);
-         vkWindow->m_Data.callback(e);
+         glfwWindow->m_Data.callback(e);
       });
 
       glfwSetKeyCallback(
          m_Window, [](GLFWwindow* window, int keycode, int scancode, int action, int mods) {
-            auto vkWindow = reinterpret_cast<VulkanWindow*>(glfwGetWindowUserPointer(window));
+            auto glfwWindow = reinterpret_cast<GLFWWindow*>(glfwGetWindowUserPointer(window));
 
             switch (action)
             {
                case GLFW_PRESS:
                {
                   KeyDownEvent e(keycode, false);
-                  vkWindow->m_Data.callback(e);
+                  glfwWindow->m_Data.callback(e);
                   break;
                }
                case GLFW_RELEASE:
                {
                   KeyUpEvent e(keycode);
-                  vkWindow->m_Data.callback(e);
+                  glfwWindow->m_Data.callback(e);
                   break;
                }
                case GLFW_REPEAT:
                {
                   KeyDownEvent e(keycode, true);
-                  vkWindow->m_Data.callback(e);
+                  glfwWindow->m_Data.callback(e);
                   break;
                }
             }
@@ -125,42 +124,42 @@ namespace Phoinix
 
       glfwSetMouseButtonCallback(
          m_Window, [](GLFWwindow* window, int buttonID, int action, int mods) {
-            auto vkWindow = reinterpret_cast<VulkanWindow*>(glfwGetWindowUserPointer(window));
+            auto glfwWindow = reinterpret_cast<GLFWWindow*>(glfwGetWindowUserPointer(window));
 
             switch (action)
             {
                case GLFW_PRESS:
                {
                   MouseButtonDownEvent e(buttonID);
-                  vkWindow->m_Data.callback(e);
+                  glfwWindow->m_Data.callback(e);
                   break;
                }
                case GLFW_RELEASE:
                {
                   MouseButtonUpEvent e(buttonID);
-                  vkWindow->m_Data.callback(e);
+                  glfwWindow->m_Data.callback(e);
                   break;
                }
             }
          });
 
       glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xPos, double yPos) {
-         auto vkWindow = reinterpret_cast<VulkanWindow*>(glfwGetWindowUserPointer(window));
+         auto glfwWindow = reinterpret_cast<GLFWWindow*>(glfwGetWindowUserPointer(window));
 
          MouseMovedEvent e((float)xPos, (float)yPos);
-         vkWindow->m_Data.callback(e);
+         glfwWindow->m_Data.callback(e);
       });
 
       glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xDelta, double yDelta) {
-         auto vkWindow = reinterpret_cast<VulkanWindow*>(glfwGetWindowUserPointer(window));
+         auto glfwWindow = reinterpret_cast<GLFWWindow*>(glfwGetWindowUserPointer(window));
 
          MouseScrollEvent e((float)xDelta, (float)yDelta);
-         vkWindow->m_Data.callback(e);
+         glfwWindow->m_Data.callback(e);
       });
 
       glfwSetFramebufferSizeCallback(m_Window, [](GLFWwindow* window, int width, int height) {
-         auto vkWindow = reinterpret_cast<VulkanWindow*>(glfwGetWindowUserPointer(window));
-         vkWindow->m_FramebuffersResized = true;
+         auto glfwWindow = reinterpret_cast<GLFWWindow*>(glfwGetWindowUserPointer(window));
+         glfwWindow->m_FramebuffersResized = true;
       });
    }
 }

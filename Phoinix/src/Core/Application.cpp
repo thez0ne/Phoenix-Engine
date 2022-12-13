@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Application.h"
 
+#include "Platform/Vulkan/VulkanFunction.h"
+
 namespace Phoinix
 {
    Application* Application::instance = nullptr;
@@ -14,12 +16,12 @@ namespace Phoinix
       instance = this;
       window = Window::Create();
       window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
-      renderer = Renderer::Create(window);
+
+      Graphics::Vulkan::MakeDefault(); // TODO can prob be moved elsewhere to allow for switching APIs
+      renderer = Renderer::CreateFunc(window);
 
       _ImGuiLayer = new ImGuiLayer();
       AddOverlay(_ImGuiLayer);
-
-      // ImgGuiCtx = _ImGuiLayer->getImGuiCtx();
    }
 
    Application::~Application()

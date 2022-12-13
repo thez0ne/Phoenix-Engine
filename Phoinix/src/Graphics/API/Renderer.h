@@ -4,13 +4,20 @@
 
 #include "Core/Core.h"
 #include "Events/Event.h"
-#include "Window.h"
+#include "Core/Window.h"
 
 namespace Phoinix
 {
+   enum class RenderType
+   {
+      FILL,
+      WIREFRAME
+   };
+
    class Renderer
    {
     public:
+      Renderer() = default;
       virtual ~Renderer() = default;
 
       virtual void DrawFrame() = 0;
@@ -18,6 +25,6 @@ namespace Phoinix
       virtual void Render() = 0;
       virtual void EndRender() = 0;
 
-      static Renderer* Create(Window* window);
+      static Renderer* (*CreateFunc)(Window* window);
    };
 }

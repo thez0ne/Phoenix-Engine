@@ -1,16 +1,14 @@
 #include "pch.h"
 #include "ImGuiLayer.h"
 
-// #include "Platform/ImGui/imgui_impl_opengl3.h"
-// #include "Platform/ImGui/imgui_impl_glfw.h"
 #include <imgui.h>
 #include <backends/imgui_impl_vulkan.h>
 #include <backends/imgui_impl_glfw.h>
 
 #include "Core/Application.h"
 // #include "Platform/OpenGL/OpenGLWindow.h"
-#include "Platform/Vulkan/VulkanWindow.h"
-#include "Renderer/VulkanRenderer.h"
+// #include "Platform/Vulkan/GLFWWindow.h"
+#include "Graphics/Renderer/VulkanRenderer.h"
 
 namespace Phoinix
 {

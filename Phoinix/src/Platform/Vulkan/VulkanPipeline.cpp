@@ -1,6 +1,6 @@
 #include "VulkanPipeline.h"
 
-#include "Vertex.h"
+#include "Graphics/Buffer/Vertex.h"
 
 // TODO prob needs to be a part of the renderer
 

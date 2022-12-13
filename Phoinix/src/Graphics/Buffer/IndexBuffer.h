@@ -1,7 +1,7 @@
 #pragma once
 #include "pch.h"
 
-#include "VulkanDevice.h"
+#include "Platform/Vulkan/VulkanDevice.h"
 #include "Buffer.h"
 
 namespace Phoinix

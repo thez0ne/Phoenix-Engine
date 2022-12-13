@@ -1,24 +1,25 @@
 #pragma once
 #include "pch.h"
 
-#include "Core/Renderer.h"
+#include "Graphics/API/Renderer.h"
+#include "Platform/GLFW/GLFWWindow.h"
 #include "Platform/Vulkan/VulkanInstance.h"
 #include "Platform/Vulkan/VulkanDevice.h"
 #include "Platform/Vulkan/VulkanPipeline.h"
 
-#include "Platform/Vulkan/VertexBuffer.h"
-#include "Platform/Vulkan/IndexBuffer.h"
+#include "Graphics/Buffer/VertexBuffer.h"
+#include "Graphics/Buffer/IndexBuffer.h"
 
 namespace Phoinix
 {
    class VulkanRenderer : public Renderer
    {
     public:
-      static constexpr int width = 800;
-      static constexpr int height = 600;
+      static constexpr int width = 1280;
+      static constexpr int height = 720;
       const int max_frames_in_flight = 2;
 
-      VulkanRenderer(VulkanWindow* window);
+      VulkanRenderer(GLFWWindow* window);
       ~VulkanRenderer();
 
       VulkanRenderer(const VulkanRenderer&) = delete;
@@ -53,7 +54,7 @@ namespace Phoinix
       [[nodiscard]] const VkCommandPool& GetCommandPool() { return m_Device.GetCommandPool(); }
 
     private:
-      VulkanWindow* m_Window;
+      GLFWWindow* m_Window;
       VulkanInstance m_Instance{}; // TODO temp, might move to window class if this is per window
       VulkanDevice m_Device;
       VkPipelineLayout m_PipelineLayout{};
@@ -86,5 +87,10 @@ namespace Phoinix
       void RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
       void CreateSyncObject();
       void CreateDescriptorPool();
+
+    public:
+      static void MakeDefault();
+    protected:
+      static Renderer* CreateFuncVulkan(Window* window);
    };
 }

@@ -8,18 +8,18 @@
 
 namespace Phoinix
 {
-   class VulkanWindow : public Window
+   class GLFWWindow : public Window
    {
     public:
-      VulkanWindow(const unsigned int w = 1280,
+      GLFWWindow(const unsigned int w = 1280,
                    const unsigned int h = 720,
                    const std::string& title = "Vulkan Window");
-      ~VulkanWindow();
+      ~GLFWWindow();
 
-      VulkanWindow(const VulkanWindow&) = delete;
-      VulkanWindow& operator=(const VulkanWindow&) = delete;
-      VulkanWindow(VulkanWindow&&) = delete;
-      VulkanWindow& operator=(VulkanWindow&&) = delete;
+      GLFWWindow(const GLFWWindow&) = delete;
+      GLFWWindow& operator=(const GLFWWindow&) = delete;
+      GLFWWindow(GLFWWindow&&) = delete;
+      GLFWWindow& operator=(GLFWWindow&&) = delete;
 
       void Update() override;
 

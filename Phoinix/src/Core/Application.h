@@ -4,7 +4,7 @@
 #include "Events/Event.h"
 #include "Events/ApplicationEvent.h"
 #include "Window.h"
-#include "Renderer.h"
+#include "Graphics/API/Renderer.h"
 #include "LayerStack.h"
 #include "ImGui/ImGuiLayer.h"
 
@@ -28,9 +28,6 @@ namespace Phoinix
       inline Window& GetWindow() { return *window; }
       Renderer& GetRenderer() { return *renderer; }
       static Application* GetInstance() { return instance; }
-
-    protected:
-    //   ImGuiContext* ImgGuiCtx;
 
     private:
       static Application* _instance;
