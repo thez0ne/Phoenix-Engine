@@ -259,7 +259,9 @@ namespace Phoinix
       {
          m_SimplePipeline->Bind(m_CommandBuffers[m_CurrentFrame]);
          temp.Bind(m_CommandBuffers[m_CurrentFrame]);
-         vkCmdDraw(m_CommandBuffers[m_CurrentFrame], static_cast<uint32_t>(vertices.size()), 1, 0, 0);
+         temp2.Bind(m_CommandBuffers[m_CurrentFrame]);
+         // vkCmdDraw(m_CommandBuffers[m_CurrentFrame], static_cast<uint32_t>(vertices.size()), 1, 0, 0);
+         vkCmdDrawIndexed(m_CommandBuffers[m_CurrentFrame], static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
       }
    }
 

@@ -7,6 +7,7 @@
 #include "Platform/Vulkan/VulkanPipeline.h"
 
 #include "Platform/Vulkan/VertexBuffer.h"
+#include "Platform/Vulkan/IndexBuffer.h"
 
 namespace Phoinix
 {
@@ -31,13 +32,22 @@ namespace Phoinix
       virtual void EndRender() override;
 
       [[nodiscard]] const VkInstance& GetVkInstance() { return m_Instance.GetInstance(); }
-      [[nodiscard]] const VkPhysicalDevice& GetPhysicalDevice() { return m_Device.GetPhysicalDevice(); }
+      [[nodiscard]] const VkPhysicalDevice& GetPhysicalDevice()
+      {
+         return m_Device.GetPhysicalDevice();
+      }
       [[nodiscard]] const VkDevice& GetVkDevice() { return m_Device.GetDevice(); }
       [[nodiscard]] const VkQueue& GetGraphicsQueue() { return m_Device.GetGraphicsQueue(); }
-      [[nodiscard]] QueueFamilyIndices GetGraphicsQueueFamily() { return m_Device.FindQueueFamilies(m_Device.GetPhysicalDevice()); }
+      [[nodiscard]] QueueFamilyIndices GetGraphicsQueueFamily()
+      {
+         return m_Device.FindQueueFamilies(m_Device.GetPhysicalDevice());
+      }
       [[nodiscard]] uint32_t GetImageCount() const { return m_ImageAvailableSemaphores.size(); }
       [[nodiscard]] const VkRenderPass& GetRenderPass() { return m_Device.GetRenderPass(); }
-      [[nodiscard]] VkCommandBuffer& GetCurrentCommandBuffer() { return m_CommandBuffers[m_CurrentFrame]; }
+      [[nodiscard]] VkCommandBuffer& GetCurrentCommandBuffer()
+      {
+         return m_CommandBuffers[m_CurrentFrame];
+      }
       [[nodiscard]] const VkPipeline& GetVkPipeline() { return m_SimplePipeline->GetVkPipeline(); }
       [[nodiscard]] const VkDescriptorPool& GetDescriptorPool() { return m_DescriptorPool; }
       [[nodiscard]] const VkCommandPool& GetCommandPool() { return m_Device.GetCommandPool(); }
@@ -60,13 +70,15 @@ namespace Phoinix
 
       uint32_t imageIndex;
 
-      const std::vector<Vertex> vertices = {
-        {{0.0f, -0.5f}, {1.0f, 1.0f, 1.0f}},
-        {{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
-        {{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}
-      };
+      const std::vector<Vertex> vertices = {{{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+                                            {{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
+                                            {{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
+                                            {{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}};
+
+      const std::vector<uint16_t> indices = {0, 1, 2, 2, 3, 0};
 
       VertexBuffer temp{m_Device, vertices};
+      IndexBuffer temp2{m_Device, indices};
 
       void CreatePipelineLayout();
       void CreatePipeline();
