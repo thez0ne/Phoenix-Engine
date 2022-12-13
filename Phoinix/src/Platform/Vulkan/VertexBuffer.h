@@ -2,8 +2,7 @@
 #include "pch.h"
 
 #include "Vertex.h"
-#include "VulkanDevice.h"
-#include <vulkan/vulkan.h>
+#include "Buffer.h"
 
 namespace Phoinix
 {

@@ -119,6 +119,8 @@ namespace Phoinix
 
    void ImGuiLayer::OnDetach()
    {
+      // TODO currently causes validation layer error
+      // destroys VkPipeline that is in use by command buffer
       ImGui_ImplVulkan_Shutdown();
       ImGui_ImplGlfw_Shutdown();
       ImGui::DestroyContext();
