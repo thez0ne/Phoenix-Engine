@@ -27,7 +27,6 @@ namespace Phoinix
       VulkanRenderer(VulkanRenderer&&) = delete;
       VulkanRenderer& operator=(VulkanRenderer&&) = delete;
 
-      virtual void DrawFrame() override;
       virtual void BeginRender() override;
       virtual void Render() override;
       virtual void EndRender() override;
@@ -84,7 +83,6 @@ namespace Phoinix
       void CreatePipelineLayout();
       void CreatePipeline();
       void CreateCommandBuffer();
-      void RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
       void CreateSyncObject();
       void CreateDescriptorPool();
 

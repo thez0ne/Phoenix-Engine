@@ -1,4 +1,5 @@
 #include "Buffer.h"
+#include "Core/Core.h"
 
 namespace Phoinix
 {
@@ -18,8 +19,8 @@ namespace Phoinix
          }
       }
 
-      ENGINE_ERR("Failed to find suitable memory");
-      std::exit(-4);
+      VKASSERT(5, "Failed to find suitable memory");
+      return 999999;
    }
 
    void CreateBuffer(VulkanDevice& device,
@@ -36,11 +37,7 @@ namespace Phoinix
       bufferInfo.usage = usage;
       bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
-      if (vkCreateBuffer(device.GetDevice(), &bufferInfo, nullptr, &buffer) != VK_SUCCESS)
-      {
-         ENGINE_ERR("Failed to create vertex buffer");
-         std::exit(-3);
-      }
+      VKASSERT(vkCreateBuffer(device.GetDevice(), &bufferInfo, nullptr, &buffer), "Failed to create vertex buffer");
 
       // allocate memory
       VkMemoryRequirements memoryRequirements;
@@ -54,11 +51,7 @@ namespace Phoinix
                         memoryRequirements.memoryTypeBits,
                         properties);
 
-      if (vkAllocateMemory(device.GetDevice(), &allocInfo, nullptr, &bufferMemory) != VK_SUCCESS)
-      {
-         ENGINE_ERR("Failed to allocate memory to vertex buffer");
-         std::exit(-3);
-      }
+      VKASSERT(vkAllocateMemory(device.GetDevice(), &allocInfo, nullptr, &bufferMemory), "Failed to allocate memory to vertex buffer");
 
       vkBindBufferMemory(device.GetDevice(), buffer, bufferMemory, 0);
    }

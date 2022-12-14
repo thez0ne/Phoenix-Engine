@@ -65,8 +65,8 @@ namespace Phoinix
       VkSurfaceKHR m_Surface{};
       VkPhysicalDevice m_PhysicalDevice = VK_NULL_HANDLE;
       VkDevice m_Device{};
-      VkQueue m_PresentQueue{};  // TODO: is here a good spot?
-      VkQueue m_GraphicsQueue{}; // TODO: is here a good spot?
+      VkQueue m_PresentQueue{};
+      VkQueue m_GraphicsQueue{};
 
       std::vector<VkImage> m_SwapChainImages; // TODO is this a good spot
       VkFormat m_SwapChainImageFormat{};      // TODO is this a good spot

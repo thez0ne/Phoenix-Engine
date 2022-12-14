@@ -1,5 +1,7 @@
 #include "VertexBuffer.h"
 
+#include "Core/Core.h"
+
 namespace Phoinix
 {
    VertexBuffer::VertexBuffer(VulkanDevice& device, std::vector<Vertex> vertices) : m_Device(device)
@@ -45,23 +47,5 @@ namespace Phoinix
       VkBuffer vertexBuffers[] = {m_VertexBuffer};
       VkDeviceSize offsets[] = {0};
       vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
-   }
-
-   uint32_t VertexBuffer::FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties)
-   {
-      VkPhysicalDeviceMemoryProperties memoryProperties;
-      vkGetPhysicalDeviceMemoryProperties(m_Device.GetPhysicalDevice(), &memoryProperties);
-
-      for (uint32_t i = 0; i < memoryProperties.memoryTypeCount; i++)
-      {
-         if ((typeFilter & (1 << i)) &&
-             (memoryProperties.memoryTypes[i].propertyFlags & properties) == properties)
-         {
-            return i;
-         }
-      }
-
-      ENGINE_ERR("Failed to find suitable memory");
-      std::exit(-4);
    }
 }

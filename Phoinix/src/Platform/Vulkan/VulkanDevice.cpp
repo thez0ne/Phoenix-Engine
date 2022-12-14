@@ -1,5 +1,6 @@
 #include "VulkanDevice.h"
 
+#include "Core/Core.h"
 #include "VulkanValidation.h"
 
 namespace Phoinix
@@ -12,11 +13,7 @@ namespace Phoinix
       uint32_t deviceCount = 0;
       vkEnumeratePhysicalDevices(m_Instance, &deviceCount, nullptr);
 
-      if (deviceCount == 0)
-      {
-         ENGINE_ERR("Failed to find Vulkan compatible device");
-         std::exit(-3);
-      }
+      PHOINIX_ASSERT(deviceCount > 0, "Failed to find Vulkan compatible device");
 
       std::vector<VkPhysicalDevice> devices(deviceCount);
       vkEnumeratePhysicalDevices(m_Instance, &deviceCount, devices.data());
@@ -30,11 +27,7 @@ namespace Phoinix
          }
       }
 
-      if (m_PhysicalDevice == VK_NULL_HANDLE)
-      {
-         ENGINE_ERR("Failed to find suitable GPU");
-         std::exit(-3);
-      }
+      PHOINIX_ASSERT(m_PhysicalDevice != VK_NULL_HANDLE, "Failed to find suitable GPU");
 
       CreateLogicalDevice();
       CreateSwapChain();
@@ -160,11 +153,7 @@ namespace Phoinix
          createInfo.enabledLayerCount = 0;
       }
 
-      if (vkCreateDevice(m_PhysicalDevice, &createInfo, nullptr, &m_Device) != VK_SUCCESS)
-      {
-         ENGINE_ERR("Failed to create logical device");
-         std::exit(-3);
-      }
+      VKASSERT(vkCreateDevice(m_PhysicalDevice, &createInfo, nullptr, &m_Device), "Failed to create logical device");
 
       vkGetDeviceQueue(m_Device, indices.graphicsFamily.value(), 0, &m_GraphicsQueue);
       vkGetDeviceQueue(m_Device, indices.presentFamily.value(), 0, &m_PresentQueue);
@@ -172,11 +161,7 @@ namespace Phoinix
 
    void VulkanDevice::CreateSurface()
    {
-      if (glfwCreateWindowSurface(m_Instance, m_Window, nullptr, &m_Surface) != VK_SUCCESS)
-      {
-         ENGINE_ERR("Failed to create window surface");
-         std::exit(-3);
-      }
+      VKASSERT(glfwCreateWindowSurface(m_Instance, m_Window, nullptr, &m_Surface), "Failed to create window surface");
    }
 
    bool VulkanDevice::CheckDeviceExtensionsSupport(VkPhysicalDevice device) const
@@ -338,11 +323,7 @@ namespace Phoinix
       createInfo.clipped = VK_TRUE;
       createInfo.oldSwapchain = VK_NULL_HANDLE;
 
-      if (vkCreateSwapchainKHR(m_Device, &createInfo, nullptr, &m_SwapChain) != VK_SUCCESS)
-      {
-         ENGINE_ERR("Failed to create swapchain");
-         std::exit(-3);
-      }
+      VKASSERT(vkCreateSwapchainKHR(m_Device, &createInfo, nullptr, &m_SwapChain), "Failed to create swapchain");
 
       vkGetSwapchainImagesKHR(m_Device, m_SwapChain, &imageCount, nullptr);
       m_SwapChainImages.resize(imageCount);
@@ -377,12 +358,7 @@ namespace Phoinix
          createInfo.subresourceRange.baseArrayLayer = 0;
          createInfo.subresourceRange.layerCount = 1; // might want more layers for stereoscopic 3d
 
-         if (vkCreateImageView(m_Device, &createInfo, nullptr, &m_SwapChainImageViews[i]) !=
-             VK_SUCCESS)
-         {
-            ENGINE_ERR("Failed to create image view");
-            std::exit(-3);
-         }
+         VKASSERT(vkCreateImageView(m_Device, &createInfo, nullptr, &m_SwapChainImageViews[i]), "Failed to create image view");
       }
    }
 
@@ -438,11 +414,7 @@ namespace Phoinix
       renderPassInfo.dependencyCount = 1;
       renderPassInfo.pDependencies = &dependency;
 
-      if (vkCreateRenderPass(m_Device, &renderPassInfo, nullptr, &m_RenderPass) != VK_SUCCESS)
-      {
-         ENGINE_ERR("Failed to create render pass");
-         std::exit(-3);
-      }
+      VKASSERT(vkCreateRenderPass(m_Device, &renderPassInfo, nullptr, &m_RenderPass), "Failed to create render pass");
    }
 
    void VulkanDevice::CreateCommandPool()
@@ -454,11 +426,6 @@ namespace Phoinix
       commandPoolCreateInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT | VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
       commandPoolCreateInfo.queueFamilyIndex = queueFamilyIndices.graphicsFamily.value();
 
-      if (vkCreateCommandPool(m_Device, &commandPoolCreateInfo, nullptr, &m_CommandPool) !=
-          VK_SUCCESS)
-      {
-         ENGINE_ERR("Failed to create command pool");
-         std::exit(-3);
-      }
+      VKASSERT(vkCreateCommandPool(m_Device, &commandPoolCreateInfo, nullptr, &m_CommandPool), "Failed to create command pool");
    }
 }

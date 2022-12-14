@@ -1,7 +1,7 @@
 #include "VulkanPipeline.h"
 
 #include "Graphics/Buffer/Vertex.h"
-
+#include "Core/Core.h"
 // TODO prob needs to be a part of the renderer
 
 namespace Phoinix
@@ -30,11 +30,7 @@ namespace Phoinix
    std::vector<char> VulkanPipeline::ReadFile(const std::string& filePath)
    {
       std::ifstream file(filePath, std::ios::ate | std::ios::binary);
-      if (!file.is_open())
-      {
-         ENGINE_ERR("File could not be opened with path: {}", filePath);
-         std::exit(-3);
-      }
+      PHOINIX_ASSERT(file.is_open(), "File could not be opened with path: {}", filePath);
 
       const size_t fileSize = static_cast<size_t>(file.tellg());
       std::vector<char> buffer(fileSize);
@@ -64,13 +60,8 @@ namespace Phoinix
          framebufferInfo.height = m_Device.GetExtentHeight();
          framebufferInfo.layers = 1;
 
-         if (vkCreateFramebuffer(
-                m_Device.GetDevice(), &framebufferInfo, nullptr, &m_SwapChainFrameBuffers[i]) !=
-             VK_SUCCESS)
-         {
-            ENGINE_ERR("Failed to create framebuffer");
-            std::exit(-3);
-         }
+         VKASSERT(vkCreateFramebuffer(
+                m_Device.GetDevice(), &framebufferInfo, nullptr, &m_SwapChainFrameBuffers[i]), "Failed to create framebuffer");
       }
    }
 
@@ -141,16 +132,12 @@ namespace Phoinix
 
       pipelineInfo.pDynamicState = &dynamicState;
 
-      if (vkCreateGraphicsPipelines(m_Device.GetDevice(),
+      VKASSERT(vkCreateGraphicsPipelines(m_Device.GetDevice(),
                                     VK_NULL_HANDLE,
                                     1,
                                     &pipelineInfo,
                                     nullptr,
-                                    &m_GraphicsPipeline) != VK_SUCCESS)
-      {
-         ENGINE_ERR("Failed to create graphics pipeline");
-         std::exit(-3);
-      }
+                                    &m_GraphicsPipeline), "Failed to create graphics pipeline");
    }
 
    void VulkanPipeline::CreateShaderModule(const std::vector<char>& code,
@@ -161,12 +148,7 @@ namespace Phoinix
       createInfo.codeSize = code.size();
       createInfo.pCode = reinterpret_cast<const uint32_t*>(code.data());
 
-      if (vkCreateShaderModule(m_Device.GetDevice(), &createInfo, nullptr, shaderModule) !=
-          VK_SUCCESS)
-      {
-         ENGINE_ERR("Failed to create shader module");
-         std::exit(-3);
-      }
+      VKASSERT(vkCreateShaderModule(m_Device.GetDevice(), &createInfo, nullptr, shaderModule), "Failed to create shader module");
    }
 
    void VulkanPipeline::Bind(VkCommandBuffer commandBuffer)

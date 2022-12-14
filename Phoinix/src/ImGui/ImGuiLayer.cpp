@@ -57,11 +57,7 @@ namespace Phoinix
       initInfo.MSAASamples = VK_SAMPLE_COUNT_1_BIT;
       initInfo.Allocator = nullptr;
       initInfo.CheckVkResultFn = [](VkResult err) {
-         if (err != VK_SUCCESS)
-         {
-            ENGINE_ERR("[ImGUI] error with VkResult: {}", err);
-            std::exit(-3);
-         }
+         VKASSERT(err, "[ImGUI] error with VkResult: {}", err);
       };
 
       ImGui_ImplVulkan_Init(&initInfo, renderer->GetRenderPass());
@@ -70,26 +66,24 @@ namespace Phoinix
       {
          // Use any command queue
          VkCommandPool command_pool = renderer->GetCommandPool(); // TODO create own command pool for this action
-         // VkCommandBuffer command_buffer = renderer->GetCurrentCommandBuffer();
 
          // create command buffer for the ImGUI fonts
          VkCommandBuffer commandBuffer;
          {
             // TODO can probably consolidate this into a function
-            // TODO add validation?
             VkCommandBufferAllocateInfo allocInfo{};
             allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
             allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
             allocInfo.commandPool = command_pool;
             allocInfo.commandBufferCount = 1;
 
-            vkAllocateCommandBuffers(renderer->GetVkDevice(), &allocInfo, &commandBuffer);
+            VKASSERT(vkAllocateCommandBuffers(renderer->GetVkDevice(), &allocInfo, &commandBuffer), "Failed to allocate command buffer");
 
             VkCommandBufferBeginInfo beginInfo{};
             beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
             beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 
-            vkBeginCommandBuffer(commandBuffer, &beginInfo);
+            VKASSERT(vkBeginCommandBuffer(commandBuffer, &beginInfo), "Failed to begin command buffer");
          }
 
          ImGui_ImplVulkan_CreateFontsTexture(commandBuffer);
@@ -97,17 +91,16 @@ namespace Phoinix
          // end and delete command buffer for the ImGUI fonts
          {
             // TODO can probably consolidate this into a function
-            // TODO add validation?
-            vkEndCommandBuffer(commandBuffer);
+            VKASSERT(vkEndCommandBuffer(commandBuffer), "Failed to end command buffer");
 
             VkSubmitInfo submitInfo{};
             submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
             submitInfo.commandBufferCount = 1;
             submitInfo.pCommandBuffers = &commandBuffer;
 
-            vkQueueSubmit(renderer->GetGraphicsQueue(), 1, &submitInfo, VK_NULL_HANDLE);
-            vkQueueWaitIdle(renderer->GetGraphicsQueue());
-            vkDeviceWaitIdle(renderer->GetVkDevice());
+            VKASSERT(vkQueueSubmit(renderer->GetGraphicsQueue(), 1, &submitInfo, VK_NULL_HANDLE), "Failed to submit to queue");
+            VKASSERT(vkQueueWaitIdle(renderer->GetGraphicsQueue()), "Failed to wait for queue to idle");
+            VKASSERT(vkDeviceWaitIdle(renderer->GetVkDevice()), "Failed to wait for device to idle");
 
             vkFreeCommandBuffers(renderer->GetVkDevice(), command_pool, 1, &commandBuffer);
          }

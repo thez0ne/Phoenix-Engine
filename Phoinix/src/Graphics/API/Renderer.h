@@ -20,7 +20,6 @@ namespace Phoinix
       Renderer() = default;
       virtual ~Renderer() = default;
 
-      virtual void DrawFrame() = 0;
       virtual void BeginRender() = 0;
       virtual void Render() = 0;
       virtual void EndRender() = 0;

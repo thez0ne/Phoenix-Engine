@@ -19,7 +19,5 @@ namespace Phoinix
         VkDeviceMemory m_VertexBufferMemory;
         VulkanDevice& m_Device;
         void* m_Data;
-
-        uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
     }; 
 }
