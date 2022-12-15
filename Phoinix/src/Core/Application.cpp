@@ -18,7 +18,7 @@ namespace Phoinix
       window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 
       Graphics::Vulkan::MakeDefault(); // TODO can prob be moved elsewhere to allow for switching APIs
-      renderer = Renderer::CreateFunc(window);
+      renderer = Renderer::Create(window);
 
       _ImGuiLayer = new ImGuiLayer();
       AddOverlay(_ImGuiLayer);

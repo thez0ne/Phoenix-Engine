@@ -24,6 +24,8 @@ namespace Phoinix
       virtual void Render() = 0;
       virtual void EndRender() = 0;
 
+      static Renderer* Create(Window* window);
+    protected:
       static Renderer* (*CreateFunc)(Window* window);
    };
 }
