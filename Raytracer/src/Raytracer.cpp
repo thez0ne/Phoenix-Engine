@@ -3,7 +3,10 @@
 class RaytracerLayer : public Phoinix::Layer
 {
  public:
-   RaytracerLayer() : Layer("Sandbox Layer") {}
+   RaytracerLayer() : Layer("Sandbox Layer")
+   {
+      PRINT("Creating Application layer");
+   }
 
    void OnUpdate() override
    {
