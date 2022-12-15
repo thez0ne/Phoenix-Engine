@@ -38,6 +38,32 @@ namespace Phoinix
          style.Colors[ImGuiCol_WindowBg].w = 1.0f;
       }
 
+      {
+         std::vector<VkDescriptorPoolSize> pool_sizes = {
+            {VK_DESCRIPTOR_TYPE_SAMPLER, 1000},
+            {VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000},
+            {VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1000},
+            {VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 1000},
+            {VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, 1000},
+            {VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, 1000},
+            {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1000},
+            {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1000},
+            {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1000},
+            {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, 1000},
+            {VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1000}};
+
+         VkDescriptorPoolCreateInfo pool_info{};
+         pool_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+         pool_info.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
+         pool_info.maxSets = 1000 * pool_sizes.size();
+         pool_info.poolSizeCount = static_cast<uint32_t>(pool_sizes.size());
+         pool_info.pPoolSizes = pool_sizes.data();
+
+         VKASSERT(
+            vkCreateDescriptorPool(VulkanDevice::Device(), &pool_info, nullptr, &m_DescriptorPool),
+            "Failed to create descriptor pool");
+      }
+
       auto app = Application::GetInstance();
       Window* win = &app->GetWindow(); // TODO store reference
       auto renderer = (VulkanRenderer*)&app->GetRenderer();
@@ -46,11 +72,11 @@ namespace Phoinix
       ImGui_ImplVulkan_InitInfo initInfo{};
       initInfo.Instance = renderer->GetVkInstance();
       initInfo.PhysicalDevice = renderer->GetPhysicalDevice();
-      initInfo.Device = renderer->GetVkDevice();
+      initInfo.Device = VulkanDevice::Device();
       initInfo.QueueFamily = renderer->GetGraphicsQueueFamily().graphicsFamily.value();
-      initInfo.Queue = renderer->GetGraphicsQueue();
+      initInfo.Queue = VulkanDevice::GraphicsQueue();
       initInfo.PipelineCache = VK_NULL_HANDLE;
-      initInfo.DescriptorPool = renderer->GetDescriptorPool();
+      initInfo.DescriptorPool = m_DescriptorPool;
       initInfo.Subpass = 0;       // TODO: check if it is 0 with our render settings
       initInfo.MinImageCount = 2; // TODO: check if right value
       initInfo.ImageCount = renderer->GetImageCount();
@@ -77,7 +103,7 @@ namespace Phoinix
             allocInfo.commandPool = command_pool;
             allocInfo.commandBufferCount = 1;
 
-            VKASSERT(vkAllocateCommandBuffers(renderer->GetVkDevice(), &allocInfo, &commandBuffer), "Failed to allocate command buffer");
+            VKASSERT(vkAllocateCommandBuffers(VulkanDevice::Device(), &allocInfo, &commandBuffer), "Failed to allocate command buffer");
 
             VkCommandBufferBeginInfo beginInfo{};
             beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -98,11 +124,11 @@ namespace Phoinix
             submitInfo.commandBufferCount = 1;
             submitInfo.pCommandBuffers = &commandBuffer;
 
-            VKASSERT(vkQueueSubmit(renderer->GetGraphicsQueue(), 1, &submitInfo, VK_NULL_HANDLE), "Failed to submit to queue");
-            VKASSERT(vkQueueWaitIdle(renderer->GetGraphicsQueue()), "Failed to wait for queue to idle");
-            VKASSERT(vkDeviceWaitIdle(renderer->GetVkDevice()), "Failed to wait for device to idle");
+            VKASSERT(vkQueueSubmit(VulkanDevice::GraphicsQueue(), 1, &submitInfo, VK_NULL_HANDLE), "Failed to submit to queue");
+            VKASSERT(vkQueueWaitIdle(VulkanDevice::GraphicsQueue()), "Failed to wait for queue to idle");
+            VKASSERT(vkDeviceWaitIdle(VulkanDevice::Device()), "Failed to wait for device to idle");
 
-            vkFreeCommandBuffers(renderer->GetVkDevice(), command_pool, 1, &commandBuffer);
+            vkFreeCommandBuffers(VulkanDevice::Device(), command_pool, 1, &commandBuffer);
          }
          ImGui_ImplVulkan_DestroyFontUploadObjects();
       }
@@ -110,8 +136,10 @@ namespace Phoinix
 
    void ImGuiLayer::OnDetach()
    {
-      // TODO currently causes validation layer error
-      // destroys VkPipeline that is in use by command buffer
+      vkDeviceWaitIdle(VulkanDevice::Device());
+
+      vkDestroyDescriptorPool(VulkanDevice::Device(), m_DescriptorPool, nullptr);
+
       ImGui_ImplVulkan_Shutdown();
       ImGui_ImplGlfw_Shutdown();
       ImGui::DestroyContext();
@@ -142,7 +170,7 @@ namespace Phoinix
 
       ImGui::Render();
       auto renderer = (VulkanRenderer*)&app->GetRenderer();
-      vkDeviceWaitIdle(renderer->GetVkDevice());
+      vkDeviceWaitIdle(VulkanDevice::Device());
       ImGui_ImplVulkan_RenderDrawData(
          ImGui::GetDrawData(), renderer->GetCurrentCommandBuffer());
 

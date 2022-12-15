@@ -33,7 +33,7 @@ find_package(Vulkan REQUIRED)
 # message("Vulkan found? " ${Vulkan_FOUND})
 # message("Alright, where is it? " ${Vulkan_LIBRARY})
 # message("And I can include it? " ${Vulkan_INCLUDE_DIR})
-target_link_libraries(Phoinix PRIVATE Vulkan::Vulkan)
+target_link_libraries(Phoinix PUBLIC Vulkan::Vulkan)
 
 # Dear ImGUI
 add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/external/imgui modules/imgui)

@@ -5,9 +5,17 @@
 
 namespace Phoinix
 {
+   VulkanDevice* VulkanDevice::s_Instance = nullptr;
+
    VulkanDevice::VulkanDevice(const VkInstance& instance, GLFWwindow* window) :
       m_Instance(instance), m_Window(window)
    {
+      PHOINIX_ASSERT(
+         !s_Instance,
+         "Vulkan Device should be a singleton!"); // TODO can i move this into a base singleton class?
+
+      s_Instance = this;
+
       CreateSurface();
 
       uint32_t deviceCount = 0;

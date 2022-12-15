@@ -20,7 +20,6 @@ namespace Phoinix
     private:
       VkBuffer m_IndexBuffer;
       VkDeviceMemory m_IndexBufferMemory;
-      VulkanDevice& m_Device;
       void* m_Data;
    };
 }

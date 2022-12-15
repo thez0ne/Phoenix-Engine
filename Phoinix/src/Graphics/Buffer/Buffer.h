@@ -3,18 +3,26 @@
 #include "Platform/Vulkan/VulkanDevice.h"
 #include <vulkan/vulkan.h>
 
+// TODO temp
+#include <glm/glm.hpp>
+
 namespace Phoinix
 {
-   uint32_t FindMemoryType(const VkPhysicalDevice& physicalDevice,
-                           uint32_t typeFilter,
-                           VkMemoryPropertyFlags properties);
+   // TODO move to file?
+   struct UniformBufferObject
+   {
+      glm::mat4 model;
+      glm::mat4 view;
+      glm::mat4 projection;
+   };
 
-   void CreateBuffer(VulkanDevice& device,
-                     VkDeviceSize size,
+   uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+
+   void CreateBuffer(VkDeviceSize size,
                      VkBufferUsageFlags usage,
                      VkMemoryPropertyFlags properties,
                      VkBuffer& buffer,
                      VkDeviceMemory& bufferMemory);
 
-   void CopyBuffer(VulkanDevice& device, VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
+   void CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 }

@@ -4,9 +4,11 @@
 
 #include "Core/Layer.h"
 
+// TODO TEMP
+#include <vulkan/vulkan.h>
+
 namespace Phoinix
 {
-
    class ImGuiLayer : public Layer
    {
     public:
@@ -26,6 +28,7 @@ namespace Phoinix
 
     private:
       float dt = 0;
+      VkDescriptorPool m_DescriptorPool;
       // GLFWwindow* win;
    };
 }

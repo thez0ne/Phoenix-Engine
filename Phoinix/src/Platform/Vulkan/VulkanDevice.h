@@ -60,7 +60,15 @@ namespace Phoinix
 
       QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device) const;
 
+      [[nodiscard]] static VulkanDevice* GetInstance() { return s_Instance; }
+      [[nodiscard]] static VkDevice Device() { return s_Instance->GetDevice(); }
+      [[nodiscard]] static VkPhysicalDevice PhysicalDevice() { return s_Instance->GetPhysicalDevice(); }
+      [[nodiscard]] static VkCommandPool CommandPool() { return s_Instance->GetCommandPool(); }
+      [[nodiscard]] static VkQueue GraphicsQueue() { return s_Instance->GetGraphicsQueue(); }
+
     private:
+      static VulkanDevice* s_Instance;
+
       VkSwapchainKHR m_SwapChain{};
       VkSurfaceKHR m_Surface{};
       VkPhysicalDevice m_PhysicalDevice = VK_NULL_HANDLE;

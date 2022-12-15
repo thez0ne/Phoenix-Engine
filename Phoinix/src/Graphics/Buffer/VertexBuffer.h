@@ -17,7 +17,6 @@ namespace Phoinix
     private:
         VkBuffer m_VertexBuffer;
         VkDeviceMemory m_VertexBufferMemory;
-        VulkanDevice& m_Device;
         void* m_Data;
     }; 
 }

@@ -121,7 +121,6 @@ namespace Phoinix
       pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
       pipelineInfo.basePipelineIndex = -1;
 
-      // TODO: MOVE THIS TO CREATION OF PIPELINE LAYOUT??
       const std::vector<VkDynamicState> dynamicStates = {VK_DYNAMIC_STATE_VIEWPORT,
                                                          VK_DYNAMIC_STATE_SCISSOR};
 

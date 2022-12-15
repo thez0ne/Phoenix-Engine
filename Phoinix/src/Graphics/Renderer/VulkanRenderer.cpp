@@ -6,11 +6,21 @@ namespace Phoinix
       m_Window(window), m_Device(m_Instance.GetInstance(), (GLFWwindow*)window->GetWindow())
    {
       ENGINE_TRACE("Creating Renderer");
+
+      m_DescriptorSet = DescriptorSet::Create();
       CreatePipelineLayout();
       CreatePipeline();
+
+      uniformBuffers.resize(max_frames_in_flight);
+      for (size_t i = 0; i < max_frames_in_flight; i++)
+      {
+         uniformBuffers[i] = UniformBuffer::Create();
+      }
+
       CreateCommandBuffer();
       CreateSyncObject();
       CreateDescriptorPool();
+      CreateDescriptorSet();
    }
 
    VulkanRenderer::~VulkanRenderer()
@@ -18,6 +28,7 @@ namespace Phoinix
       vkDeviceWaitIdle(m_Device.GetDevice());
 
       vkDestroyDescriptorPool(m_Device.GetDevice(), m_DescriptorPool, nullptr);
+
       for (size_t i = 0; i < max_frames_in_flight; i++)
       {
          vkDestroySemaphore(m_Device.GetDevice(), m_RenderFinishedSemaphores[i], nullptr);
@@ -25,6 +36,13 @@ namespace Phoinix
          vkDestroyFence(m_Device.GetDevice(), m_InFlightFences[i], nullptr);
       }
       vkDestroyPipelineLayout(m_Device.GetDevice(), m_PipelineLayout, nullptr);
+
+      for (size_t i = 0; i < max_frames_in_flight; i++)
+      {
+         delete uniformBuffers[i];
+      }
+
+      delete m_DescriptorSet;
    }
 
    void VulkanRenderer::CreatePipelineLayout()
@@ -32,8 +50,12 @@ namespace Phoinix
       // NOTE: used to set uniforms for the shaders
       VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
       pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-      pipelineLayoutInfo.setLayoutCount = 0;
-      pipelineLayoutInfo.pSetLayouts = nullptr;
+      // pipelineLayoutInfo.setLayoutCount = 0;
+      pipelineLayoutInfo.setLayoutCount = 1;
+      // pipelineLayoutInfo.pSetLayouts = nullptr;
+      // auto d = ((VulkanDescriptorSet*)m_DescriptorSetLayout)->GetDescriptorSetLayout();
+      pipelineLayoutInfo.pSetLayouts =
+         ((VulkanDescriptorSet*)m_DescriptorSet)->GetDescriptorSetLayout();
       pipelineLayoutInfo.pushConstantRangeCount = 0;
       pipelineLayoutInfo.pPushConstantRanges = nullptr;
 
@@ -85,6 +107,9 @@ namespace Phoinix
       }
 
       PHOINIX_ASSERT(result == VK_SUCCESS || result == VK_SUBOPTIMAL_KHR, "Failed to get swap chain image");
+
+      uniformBuffers[m_CurrentFrame]->Update(m_CurrentFrame);
+
 
       vkResetFences(m_Device.GetDevice(), 1, &m_InFlightFences[m_CurrentFrame]);
 
@@ -141,6 +166,14 @@ namespace Phoinix
          m_SimplePipeline->Bind(m_CommandBuffers[m_CurrentFrame]);
          temp.Bind(m_CommandBuffers[m_CurrentFrame]);
          temp2.Bind(m_CommandBuffers[m_CurrentFrame]);
+         vkCmdBindDescriptorSets(m_CommandBuffers[m_CurrentFrame],
+                                 VK_PIPELINE_BIND_POINT_GRAPHICS,
+                                 m_PipelineLayout,
+                                 0,
+                                 1,
+                                 &m_DescriptorSets[m_CurrentFrame],
+                                 0,
+                                 nullptr);
          // vkCmdDraw(m_CommandBuffers[m_CurrentFrame], static_cast<uint32_t>(vertices.size()), 1, 0, 0);
          vkCmdDrawIndexed(m_CommandBuffers[m_CurrentFrame], static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
       }
@@ -220,7 +253,7 @@ namespace Phoinix
 
    void VulkanRenderer::CreateDescriptorPool()
    {
-      std::vector<VkDescriptorPoolSize> pool_sizes = {
+      /*std::vector<VkDescriptorPoolSize> pool_sizes = {
          {VK_DESCRIPTOR_TYPE_SAMPLER, 1000},
          {VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000},
          {VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1000},
@@ -240,7 +273,58 @@ namespace Phoinix
       pool_info.poolSizeCount = static_cast<uint32_t>(pool_sizes.size());
       pool_info.pPoolSizes = pool_sizes.data();
 
-      VKASSERT(vkCreateDescriptorPool(m_Device.GetDevice(), &pool_info, nullptr, &m_DescriptorPool), "Failed to create descriptor pool");
+      VKASSERT(vkCreateDescriptorPool(m_Device.GetDevice(), &pool_info, nullptr, &m_DescriptorPool), "Failed to create descriptor pool");*/
+
+      VkDescriptorPoolSize poolSize{};
+      poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+      poolSize.descriptorCount = static_cast<uint32_t>(max_frames_in_flight);
+
+      VkDescriptorPoolCreateInfo poolInfo{};
+      poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+      poolInfo.poolSizeCount = 1;
+      poolInfo.pPoolSizes = &poolSize;
+      poolInfo.maxSets = static_cast<uint32_t>(max_frames_in_flight);
+
+      VKASSERT(vkCreateDescriptorPool(m_Device.GetDevice(), &poolInfo, nullptr, &m_DescriptorPool),
+               "Failed to create descriptor pool");
+   }
+
+   void VulkanRenderer::CreateDescriptorSet()
+   {
+      // TODO might be able to be moved into VulkanDescriptorSet
+      auto setLayout = ((VulkanDescriptorSet*)m_DescriptorSet)->GetDescriptorSetLayout();
+      std::vector<VkDescriptorSetLayout> layouts(max_frames_in_flight, *setLayout);
+
+      VkDescriptorSetAllocateInfo allocInfo{};
+      allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+      allocInfo.descriptorPool = m_DescriptorPool;
+      allocInfo.descriptorSetCount = static_cast<uint32_t>(max_frames_in_flight);
+      allocInfo.pSetLayouts = layouts.data();
+
+      m_DescriptorSets.resize(max_frames_in_flight);
+      VKASSERT(vkAllocateDescriptorSets(m_Device.GetDevice(), &allocInfo, m_DescriptorSets.data()), "Failed to allocate descriptor set");
+
+      
+      for (size_t i = 0; i < max_frames_in_flight; i++)
+      {
+         VkDescriptorBufferInfo bufferInfo{};
+         bufferInfo.buffer = static_cast<VulkanUniformBuffer*>(uniformBuffers[i])->GetBuffer();
+         bufferInfo.offset = 0;
+         bufferInfo.range = sizeof(UniformBufferObject);
+
+         VkWriteDescriptorSet descriptorWrite{};
+         descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+         descriptorWrite.dstSet = m_DescriptorSets[i];
+         descriptorWrite.dstBinding = 0;
+         descriptorWrite.dstArrayElement = 0;
+         descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+         descriptorWrite.descriptorCount = 1;
+         descriptorWrite.pBufferInfo = &bufferInfo;
+         descriptorWrite.pImageInfo = nullptr;
+         descriptorWrite.pTexelBufferView = nullptr;
+
+         vkUpdateDescriptorSets(m_Device.GetDevice(), 1, &descriptorWrite, 0, nullptr);
+      }
    }
 
 

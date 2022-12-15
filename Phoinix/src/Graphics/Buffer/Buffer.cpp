@@ -3,12 +3,13 @@
 
 namespace Phoinix
 {
-   uint32_t FindMemoryType(const VkPhysicalDevice& physicalDevice,
+   // TODO: should these methods be a part of device?
+   uint32_t FindMemoryType(/*const VkPhysicalDevice& physicalDevice,*/
                            uint32_t typeFilter,
                            VkMemoryPropertyFlags properties)
    {
       VkPhysicalDeviceMemoryProperties memoryProperties;
-      vkGetPhysicalDeviceMemoryProperties(physicalDevice, &memoryProperties);
+      vkGetPhysicalDeviceMemoryProperties(VulkanDevice::PhysicalDevice(), &memoryProperties);
 
       for (uint32_t i = 0; i < memoryProperties.memoryTypeCount; i++)
       {
@@ -23,7 +24,7 @@ namespace Phoinix
       return 999999;
    }
 
-   void CreateBuffer(VulkanDevice& device,
+   void CreateBuffer(/*VulkanDevice& device,*/
                      VkDeviceSize size,
                      VkBufferUsageFlags usage,
                      VkMemoryPropertyFlags properties,
@@ -37,35 +38,34 @@ namespace Phoinix
       bufferInfo.usage = usage;
       bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
-      VKASSERT(vkCreateBuffer(device.GetDevice(), &bufferInfo, nullptr, &buffer), "Failed to create vertex buffer");
+      VKASSERT(vkCreateBuffer(VulkanDevice::Device(), &bufferInfo, nullptr, &buffer), "Failed to create vertex buffer");
 
       // allocate memory
       VkMemoryRequirements memoryRequirements;
-      vkGetBufferMemoryRequirements(device.GetDevice(), buffer, &memoryRequirements);
+      vkGetBufferMemoryRequirements(VulkanDevice::Device(), buffer, &memoryRequirements);
 
       VkMemoryAllocateInfo allocInfo{};
       allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
       allocInfo.allocationSize = memoryRequirements.size;
       allocInfo.memoryTypeIndex =
-         FindMemoryType(device.GetPhysicalDevice(),
-                        memoryRequirements.memoryTypeBits,
+         FindMemoryType(memoryRequirements.memoryTypeBits,
                         properties);
 
-      VKASSERT(vkAllocateMemory(device.GetDevice(), &allocInfo, nullptr, &bufferMemory), "Failed to allocate memory to vertex buffer");
+      VKASSERT(vkAllocateMemory(VulkanDevice::Device(), &allocInfo, nullptr, &bufferMemory), "Failed to allocate memory to vertex buffer");
 
-      vkBindBufferMemory(device.GetDevice(), buffer, bufferMemory, 0);
+      vkBindBufferMemory(VulkanDevice::Device(), buffer, bufferMemory, 0);
    }
    
-   void CopyBuffer(VulkanDevice& device, VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)
+   void CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)
    {
       VkCommandBufferAllocateInfo allocInfo{};
       allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
       allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-      allocInfo.commandPool = device.GetCommandPool();
+      allocInfo.commandPool = VulkanDevice::CommandPool();
       allocInfo.commandBufferCount = 1;
 
       VkCommandBuffer commandBuffer;
-      vkAllocateCommandBuffers(device.GetDevice(), &allocInfo, &commandBuffer);
+      vkAllocateCommandBuffers(VulkanDevice::Device(), &allocInfo, &commandBuffer);
 
       VkCommandBufferBeginInfo beginInfo{};
       beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -86,9 +86,9 @@ namespace Phoinix
       submitInfo.commandBufferCount = 1;
       submitInfo.pCommandBuffers = &commandBuffer;
 
-      vkQueueSubmit(device.GetGraphicsQueue(), 1, &submitInfo, VK_NULL_HANDLE);
-      vkQueueWaitIdle(device.GetGraphicsQueue());
+      vkQueueSubmit(VulkanDevice::GraphicsQueue(), 1, &submitInfo, VK_NULL_HANDLE);
+      vkQueueWaitIdle(VulkanDevice::GraphicsQueue());
 
-      vkFreeCommandBuffers(device.GetDevice(), device.GetCommandPool(), 1, &commandBuffer);
+      vkFreeCommandBuffers(VulkanDevice::Device(), VulkanDevice::CommandPool(), 1, &commandBuffer);
    }
 }

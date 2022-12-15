@@ -9,6 +9,8 @@
 
 #include "Graphics/Buffer/VertexBuffer.h"
 #include "Graphics/Buffer/IndexBuffer.h"
+#include "Platform/Vulkan/VulkanDescriptorSet.h"
+#include "Platform/Vulkan/VulkanUniformBuffer.h"
 
 namespace Phoinix
 {
@@ -49,7 +51,7 @@ namespace Phoinix
          return m_CommandBuffers[m_CurrentFrame];
       }
       [[nodiscard]] const VkPipeline& GetVkPipeline() { return m_SimplePipeline->GetVkPipeline(); }
-      [[nodiscard]] const VkDescriptorPool& GetDescriptorPool() { return m_DescriptorPool; }
+      // [[nodiscard]] const VkDescriptorPool& GetDescriptorPool() { return m_DescriptorPool; }
       [[nodiscard]] const VkCommandPool& GetCommandPool() { return m_Device.GetCommandPool(); }
 
     private:
@@ -77,6 +79,10 @@ namespace Phoinix
 
       const std::vector<uint16_t> indices = {0, 1, 2, 2, 3, 0};
 
+      std::vector<UniformBuffer*> uniformBuffers;
+      DescriptorSet* m_DescriptorSet;
+      std::vector<VkDescriptorSet> m_DescriptorSets;
+
       VertexBuffer temp{m_Device, vertices};
       IndexBuffer temp2{m_Device, indices};
 
@@ -85,6 +91,7 @@ namespace Phoinix
       void CreateCommandBuffer();
       void CreateSyncObject();
       void CreateDescriptorPool();
+      void CreateDescriptorSet();
 
     public:
       static void MakeDefault();
