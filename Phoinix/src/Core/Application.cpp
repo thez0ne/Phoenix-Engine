@@ -49,7 +49,8 @@ namespace Phoinix
          {
             layer->OnImGUIUpdate();
          }
-         renderer->Render();
+         if (shouldRender)
+            renderer->Render();
          _ImGuiLayer->ImGuiRenderFrame();
 
          // renderer->DrawFrame();

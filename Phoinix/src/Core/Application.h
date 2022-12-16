@@ -28,6 +28,8 @@ namespace Phoinix
       inline Window& GetWindow() { return *window; }
       Renderer& GetRenderer() { return *renderer; }
       static Application* GetInstance() { return instance; }
+      
+      void WithRendering(bool status) { shouldRender = status; }
 
     private:
       static Application* _instance;
@@ -40,6 +42,8 @@ namespace Phoinix
       bool isRunning = true;
 
       static Application* instance;
+
+      bool shouldRender = true;
 
     private:
       bool OnClose(WindowCloseEvent& e);
