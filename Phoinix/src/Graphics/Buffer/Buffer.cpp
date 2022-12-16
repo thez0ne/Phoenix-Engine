@@ -21,7 +21,7 @@ namespace Phoinix
       }
 
       VKASSERT(5, "Failed to find suitable memory");
-      return 999999;
+      return 0xffffffff;
    }
 
    void CreateBuffer(/*VulkanDevice& device,*/
