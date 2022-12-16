@@ -15,3 +15,4 @@
 #include <set>
 
 #include "Core/Log.h"
+#include "Core/Core.h"

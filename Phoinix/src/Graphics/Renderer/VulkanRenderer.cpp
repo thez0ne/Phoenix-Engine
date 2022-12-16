@@ -59,7 +59,9 @@ namespace Phoinix
       pipelineLayoutInfo.pushConstantRangeCount = 0;
       pipelineLayoutInfo.pPushConstantRanges = nullptr;
 
-      VKASSERT(vkCreatePipelineLayout(m_Device.GetDevice(), &pipelineLayoutInfo, nullptr, &m_PipelineLayout), "Failed to create pipeline layout");
+      VKASSERT(vkCreatePipelineLayout(
+                  m_Device.GetDevice(), &pipelineLayoutInfo, nullptr, &m_PipelineLayout),
+               "Failed to create pipeline layout");
    }
 
    void VulkanRenderer::CreatePipeline()
@@ -84,7 +86,9 @@ namespace Phoinix
 
       allocationInfo.commandBufferCount = static_cast<uint32_t>(m_CommandBuffers.size());
 
-      VKASSERT(vkAllocateCommandBuffers(m_Device.GetDevice(), &allocationInfo, m_CommandBuffers.data()), "Failed to allocate command buffer");
+      VKASSERT(
+         vkAllocateCommandBuffers(m_Device.GetDevice(), &allocationInfo, m_CommandBuffers.data()),
+         "Failed to allocate command buffer");
    }
 
    void VulkanRenderer::BeginRender()
@@ -106,10 +110,10 @@ namespace Phoinix
          return;
       }
 
-      PHOINIX_ASSERT(result == VK_SUCCESS || result == VK_SUBOPTIMAL_KHR, "Failed to get swap chain image");
+      PHOINIX_ASSERT(result == VK_SUCCESS || result == VK_SUBOPTIMAL_KHR,
+                     "Failed to get swap chain image");
 
       uniformBuffers[m_CurrentFrame]->Update(m_CurrentFrame);
-
 
       vkResetFences(m_Device.GetDevice(), 1, &m_InFlightFences[m_CurrentFrame]);
 
@@ -121,7 +125,8 @@ namespace Phoinix
       beginInfo.flags = 0;
       beginInfo.pInheritanceInfo = nullptr;
 
-      VKASSERT(vkBeginCommandBuffer(m_CommandBuffers[m_CurrentFrame], &beginInfo), "Failed to begin recording command buffer");
+      VKASSERT(vkBeginCommandBuffer(m_CommandBuffers[m_CurrentFrame], &beginInfo),
+               "Failed to begin recording command buffer");
 
       VkRenderPassBeginInfo renderPassInfo{};
       renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -134,7 +139,8 @@ namespace Phoinix
       renderPassInfo.clearValueCount = 1;
       renderPassInfo.pClearValues = &clearColour;
 
-      vkCmdBeginRenderPass(m_CommandBuffers[m_CurrentFrame], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+      vkCmdBeginRenderPass(
+         m_CommandBuffers[m_CurrentFrame], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
       VkViewport viewport{};
       viewport.x = 0.0f;
@@ -174,8 +180,10 @@ namespace Phoinix
                                  &m_DescriptorSets[m_CurrentFrame],
                                  0,
                                  nullptr);
-         // vkCmdDraw(m_CommandBuffers[m_CurrentFrame], static_cast<uint32_t>(vertices.size()), 1, 0, 0);
-         vkCmdDrawIndexed(m_CommandBuffers[m_CurrentFrame], static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
+         // vkCmdDraw(m_CommandBuffers[m_CurrentFrame], static_cast<uint32_t>(vertices.size()), 1,
+         // 0, 0);
+         vkCmdDrawIndexed(
+            m_CommandBuffers[m_CurrentFrame], static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
       }
    }
 
@@ -184,7 +192,8 @@ namespace Phoinix
       // NOTE: cleanup of CommandBuffer and RenderPass
       vkCmdEndRenderPass(m_CommandBuffers[m_CurrentFrame]);
 
-      VKASSERT(vkEndCommandBuffer(m_CommandBuffers[m_CurrentFrame]), "Failed to end recording command buffer");
+      VKASSERT(vkEndCommandBuffer(m_CommandBuffers[m_CurrentFrame]),
+               "Failed to end recording command buffer");
 
       VkSubmitInfo submitInfo{};
       submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -202,7 +211,9 @@ namespace Phoinix
       submitInfo.signalSemaphoreCount = 1;
       submitInfo.pSignalSemaphores = signalSemaphores;
 
-      VKASSERT(vkQueueSubmit(m_Device.GetGraphicsQueue(), 1, &submitInfo, m_InFlightFences[m_CurrentFrame]), "Failed to submit draw command");
+      VKASSERT(vkQueueSubmit(
+                  m_Device.GetGraphicsQueue(), 1, &submitInfo, m_InFlightFences[m_CurrentFrame]),
+               "Failed to submit draw command");
 
       VkPresentInfoKHR presentInfo{};
       presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
@@ -225,9 +236,56 @@ namespace Phoinix
          m_Window->m_FramebuffersResized = false;
          m_SimplePipeline->RecreateSwapChain((GLFWwindow*)m_Window->GetWindow());
       }
-      else VKASSERT(result, "Failed to present swap chain image");
+      else
+         VKASSERT(result, "Failed to present swap chain image");
 
       m_CurrentFrame = (m_CurrentFrame + 1) % max_frames_in_flight;
+   }
+
+   VkCommandBuffer VulkanRenderer::GetTempCommandBuffer()
+   {
+      // TODO add validation to vk funcs
+      VkCommandPool commandPool = VulkanDevice::GetInstance()->GetCommandPool();
+
+      VkCommandBufferAllocateInfo allocInfo{};
+      allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+      allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+      allocInfo.commandPool = commandPool;
+      allocInfo.commandBufferCount = 1;
+
+      VkCommandBuffer commandBuffer;
+      vkAllocateCommandBuffers(VulkanDevice::Device(), &allocInfo, &commandBuffer);
+
+      VkCommandBufferBeginInfo beginInfo{};
+      beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+      beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+
+      vkBeginCommandBuffer(commandBuffer, &beginInfo);
+
+      return commandBuffer;
+   }
+
+   void VulkanRenderer::FlushTempCommandBuffer(VkCommandBuffer commandBuffer)
+   {
+      // TODO add vk validation
+      vkEndCommandBuffer(commandBuffer);
+      VkFenceCreateInfo fenceCreateInfo{};
+      fenceCreateInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+      fenceCreateInfo.flags = 0;
+      VkFence fence;
+      vkCreateFence(VulkanDevice::Device(), &fenceCreateInfo, nullptr, &fence);
+
+      VkSubmitInfo submitInfo{};
+      submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+      submitInfo.commandBufferCount = 1;
+      submitInfo.pCommandBuffers = &commandBuffer;
+
+      vkQueueSubmit(VulkanDevice::GetInstance()->GetGraphicsQueue(), 1, &submitInfo, fence);
+      vkQueueWaitIdle(VulkanDevice::GetInstance()->GetGraphicsQueue());
+      // vkWaitForFences(VulkanDevice::Device(), 1, &fence, VK_TRUE, UINT64_MAX);
+      vkDestroyFence(VulkanDevice::Device(), fence, nullptr);
+      vkFreeCommandBuffers(
+         VulkanDevice::Device(), VulkanDevice::GetInstance()->GetCommandPool(), 1, &commandBuffer);
    }
 
    void VulkanRenderer::CreateSyncObject()
@@ -245,15 +303,20 @@ namespace Phoinix
 
       for (size_t i = 0; i < max_frames_in_flight; i++)
       {
-         VKASSERT(vkCreateSemaphore(m_Device.GetDevice(), &semaphoreInfo, nullptr, &m_ImageAvailableSemaphores[i]), "Failed to create semaphores");
-         VKASSERT(vkCreateSemaphore(m_Device.GetDevice(), &semaphoreInfo, nullptr, &m_RenderFinishedSemaphores[i]), "Failed to create semaphores");
-         VKASSERT(vkCreateFence(m_Device.GetDevice(), &fenceInfo, nullptr, &m_InFlightFences[i]), "Failed to create semaphores");
+         VKASSERT(vkCreateSemaphore(
+                     m_Device.GetDevice(), &semaphoreInfo, nullptr, &m_ImageAvailableSemaphores[i]),
+                  "Failed to create semaphores");
+         VKASSERT(vkCreateSemaphore(
+                     m_Device.GetDevice(), &semaphoreInfo, nullptr, &m_RenderFinishedSemaphores[i]),
+                  "Failed to create semaphores");
+         VKASSERT(vkCreateFence(m_Device.GetDevice(), &fenceInfo, nullptr, &m_InFlightFences[i]),
+                  "Failed to create semaphores");
       }
    }
 
    void VulkanRenderer::CreateDescriptorPool()
    {
-      /*std::vector<VkDescriptorPoolSize> pool_sizes = {
+      std::vector<VkDescriptorPoolSize> pool_sizes = {
          {VK_DESCRIPTOR_TYPE_SAMPLER, 1000},
          {VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000},
          {VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1000},
@@ -273,19 +336,7 @@ namespace Phoinix
       pool_info.poolSizeCount = static_cast<uint32_t>(pool_sizes.size());
       pool_info.pPoolSizes = pool_sizes.data();
 
-      VKASSERT(vkCreateDescriptorPool(m_Device.GetDevice(), &pool_info, nullptr, &m_DescriptorPool), "Failed to create descriptor pool");*/
-
-      VkDescriptorPoolSize poolSize{};
-      poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-      poolSize.descriptorCount = static_cast<uint32_t>(max_frames_in_flight);
-
-      VkDescriptorPoolCreateInfo poolInfo{};
-      poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-      poolInfo.poolSizeCount = 1;
-      poolInfo.pPoolSizes = &poolSize;
-      poolInfo.maxSets = static_cast<uint32_t>(max_frames_in_flight);
-
-      VKASSERT(vkCreateDescriptorPool(m_Device.GetDevice(), &poolInfo, nullptr, &m_DescriptorPool),
+      VKASSERT(vkCreateDescriptorPool(m_Device.GetDevice(), &pool_info, nullptr, &m_DescriptorPool),
                "Failed to create descriptor pool");
    }
 
@@ -302,9 +353,9 @@ namespace Phoinix
       allocInfo.pSetLayouts = layouts.data();
 
       m_DescriptorSets.resize(max_frames_in_flight);
-      VKASSERT(vkAllocateDescriptorSets(m_Device.GetDevice(), &allocInfo, m_DescriptorSets.data()), "Failed to allocate descriptor set");
+      VKASSERT(vkAllocateDescriptorSets(m_Device.GetDevice(), &allocInfo, m_DescriptorSets.data()),
+               "Failed to allocate descriptor set");
 
-      
       for (size_t i = 0; i < max_frames_in_flight; i++)
       {
          VkDescriptorBufferInfo bufferInfo{};
@@ -326,7 +377,6 @@ namespace Phoinix
          vkUpdateDescriptorSets(m_Device.GetDevice(), 1, &descriptorWrite, 0, nullptr);
       }
    }
-
 
    void VulkanRenderer::MakeDefault()
    {

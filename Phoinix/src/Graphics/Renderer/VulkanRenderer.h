@@ -33,6 +33,9 @@ namespace Phoinix
       virtual void Render() override;
       virtual void EndRender() override;
 
+      static VkCommandBuffer GetTempCommandBuffer();
+      static void FlushTempCommandBuffer(VkCommandBuffer commandBuffer);
+
       [[nodiscard]] const VkInstance& GetVkInstance() { return m_Instance.GetInstance(); }
       [[nodiscard]] const VkPhysicalDevice& GetPhysicalDevice()
       {
@@ -51,7 +54,8 @@ namespace Phoinix
          return m_CommandBuffers[m_CurrentFrame];
       }
       [[nodiscard]] const VkPipeline& GetVkPipeline() { return m_SimplePipeline->GetVkPipeline(); }
-      // [[nodiscard]] const VkDescriptorPool& GetDescriptorPool() { return m_DescriptorPool; }
+      [[nodiscard]] const VkDescriptorPool& GetDescriptorPool() { return m_DescriptorPool; }
+      [[nodiscard]] DescriptorSet* GetDescriptorSet() { return m_DescriptorSet; }
       [[nodiscard]] const VkCommandPool& GetCommandPool() { return m_Device.GetCommandPool(); }
 
     private:
