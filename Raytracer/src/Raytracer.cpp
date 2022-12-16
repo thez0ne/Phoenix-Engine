@@ -8,7 +8,7 @@ class RaytracerLayer : public Phoinix::Layer
  public:
    RaytracerLayer() : Layer("Sandbox Layer")
    {
-      Phoinix::Utils::ScopedTimer creation{"RaytracerLayer"};
+      Phoinix::Utils::ScopedTimer creation{"RaytracerLayer constructor"};
       PRINT("Creating Application layer");
       m_ViewportWidth = 800;
       m_ViewportHeight = 600;
@@ -78,6 +78,7 @@ class Raytracer : public Phoinix::Application
    Raytracer() : Application()
    {
       AddLayer(new RaytracerLayer());
+      ShouldShowImGuiDemo(false);
    }
 
    virtual ~Raytracer() = default;

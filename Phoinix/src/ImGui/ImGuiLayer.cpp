@@ -151,7 +151,8 @@ namespace Phoinix
 
    void ImGuiLayer::OnImGUIUpdate()
    {
-      ImGui::ShowDemoWindow();
+      if (m_ShowDemo)
+         ImGui::ShowDemoWindow();
    }
 
    void ImGuiLayer::ImGuiInitFrame()

@@ -26,9 +26,13 @@ namespace Phoinix
 
       inline ImGuiContext* GetImGuiCtx() { return ImGui::GetCurrentContext(); }
 
+      void ShouldShowDemoWindow(bool status) { m_ShowDemo = status; }
+
     private:
       float dt = 0;
       VkDescriptorPool m_DescriptorPool;
       // GLFWwindow* win;
+
+      bool m_ShowDemo;
    };
 }
