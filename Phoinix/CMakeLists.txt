@@ -77,13 +77,6 @@ add_custom_target(
     
 add_dependencies(Phoinix Shaders_Engine)
 
-add_custom_command(TARGET Phoinix POST_BUILD
-COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:Phoinix>/shaders/"
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-        "${PROJECT_BINARY_DIR}/shaders"
-        "$<TARGET_FILE_DIR:Phoinix>/shaders"
-        )
-
 # Setup files in VS
 if(WIN32)
     file(GLOB_RECURSE PHOINIX_SRC RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "*.cpp" "*.h" "*.vert" "*.frag")

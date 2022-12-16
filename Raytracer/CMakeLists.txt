@@ -61,6 +61,14 @@ add_custom_command(TARGET Raytracer POST_BUILD
         "${PROJECT_BINARY_DIR}/shaders"
         "$<TARGET_FILE_DIR:Raytracer>/shaders"
         )
+if(MSVC)
+    add_custom_command(TARGET Raytracer POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:Phoinix>/shaders/"
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+            "${PROJECT_BINARY_DIR}/shaders"
+            "$<TARGET_FILE_DIR:Raytracer>/../shaders"
+            )
+endif()
 
 # Setup files in VS
 if(WIN32)
