@@ -12,7 +12,7 @@ namespace Phoinix
    {
       switch (format)
       {
-         case Format::None:
+         case Format::NONE:
             PHOINIX_ASSERT(nullptr, "Invalid image format given");
          case Format::RGBA:
             return VK_FORMAT_R8G8B8A8_UNORM;
@@ -30,7 +30,7 @@ namespace Phoinix
       virtual ~VulkanImage();
 
       virtual void SetData(const void* data) override;
-      virtual void Bind() override
+      virtual void ImGuiBind() override
       {
          ImGui::Image(
             m_DescriptorSet, {(float)GetWidth(), (float)GetHeight()}, ImVec2(0, 1), ImVec2(1, 0));

@@ -15,6 +15,8 @@ namespace Phoinix
    {
       switch (format)
       {
+         case Format::NONE:
+            PHOINIX_ASSERT(nullptr, "Invalid image format given");
          case Format::RGBA:
             return 4;
          case Format::RGBA32F:
@@ -32,7 +34,7 @@ namespace Phoinix
       virtual ~Image() = default;
 
       virtual void SetData(const void* data) = 0;
-      virtual void Bind() = 0;
+      virtual void ImGuiBind() = 0;
       virtual void* GetDescriptorSet() = 0;
       virtual void Resize(uint32_t, uint32_t) = 0;
 

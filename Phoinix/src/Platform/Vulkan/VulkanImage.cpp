@@ -239,37 +239,7 @@ namespace Phoinix
                   "Failed to create sampler");
       }
 
-      // TODO create and save a descriptor set?
-      // Create Descriptor Set:
-      /* VkDescriptorSet descriptor_set{};
-      {
-         VkDescriptorSetAllocateInfo allocInfo{};
-         allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-         // alloc_info.descriptorPool = v->DescriptorPool;
-         auto d = ((VulkanRenderer*)&Application::GetInstance()->GetRenderer());
-         allocInfo.descriptorPool = d->GetDescriptorPool();
-         allocInfo.descriptorSetCount = 1;
-         // alloc_info.pSetLayouts = &bd->DescriptorSetLayout;
-         allocInfo.pSetLayouts =
-            ((VulkanDescriptorSet*)d->GetDescriptorSet())->GetDescriptorSetLayout();
-         VKASSERT(vkAllocateDescriptorSets(VulkanDevice::Device(), &allocInfo, &descriptor_set),
-                  "Failed to allocate descriptor set for image");
-      }
-
-      // Update the Descriptor Set:
-      {
-         VkDescriptorImageInfo descImage{};
-         descImage.sampler = m_Sampler;
-         descImage.imageView = m_ImageView;
-         descImage.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-         VkWriteDescriptorSet writeDesc{};
-         writeDesc.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-         writeDesc.dstSet = descriptor_set;
-         writeDesc.descriptorCount = 1;
-         writeDesc.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-         writeDesc.pImageInfo = &descImage;
-         vkUpdateDescriptorSets(VulkanDevice::Device(), 1, &writeDesc, 0, nullptr);
-      }*/
+      // TODO is it possible to not use the imgui function for this
       m_DescriptorSet = (VkDescriptorSet)ImGui_ImplVulkan_AddTexture(
          m_Sampler, m_ImageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
