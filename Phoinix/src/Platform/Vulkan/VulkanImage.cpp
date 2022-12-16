@@ -19,12 +19,14 @@ namespace Phoinix
       {
          SetData(data);
       }
+
+      Release();
    }
 
    VulkanImage::~VulkanImage()
    {
-      // TODO set up so that Application deletes this from within engine
-      VkDevice device = VulkanDevice::Device();
+      //// TODO set up so that Application deletes this from within engine
+      //VkDevice device = VulkanDevice::Device();
 
       //vkDestroySampler(device, m_Sampler, nullptr);
       //vkDestroyImageView(device, m_ImageView, nullptr);
@@ -32,6 +34,7 @@ namespace Phoinix
       //vkFreeMemory(device, m_Memory, nullptr);
       //vkDestroyBuffer(device, m_StagingBuffer, nullptr);
       //vkFreeMemory(device, m_StagingBufferMemory, nullptr);
+      // Release();
    }
 
    void VulkanImage::SetData(const void* data)
@@ -247,14 +250,17 @@ namespace Phoinix
 
    void VulkanImage::Release()
    {
-      VkDevice device = VulkanDevice::Device();
+      VulkanRenderer::RegisterCleanup([&]() {
+         
+         VkDevice device = VulkanDevice::Device();
 
-      vkDestroySampler(device, m_Sampler, nullptr);
-      vkDestroyImageView(device, m_ImageView, nullptr);
-      vkDestroyImage(device, m_Image, nullptr);
-      vkFreeMemory(device, m_Memory, nullptr);
-      vkDestroyBuffer(device, m_StagingBuffer, nullptr);
-      vkFreeMemory(device, m_StagingBufferMemory, nullptr);
+         vkDestroySampler(device, m_Sampler, nullptr);
+         vkDestroyImageView(device, m_ImageView, nullptr);
+         vkDestroyImage(device, m_Image, nullptr);
+         vkFreeMemory(device, m_Memory, nullptr);
+         vkDestroyBuffer(device, m_StagingBuffer, nullptr);
+         vkFreeMemory(device, m_StagingBufferMemory, nullptr);
+      });
    }
 
 

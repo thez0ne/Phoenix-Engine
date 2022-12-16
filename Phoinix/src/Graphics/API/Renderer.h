@@ -24,8 +24,16 @@ namespace Phoinix
       virtual void Render() = 0;
       virtual void EndRender() = 0;
 
+      static void RegisterCleanup(std::function<void()>&& func)
+      {
+         s_CleanupQueue.emplace_back(func);
+      }
+
       static Renderer* Create(Window* window);
+
     protected:
       static Renderer* (*CreateFunc)(Window* window);
+
+      static std::vector<std::function<void()>> s_CleanupQueue;
    };
 }

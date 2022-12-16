@@ -25,6 +25,12 @@ namespace Phoinix
 
    VulkanRenderer::~VulkanRenderer()
    {
+      // TODO should be per frame?
+      for (auto& cleanup : s_CleanupQueue)
+      {
+         cleanup();
+      }
+
       vkDeviceWaitIdle(m_Device.GetDevice());
 
       vkDestroyDescriptorPool(m_Device.GetDevice(), m_DescriptorPool, nullptr);

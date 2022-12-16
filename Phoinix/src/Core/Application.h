@@ -28,7 +28,7 @@ namespace Phoinix
       inline Window& GetWindow() { return *window; }
       Renderer& GetRenderer() { return *renderer; }
       static Application* GetInstance() { return instance; }
-      
+
       void WithRendering(bool status) { shouldRender = status; }
 
     private:
