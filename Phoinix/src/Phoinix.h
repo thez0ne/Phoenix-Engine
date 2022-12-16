@@ -7,7 +7,7 @@
 #include "Core/Layer.h"
 #include "Core/Log.h"
 #include "Graphics/Image.h"
-
+#include "Utilities/Timer.h"
 
 // main code execution
 #include "Core/EntryPoint.h"
