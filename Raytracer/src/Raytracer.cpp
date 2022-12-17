@@ -29,10 +29,13 @@ class RaytracerLayer : public Phoinix::Layer
 
    void OnUpdate() override
    {
-      // PRINT("We in the app boys");
       /*
-      PRINT("My sizes are {}x{}", m_ViewportWidth, m_ViewportHeight);
+      // Check if resize is needed
+      if (m_FinalImage->GetWidth() == m_ViewportWidth && m_FinalImage->GetHeight() == m_ViewportHeight)
+         return;
 
+      m_FinalImage->Resize(m_ViewportWidth, m_ViewportHeight);
+      
       delete[] m_ImageData;
       m_ImageData = new uint32_t[m_ViewportWidth * m_ViewportHeight];
 
@@ -42,7 +45,8 @@ class RaytracerLayer : public Phoinix::Layer
           m_ImageData[i] = Phoinix::Image::VecToRgba(color);
       }
 
-      m_FinalImage->Resize(m_ViewportWidth, m_ViewportHeight);
+      // "Render"
+      m_FinalImage->SetData(m_ImageData);
       */
    }
 

@@ -25,15 +25,6 @@ namespace Phoinix
 
    VulkanImage::~VulkanImage()
    {
-      //// TODO set up so that Application deletes this from within engine
-      //VkDevice device = VulkanDevice::Device();
-
-      //vkDestroySampler(device, m_Sampler, nullptr);
-      //vkDestroyImageView(device, m_ImageView, nullptr);
-      //vkDestroyImage(device, m_Image, nullptr);
-      //vkFreeMemory(device, m_Memory, nullptr);
-      //vkDestroyBuffer(device, m_StagingBuffer, nullptr);
-      //vkFreeMemory(device, m_StagingBufferMemory, nullptr);
       // Release();
    }
 
