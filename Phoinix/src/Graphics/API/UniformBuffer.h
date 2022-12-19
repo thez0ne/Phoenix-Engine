@@ -4,7 +4,6 @@
 #include "Core/Core.h"
 #include "Graphics/Buffer/Buffer.h"
 
-
 namespace Phoinix
 {
    class UniformBuffer

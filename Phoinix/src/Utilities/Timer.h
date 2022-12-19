@@ -46,7 +46,9 @@ namespace Phoinix::Utils
    class ScopedTimer
    {
     public:
-      ScopedTimer(const std::string& name, TimeFormat format = TimeFormat::Ms) : m_Name(name), m_Timer(), m_Format(format) {}
+      ScopedTimer(const std::string& name, TimeFormat format = TimeFormat::Ms) :
+         m_Name(name), m_Timer(), m_Format(format)
+      {}
 
       ~ScopedTimer()
       {

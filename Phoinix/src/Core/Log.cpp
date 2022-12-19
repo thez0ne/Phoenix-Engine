@@ -16,8 +16,10 @@ namespace Phoinix
       engineSinks.resize(2);
       engineSinks[0] = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
       engineSinks[0]->set_pattern("%^[%T][%n]: %v%$");
-      engineSinks[1] = std::make_shared<spdlog::sinks::daily_file_sink_mt>("engine.log", 23, 59, true);
-      m_EngineLogger = std::make_shared<spdlog::logger>("Phoinix", engineSinks.begin(), engineSinks.end());
+      engineSinks[1] =
+         std::make_shared<spdlog::sinks::daily_file_sink_mt>("engine.log", 23, 59, true);
+      m_EngineLogger =
+         std::make_shared<spdlog::logger>("Phoinix", engineSinks.begin(), engineSinks.end());
 
       std::vector<spdlog::sink_ptr> appSinks;
       appSinks.resize(2);

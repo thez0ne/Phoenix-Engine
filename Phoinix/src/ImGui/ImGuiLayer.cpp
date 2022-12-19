@@ -91,7 +91,8 @@ namespace Phoinix
       // Upload Fonts
       {
          // Use any command queue
-         VkCommandPool command_pool = renderer->GetCommandPool(); // TODO create own command pool for this action
+         VkCommandPool command_pool =
+            renderer->GetCommandPool(); // TODO create own command pool for this action
 
          // create command buffer for the ImGUI fonts
          VkCommandBuffer commandBuffer;
@@ -103,13 +104,15 @@ namespace Phoinix
             allocInfo.commandPool = command_pool;
             allocInfo.commandBufferCount = 1;
 
-            VKASSERT(vkAllocateCommandBuffers(VulkanDevice::Device(), &allocInfo, &commandBuffer), "Failed to allocate command buffer");
+            VKASSERT(vkAllocateCommandBuffers(VulkanDevice::Device(), &allocInfo, &commandBuffer),
+                     "Failed to allocate command buffer");
 
             VkCommandBufferBeginInfo beginInfo{};
             beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
             beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 
-            VKASSERT(vkBeginCommandBuffer(commandBuffer, &beginInfo), "Failed to begin command buffer");
+            VKASSERT(vkBeginCommandBuffer(commandBuffer, &beginInfo),
+                     "Failed to begin command buffer");
          }
 
          ImGui_ImplVulkan_CreateFontsTexture(commandBuffer);
@@ -124,8 +127,10 @@ namespace Phoinix
             submitInfo.commandBufferCount = 1;
             submitInfo.pCommandBuffers = &commandBuffer;
 
-            VKASSERT(vkQueueSubmit(VulkanDevice::GraphicsQueue(), 1, &submitInfo, VK_NULL_HANDLE), "Failed to submit to queue");
-            VKASSERT(vkQueueWaitIdle(VulkanDevice::GraphicsQueue()), "Failed to wait for queue to idle");
+            VKASSERT(vkQueueSubmit(VulkanDevice::GraphicsQueue(), 1, &submitInfo, VK_NULL_HANDLE),
+                     "Failed to submit to queue");
+            VKASSERT(vkQueueWaitIdle(VulkanDevice::GraphicsQueue()),
+                     "Failed to wait for queue to idle");
             VKASSERT(vkDeviceWaitIdle(VulkanDevice::Device()), "Failed to wait for device to idle");
 
             vkFreeCommandBuffers(VulkanDevice::Device(), command_pool, 1, &commandBuffer);
@@ -172,8 +177,7 @@ namespace Phoinix
       ImGui::Render();
       auto renderer = (VulkanRenderer*)&app->GetRenderer();
       vkDeviceWaitIdle(VulkanDevice::Device());
-      ImGui_ImplVulkan_RenderDrawData(
-         ImGui::GetDrawData(), renderer->GetCurrentCommandBuffer());
+      ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), renderer->GetCurrentCommandBuffer());
 
       if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
       {

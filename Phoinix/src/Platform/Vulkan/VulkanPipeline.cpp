@@ -61,7 +61,8 @@ namespace Phoinix
          framebufferInfo.layers = 1;
 
          VKASSERT(vkCreateFramebuffer(
-                m_Device.GetDevice(), &framebufferInfo, nullptr, &m_SwapChainFrameBuffers[i]), "Failed to create framebuffer");
+                     m_Device.GetDevice(), &framebufferInfo, nullptr, &m_SwapChainFrameBuffers[i]),
+                  "Failed to create framebuffer");
       }
    }
 
@@ -97,7 +98,8 @@ namespace Phoinix
       VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
       vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
       vertexInputInfo.vertexBindingDescriptionCount = 1;
-      vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size());
+      vertexInputInfo.vertexAttributeDescriptionCount =
+         static_cast<uint32_t>(attributeDescriptions.size());
       vertexInputInfo.pVertexBindingDescriptions = &bindingDescriptions;
       vertexInputInfo.pVertexAttributeDescriptions = attributeDescriptions.data();
 
@@ -131,12 +133,10 @@ namespace Phoinix
 
       pipelineInfo.pDynamicState = &dynamicState;
 
-      VKASSERT(vkCreateGraphicsPipelines(m_Device.GetDevice(),
-                                    VK_NULL_HANDLE,
-                                    1,
-                                    &pipelineInfo,
-                                    nullptr,
-                                    &m_GraphicsPipeline), "Failed to create graphics pipeline");
+      VKASSERT(
+         vkCreateGraphicsPipelines(
+            m_Device.GetDevice(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &m_GraphicsPipeline),
+         "Failed to create graphics pipeline");
    }
 
    void VulkanPipeline::CreateShaderModule(const std::vector<char>& code,
@@ -147,7 +147,8 @@ namespace Phoinix
       createInfo.codeSize = code.size();
       createInfo.pCode = reinterpret_cast<const uint32_t*>(code.data());
 
-      VKASSERT(vkCreateShaderModule(m_Device.GetDevice(), &createInfo, nullptr, shaderModule), "Failed to create shader module");
+      VKASSERT(vkCreateShaderModule(m_Device.GetDevice(), &createInfo, nullptr, shaderModule),
+               "Failed to create shader module");
    }
 
    void VulkanPipeline::Bind(VkCommandBuffer commandBuffer)

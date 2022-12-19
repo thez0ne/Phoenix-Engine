@@ -17,7 +17,8 @@ namespace Phoinix
       window = Window::Create();
       window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 
-      Graphics::Vulkan::MakeDefault(); // TODO can prob be moved elsewhere to allow for switching APIs
+      Graphics::Vulkan::MakeDefault(); // TODO can prob be moved elsewhere to allow for switching
+                                       // APIs
       renderer = Renderer::Create(window);
 
       _ImGuiLayer = new ImGuiLayer();
@@ -58,7 +59,7 @@ namespace Phoinix
          renderer->EndRender();
       }
       // TODO make sure command buffer is emptied and cleaned up before exiting
-      //renderer->EndRender();
+      // renderer->EndRender();
       ENGINE_INFO("Application is closing down");
    }
 

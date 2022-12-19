@@ -15,6 +15,7 @@ namespace Phoinix
       VkDescriptorSetLayout* GetDescriptorSetLayout() { return &m_DescriptorSetLayout; }
 
       static void MakeDefault();
+
     protected:
       static DescriptorSet* CreateFuncVulkan();
 

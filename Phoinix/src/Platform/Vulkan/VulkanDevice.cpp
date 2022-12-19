@@ -10,9 +10,9 @@ namespace Phoinix
    VulkanDevice::VulkanDevice(const VkInstance& instance, GLFWwindow* window) :
       m_Instance(instance), m_Window(window)
    {
-      PHOINIX_ASSERT(
-         !s_Instance,
-         "Vulkan Device should be a singleton!"); // TODO can i move this into a base singleton class?
+      PHOINIX_ASSERT(!s_Instance,
+                     "Vulkan Device should be a singleton!"); // TODO can i move this into a base
+                                                              // singleton class?
 
       s_Instance = this;
 
@@ -162,7 +162,8 @@ namespace Phoinix
          createInfo.enabledLayerCount = 0;
       }
 
-      VKASSERT(vkCreateDevice(m_PhysicalDevice, &createInfo, nullptr, &m_Device), "Failed to create logical device");
+      VKASSERT(vkCreateDevice(m_PhysicalDevice, &createInfo, nullptr, &m_Device),
+               "Failed to create logical device");
 
       vkGetDeviceQueue(m_Device, indices.graphicsFamily.value(), 0, &m_GraphicsQueue);
       vkGetDeviceQueue(m_Device, indices.presentFamily.value(), 0, &m_PresentQueue);
@@ -170,7 +171,8 @@ namespace Phoinix
 
    void VulkanDevice::CreateSurface()
    {
-      VKASSERT(glfwCreateWindowSurface(m_Instance, m_Window, nullptr, &m_Surface), "Failed to create window surface");
+      VKASSERT(glfwCreateWindowSurface(m_Instance, m_Window, nullptr, &m_Surface),
+               "Failed to create window surface");
    }
 
    bool VulkanDevice::CheckDeviceExtensionsSupport(VkPhysicalDevice device) const
@@ -332,7 +334,8 @@ namespace Phoinix
       createInfo.clipped = VK_TRUE;
       createInfo.oldSwapchain = VK_NULL_HANDLE;
 
-      VKASSERT(vkCreateSwapchainKHR(m_Device, &createInfo, nullptr, &m_SwapChain), "Failed to create swapchain");
+      VKASSERT(vkCreateSwapchainKHR(m_Device, &createInfo, nullptr, &m_SwapChain),
+               "Failed to create swapchain");
 
       vkGetSwapchainImagesKHR(m_Device, m_SwapChain, &imageCount, nullptr);
       m_SwapChainImages.resize(imageCount);
@@ -367,7 +370,8 @@ namespace Phoinix
          createInfo.subresourceRange.baseArrayLayer = 0;
          createInfo.subresourceRange.layerCount = 1; // might want more layers for stereoscopic 3d
 
-         VKASSERT(vkCreateImageView(m_Device, &createInfo, nullptr, &m_SwapChainImageViews[i]), "Failed to create image view");
+         VKASSERT(vkCreateImageView(m_Device, &createInfo, nullptr, &m_SwapChainImageViews[i]),
+                  "Failed to create image view");
       }
    }
 
@@ -394,7 +398,7 @@ namespace Phoinix
       colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
       colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
       colorAttachment.initialLayout =
-          VK_IMAGE_LAYOUT_UNDEFINED; // don't care what the previous format was
+         VK_IMAGE_LAYOUT_UNDEFINED; // don't care what the previous format was
       colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 
       VkAttachmentReference colorAttachmentRef{};
@@ -423,7 +427,8 @@ namespace Phoinix
       renderPassInfo.dependencyCount = 1;
       renderPassInfo.pDependencies = &dependency;
 
-      VKASSERT(vkCreateRenderPass(m_Device, &renderPassInfo, nullptr, &m_RenderPass), "Failed to create render pass");
+      VKASSERT(vkCreateRenderPass(m_Device, &renderPassInfo, nullptr, &m_RenderPass),
+               "Failed to create render pass");
    }
 
    void VulkanDevice::CreateCommandPool()
@@ -432,9 +437,11 @@ namespace Phoinix
 
       VkCommandPoolCreateInfo commandPoolCreateInfo{};
       commandPoolCreateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-      commandPoolCreateInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT | VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
+      commandPoolCreateInfo.flags =
+         VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT | VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
       commandPoolCreateInfo.queueFamilyIndex = queueFamilyIndices.graphicsFamily.value();
 
-      VKASSERT(vkCreateCommandPool(m_Device, &commandPoolCreateInfo, nullptr, &m_CommandPool), "Failed to create command pool");
+      VKASSERT(vkCreateCommandPool(m_Device, &commandPoolCreateInfo, nullptr, &m_CommandPool),
+               "Failed to create command pool");
    }
 }

@@ -33,7 +33,8 @@ namespace Phoinix
 
    void VulkanInstance::CreateInstance()
    {
-      PHOINIX_ASSERT(!enable_validation_layers || CheckValidationLayerSupport(), "Validation layers are enabled but none are available");
+      PHOINIX_ASSERT(!enable_validation_layers || CheckValidationLayerSupport(),
+                     "Validation layers are enabled but none are available");
 
       // WARNING: according to vulkan-tutorial.com, this current code will not work on MacOS
       // will require additional code when setting the extensions for the instance creation
@@ -84,7 +85,8 @@ namespace Phoinix
          createInfo.pNext = nullptr;
       }
 
-      VKASSERT(vkCreateInstance(&createInfo, nullptr, &m_Instance), "Failed to create Vulkan Instance");
+      VKASSERT(vkCreateInstance(&createInfo, nullptr, &m_Instance),
+               "Failed to create Vulkan Instance");
    }
 
    void VulkanInstance::SetupDebugMessenger()
@@ -97,7 +99,8 @@ namespace Phoinix
       VkDebugUtilsMessengerCreateInfoEXT createInfo{};
       PopulateDebugMessengerCreateInfo(createInfo);
 
-      VKASSERT(CreateDebugUtilsMessengerExt(m_Instance, &createInfo, nullptr, &m_DebugMessenger), "Failed to setup validation layer debug messenger");
+      VKASSERT(CreateDebugUtilsMessengerExt(m_Instance, &createInfo, nullptr, &m_DebugMessenger),
+               "Failed to setup validation layer debug messenger");
    }
 
    VkResult VulkanInstance::CreateDebugUtilsMessengerExt(

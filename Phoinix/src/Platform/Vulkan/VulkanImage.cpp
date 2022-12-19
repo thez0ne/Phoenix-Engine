@@ -42,9 +42,8 @@ namespace Phoinix
             bufferInfo.size = upload_size;
             bufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
             bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-            VKASSERT(
-               vkCreateBuffer(VulkanDevice::Device(), &bufferInfo, nullptr, &m_StagingBuffer),
-               "Failed to create image staging buffer");
+            VKASSERT(vkCreateBuffer(VulkanDevice::Device(), &bufferInfo, nullptr, &m_StagingBuffer),
+                     "Failed to create image staging buffer");
 
             VkMemoryRequirements req;
             vkGetBufferMemoryRequirements(VulkanDevice::Device(), m_StagingBuffer, &req);
@@ -67,7 +66,7 @@ namespace Phoinix
       // Upload to Buffer
       {
          void* myData;
-         
+
          vkMapMemory(VulkanDevice::Device(), m_StagingBufferMemory, 0, m_AlignedSize, 0, &myData);
 
          memcpy(myData, data, upload_size);
@@ -236,13 +235,11 @@ namespace Phoinix
       // TODO is it possible to not use the imgui function for this
       m_DescriptorSet = (VkDescriptorSet)ImGui_ImplVulkan_AddTexture(
          m_Sampler, m_ImageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-
    }
 
    void VulkanImage::Release()
    {
       VulkanRenderer::RegisterCleanup([&]() {
-         
          VkDevice device = VulkanDevice::Device();
 
          vkDestroySampler(device, m_Sampler, nullptr);
@@ -253,7 +250,6 @@ namespace Phoinix
          vkFreeMemory(device, m_StagingBufferMemory, nullptr);
       });
    }
-
 
    void VulkanImage::MakeDefault()
    {

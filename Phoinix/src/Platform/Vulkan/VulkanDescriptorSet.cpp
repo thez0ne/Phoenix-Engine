@@ -4,7 +4,7 @@
 
 namespace Phoinix
 {
-   VulkanDescriptorSet::VulkanDescriptorSet() 
+   VulkanDescriptorSet::VulkanDescriptorSet()
    {
       VkDescriptorSetLayoutBinding uboLayoutBinding{};
       uboLayoutBinding.binding = 0;
@@ -21,7 +21,9 @@ namespace Phoinix
       layoutInfo.bindingCount = 1;
       layoutInfo.pBindings = &uboLayoutBinding;
 
-      VKASSERT(vkCreateDescriptorSetLayout(VulkanDevice::Device(), &layoutInfo, nullptr, &m_DescriptorSetLayout), "Failed to create descriptor set layout");
+      VKASSERT(vkCreateDescriptorSetLayout(
+                  VulkanDevice::Device(), &layoutInfo, nullptr, &m_DescriptorSetLayout),
+               "Failed to create descriptor set layout");
    }
 
    VulkanDescriptorSet::~VulkanDescriptorSet()
@@ -29,7 +31,7 @@ namespace Phoinix
       vkDestroyDescriptorSetLayout(VulkanDevice::Device(), m_DescriptorSetLayout, nullptr);
    }
 
-   void VulkanDescriptorSet::MakeDefault() 
+   void VulkanDescriptorSet::MakeDefault()
    {
       CreateFunc = CreateFuncVulkan;
    }

@@ -30,7 +30,8 @@ namespace Phoinix
    {
     public:
       Image(uint32_t width, uint32_t height, Format format, void* data = nullptr) :
-         m_Width(width), m_Height(height), m_Format(format){}
+         m_Width(width), m_Height(height), m_Format(format)
+      {}
       virtual ~Image() = default;
 
       virtual void SetData(const void* data) = 0;

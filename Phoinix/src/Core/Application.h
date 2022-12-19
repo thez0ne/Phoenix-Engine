@@ -47,6 +47,7 @@ namespace Phoinix
 
     private:
       bool OnClose(WindowCloseEvent& e);
+
     protected:
       void ShouldShowImGuiDemo(bool status) { _ImGuiLayer->ShouldShowDemoWindow(status); }
    };

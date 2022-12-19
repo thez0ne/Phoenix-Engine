@@ -4,9 +4,7 @@
 namespace Phoinix
 {
    // TODO: should these methods be a part of device?
-   uint32_t FindMemoryType(/*const VkPhysicalDevice& physicalDevice,*/
-                           uint32_t typeFilter,
-                           VkMemoryPropertyFlags properties)
+   uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties)
    {
       VkPhysicalDeviceMemoryProperties memoryProperties;
       vkGetPhysicalDeviceMemoryProperties(VulkanDevice::PhysicalDevice(), &memoryProperties);
@@ -24,8 +22,7 @@ namespace Phoinix
       return 0xffffffff;
    }
 
-   void CreateBuffer(/*VulkanDevice& device,*/
-                     VkDeviceSize size,
+   void CreateBuffer(VkDeviceSize size,
                      VkBufferUsageFlags usage,
                      VkMemoryPropertyFlags properties,
                      VkBuffer& buffer,
@@ -38,7 +35,8 @@ namespace Phoinix
       bufferInfo.usage = usage;
       bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
-      VKASSERT(vkCreateBuffer(VulkanDevice::Device(), &bufferInfo, nullptr, &buffer), "Failed to create vertex buffer");
+      VKASSERT(vkCreateBuffer(VulkanDevice::Device(), &bufferInfo, nullptr, &buffer),
+               "Failed to create vertex buffer");
 
       // allocate memory
       VkMemoryRequirements memoryRequirements;
@@ -47,15 +45,14 @@ namespace Phoinix
       VkMemoryAllocateInfo allocInfo{};
       allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
       allocInfo.allocationSize = memoryRequirements.size;
-      allocInfo.memoryTypeIndex =
-         FindMemoryType(memoryRequirements.memoryTypeBits,
-                        properties);
+      allocInfo.memoryTypeIndex = FindMemoryType(memoryRequirements.memoryTypeBits, properties);
 
-      VKASSERT(vkAllocateMemory(VulkanDevice::Device(), &allocInfo, nullptr, &bufferMemory), "Failed to allocate memory to vertex buffer");
+      VKASSERT(vkAllocateMemory(VulkanDevice::Device(), &allocInfo, nullptr, &bufferMemory),
+               "Failed to allocate memory to vertex buffer");
 
       vkBindBufferMemory(VulkanDevice::Device(), buffer, bufferMemory, 0);
    }
-   
+
    void CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)
    {
       VkCommandBufferAllocateInfo allocInfo{};
@@ -80,7 +77,7 @@ namespace Phoinix
       vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, 1, &copyRegion);
 
       vkEndCommandBuffer(commandBuffer);
-      
+
       VkSubmitInfo submitInfo{};
       submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
       submitInfo.commandBufferCount = 1;

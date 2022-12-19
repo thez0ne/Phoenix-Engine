@@ -15,8 +15,8 @@ namespace Phoinix
    }
 
    GLFWWindow::GLFWWindow(const unsigned int w,
-                              const unsigned int h,
-                              const std::string& name) // : m_Data(w, h, name)
+                          const unsigned int h,
+                          const std::string& name) // : m_Data(w, h, name)
    {
       m_Data.title = name;
       m_Data.width = w;

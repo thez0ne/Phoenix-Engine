@@ -12,8 +12,8 @@ namespace Phoinix
    {
     public:
       GLFWWindow(const unsigned int w = 1280,
-                   const unsigned int h = 720,
-                   const std::string& title = "Vulkan Window");
+                 const unsigned int h = 720,
+                 const std::string& title = "Vulkan Window");
       ~GLFWWindow();
 
       GLFWWindow(const GLFWWindow&) = delete;

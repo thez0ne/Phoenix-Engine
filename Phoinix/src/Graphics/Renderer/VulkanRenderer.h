@@ -99,6 +99,7 @@ namespace Phoinix
 
     public:
       static void MakeDefault();
+
     protected:
       static Renderer* CreateFuncVulkan(Window* window);
    };

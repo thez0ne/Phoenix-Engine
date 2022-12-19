@@ -8,26 +8,26 @@ namespace Phoinix
 {
    class VulkanUniformBuffer : public UniformBuffer
    {
-      public:
-         VulkanUniformBuffer(const UniformBufferObject& data);
-         VulkanUniformBuffer();
-         virtual ~VulkanUniformBuffer();
+    public:
+      VulkanUniformBuffer(const UniformBufferObject& data);
+      VulkanUniformBuffer();
+      virtual ~VulkanUniformBuffer();
 
-         void Update(uint32_t currentFrame);
+      void Update(uint32_t currentFrame);
 
-         static void MakeDefault();
+      static void MakeDefault();
 
-         [[nodiscard]] const VkBuffer& GetBuffer() const { return m_UniformBuffer; }
+      [[nodiscard]] const VkBuffer& GetBuffer() const { return m_UniformBuffer; }
 
-      protected:
-         static UniformBuffer* CreateDataFuncVulkan(const UniformBufferObject& data);
-         static UniformBuffer* CreateFuncVulkan();
+    protected:
+      static UniformBuffer* CreateDataFuncVulkan(const UniformBufferObject& data);
+      static UniformBuffer* CreateFuncVulkan();
 
-      private:
-         VkBuffer m_UniformBuffer;
-         VkDeviceMemory m_UniformBufferMemory;
-         void* m_Data;
+    private:
+      VkBuffer m_UniformBuffer;
+      VkDeviceMemory m_UniformBufferMemory;
+      void* m_Data;
 
-         UniformBufferObject m_UBO;
+      UniformBufferObject m_UBO;
    };
 }

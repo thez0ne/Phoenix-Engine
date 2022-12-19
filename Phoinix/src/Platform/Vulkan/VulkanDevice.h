@@ -62,7 +62,10 @@ namespace Phoinix
 
       [[nodiscard]] static VulkanDevice* GetInstance() { return s_Instance; }
       [[nodiscard]] static VkDevice Device() { return s_Instance->GetDevice(); }
-      [[nodiscard]] static VkPhysicalDevice PhysicalDevice() { return s_Instance->GetPhysicalDevice(); }
+      [[nodiscard]] static VkPhysicalDevice PhysicalDevice()
+      {
+         return s_Instance->GetPhysicalDevice();
+      }
       [[nodiscard]] static VkCommandPool CommandPool() { return s_Instance->GetCommandPool(); }
       [[nodiscard]] static VkQueue GraphicsQueue() { return s_Instance->GetGraphicsQueue(); }
 
