@@ -91,6 +91,6 @@ class Raytracer : public Phoinix::Application
 Phoinix::Application* Phoinix::CreateApp()
 {
    auto app = new Raytracer();
-   app->WithRendering(false);
+   // app->WithRendering(false);
    return app;
 }
