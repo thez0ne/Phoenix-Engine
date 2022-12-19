@@ -31,11 +31,11 @@ class RaytracerLayer : public Phoinix::Layer
    {
       /*
       // Check if resize is needed
-      if (m_FinalImage->GetWidth() == m_ViewportWidth && m_FinalImage->GetHeight() == m_ViewportHeight)
-         return;
+      if (m_FinalImage->GetWidth() == m_ViewportWidth && m_FinalImage->GetHeight() ==
+      m_ViewportHeight) return;
 
       m_FinalImage->Resize(m_ViewportWidth, m_ViewportHeight);
-      
+
       delete[] m_ImageData;
       m_ImageData = new uint32_t[m_ViewportWidth * m_ViewportHeight];
 
