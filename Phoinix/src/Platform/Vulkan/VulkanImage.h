@@ -13,7 +13,7 @@ namespace Phoinix
       switch (format)
       {
          case Format::NONE:
-            PHOINIX_ASSERT(nullptr, "Invalid image format given");
+            PHOINIX_ASSERT(false, "Invalid image format given");
          case Format::RGBA:
             return VK_FORMAT_R8G8B8A8_UNORM;
          case Format::RGBA32F:
