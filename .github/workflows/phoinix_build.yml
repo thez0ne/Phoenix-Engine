@@ -58,7 +58,7 @@ jobs:
     - name: Install Other Dependencies
       run: |
         sudo apt update
-        sudo apt install xorg-dev libglu1-mesa-dev libgl1-mesa-dev
+        sudo apt install xorg-dev libglu1-mesa-dev libgl1-mesa-dev qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
 
     - name: Install Vulkan SDK
       run: |
