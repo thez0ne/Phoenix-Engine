@@ -8,7 +8,7 @@ file(GLOB_RECURSE Raytracer_SHADER "src/*.vert" "src/*.frag")
 
 # Raytracer EXE
 add_executable(
-    Raytracer 
+    Raytracer
     ${Raytracer_CPP}
     ${Raytracer_H}
     ${Raytracer_SHADER}
@@ -32,7 +32,7 @@ else()
     message(FATAL_ERROR "This platform is not supported for shader compilation from this")
 endif()
 
-file(GLOB_RECURSE SHADER_SRC 
+file(GLOB_RECURSE SHADER_SRC
     "src/shaders/*.vert"
     "src/shaders/*.frag"
     )
@@ -49,7 +49,7 @@ foreach(GLSL ${SHADER_SRC})
 endforeach(GLSL)
 
 add_custom_target(
-    Shaders_App 
+    Shaders_App
     DEPENDS ${SPIRV_BINARY_FILES}
     )
 
@@ -72,6 +72,6 @@ endif()
 
 # Setup files in VS
 if(WIN32)
-	file(GLOB_RECURSE Raytracer_SRC RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "*.cpp" "*.h" "*.vert" "*.frag")
-	source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${Raytracer_SRC})
+    file(GLOB_RECURSE Raytracer_SRC RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "*.cpp" "*.h" "*.vert" "*.frag")
+    source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${Raytracer_SRC})
 endif()

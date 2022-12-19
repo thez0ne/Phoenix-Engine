@@ -50,15 +50,15 @@ if (WIN32)
     message("${Vulkan_GLSLC_EXECUTABLE}")
     set(GLSL_VALIDATOR "${Vulkan_GLSLANG_VALIDATOR_EXECUTABLE}")
     set(GLSL_COMPILER "${Vulkan_GLSLC_EXECUTABLE}")
-    else()
+else()
     message(FATAL_ERROR "This platform is not supported for shader compilation from this")
-    endif()
-    
-    file(GLOB_RECURSE SHADER_SRC 
-    "src/shaders/*.vert"
-    "src/shaders/*.frag"
-    )
-    
+endif()
+
+file(GLOB_RECURSE SHADER_SRC
+"src/shaders/*.vert"
+"src/shaders/*.frag"
+)
+
 foreach(GLSL ${SHADER_SRC})
   get_filename_component(FILE_NAME ${GLSL} NAME)
   set(SPIRV "${PROJECT_BINARY_DIR}/shaders/${FILE_NAME}.spv")
@@ -69,12 +69,12 @@ foreach(GLSL ${SHADER_SRC})
     DEPENDS ${GLSL})
   list(APPEND SPIRV_BINARY_FILES ${SPIRV})
   endforeach(GLSL)
-  
+
 add_custom_target(
-    Shaders_Engine 
+    Shaders_Engine
     DEPENDS ${SPIRV_BINARY_FILES}
     )
-    
+
 add_dependencies(Phoinix Shaders_Engine)
 
 # Setup files in VS
