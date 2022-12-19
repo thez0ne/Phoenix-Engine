@@ -78,7 +78,8 @@ namespace Phoinix
       }
 
       return indices.HasValue() &&
-         deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU &&
+         deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU ||
+         deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU &&
          deviceFeatures.geometryShader && extensionsSupported && swapChainSupported;
    }
 
