@@ -25,11 +25,17 @@ namespace Phoinix
 
    VulkanRenderer::~VulkanRenderer()
    {
-      // TODO should be per frame?
       for (auto& cleanup : s_CleanupQueue)
       {
          cleanup();
       }
+      s_CleanupQueue.clear();
+
+      for (auto& cleanup : s_InstantCleanupQueue)
+      {
+         cleanup();
+      }
+      s_InstantCleanupQueue.clear();
 
       vkDeviceWaitIdle(m_Device.GetDevice());
 
@@ -122,6 +128,16 @@ namespace Phoinix
       uniformBuffers[m_CurrentFrame]->Update(m_CurrentFrame);
 
       vkResetFences(m_Device.GetDevice(), 1, &m_InFlightFences[m_CurrentFrame]);
+      {
+         // TODO I dont think waiting for device idle every frame is a good idea
+         vkDeviceWaitIdle(m_Device.GetDevice());
+
+         for (auto& func : s_InstantCleanupQueue)
+         {
+            func();
+         }
+         s_InstantCleanupQueue.clear();
+      }
 
       vkResetCommandBuffer(m_CommandBuffers[m_CurrentFrame], 0);
 

@@ -5,6 +5,7 @@ namespace Phoinix
    Renderer* (*Renderer::CreateFunc)(Window*) = nullptr;
 
    std::vector<std::function<void()>> Renderer::s_CleanupQueue;
+   std::vector<std::function<void()>> Renderer::s_InstantCleanupQueue;
 
    // Renderer* Renderer::s_Instance = nullptr;
 

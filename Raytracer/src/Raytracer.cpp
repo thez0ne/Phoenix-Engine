@@ -6,19 +6,17 @@
 class RaytracerLayer : public Phoinix::Layer
 {
  public:
-   RaytracerLayer() : Layer("Sandbox Layer")
+   RaytracerLayer() : Layer("Sandbox Layer"), m_ViewportWidth(800), m_ViewportHeight(600)
    {
       Phoinix::Utils::ScopedTimer creation{"RaytracerLayer constructor"};
       PRINT("Creating Application layer");
-      m_ViewportWidth = 800;
-      m_ViewportHeight = 600;
       m_ImageData = new uint32_t[m_ViewportWidth * m_ViewportHeight];
       for (size_t i = 0; i < m_ViewportWidth * m_ViewportHeight; i++)
       {
          auto color = glm::vec4(1.0f, .0f, .0f, 1.0f);
          m_ImageData[i] = Phoinix::Image::VecToRgba(color);
       }
-      m_FinalImage = Phoinix::Image::Create(800, 600, Phoinix::Format::RGBA, m_ImageData);
+      m_FinalImage = Phoinix::Image::Create(m_ViewportWidth, m_ViewportHeight, Phoinix::Format::RGBA, m_ImageData);
    }
 
    ~RaytracerLayer()
@@ -29,7 +27,6 @@ class RaytracerLayer : public Phoinix::Layer
 
    void OnUpdate() override
    {
-      /*
       // Check if resize is needed
       if (m_FinalImage->GetWidth() == m_ViewportWidth && m_FinalImage->GetHeight() ==
       m_ViewportHeight) return;
@@ -47,7 +44,6 @@ class RaytracerLayer : public Phoinix::Layer
 
       // "Render"
       m_FinalImage->SetData(m_ImageData);
-      */
    }
 
    void OnEvent(Phoinix::Event& e) override
@@ -72,7 +68,6 @@ class RaytracerLayer : public Phoinix::Layer
    }
 
  private:
-   // std::shared_ptr<Phoinix::Image> m_FinalImage;
    Phoinix::Image* m_FinalImage;
    uint32_t* m_ImageData;
    uint32_t m_ViewportWidth = 0, m_ViewportHeight = 0;

@@ -25,7 +25,6 @@ namespace Phoinix
 
    VulkanImage::~VulkanImage()
    {
-      // Release();
    }
 
    void VulkanImage::SetData(const void* data)
@@ -153,8 +152,40 @@ namespace Phoinix
 
       m_Width = width;
       m_Height = height;
-      Release();
+
+      VulkanRenderer::RegisterInstantCleanup([sampler = m_Sampler, imageView = m_ImageView, image = m_Image,
+            memory = m_Memory, stagingBuffer = m_StagingBuffer, stagingBufferMemory = m_StagingBufferMemory]() {
+         VkDevice device = VulkanDevice::Device();
+
+         vkDestroySampler(device, sampler, nullptr);
+         vkDestroyImageView(device, imageView, nullptr);
+         vkDestroyImage(device, image, nullptr);
+         vkFreeMemory(device, memory, nullptr);
+         vkDestroyBuffer(device, stagingBuffer, nullptr);
+         vkFreeMemory(device, stagingBufferMemory, nullptr);
+      });
+
+      m_Sampler = nullptr;
+      m_ImageView = nullptr;
+      m_Image = nullptr;
+      m_Memory = nullptr;
+      m_StagingBuffer = nullptr;
+      m_StagingBufferMemory = nullptr;
       AllocateMemory(m_Width * m_Height * BytesPerPixel(m_Format));
+   }
+
+   void VulkanImage::Release()
+   {
+      VulkanRenderer::RegisterCleanup([this]() {
+         VkDevice device = VulkanDevice::Device();
+
+         vkDestroySampler(device, m_Sampler, nullptr);
+         vkDestroyImageView(device, m_ImageView, nullptr);
+         vkDestroyImage(device, m_Image, nullptr);
+         vkFreeMemory(device, m_Memory, nullptr);
+         vkDestroyBuffer(device, m_StagingBuffer, nullptr);
+         vkFreeMemory(device, m_StagingBufferMemory, nullptr);
+      });
    }
 
    void VulkanImage::AllocateMemory(uint64_t size)
@@ -235,20 +266,6 @@ namespace Phoinix
       // TODO is it possible to not use the imgui function for this
       m_DescriptorSet = (VkDescriptorSet)ImGui_ImplVulkan_AddTexture(
          m_Sampler, m_ImageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-   }
-
-   void VulkanImage::Release()
-   {
-      VulkanRenderer::RegisterCleanup([&]() {
-         VkDevice device = VulkanDevice::Device();
-
-         vkDestroySampler(device, m_Sampler, nullptr);
-         vkDestroyImageView(device, m_ImageView, nullptr);
-         vkDestroyImage(device, m_Image, nullptr);
-         vkFreeMemory(device, m_Memory, nullptr);
-         vkDestroyBuffer(device, m_StagingBuffer, nullptr);
-         vkFreeMemory(device, m_StagingBufferMemory, nullptr);
-      });
    }
 
    void VulkanImage::MakeDefault()

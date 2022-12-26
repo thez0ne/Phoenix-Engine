@@ -29,11 +29,19 @@ namespace Phoinix
          s_CleanupQueue.emplace_back(func);
       }
 
+      static void RegisterInstantCleanup(std::function<void()>&& func)
+      {
+         s_InstantCleanupQueue.emplace_back(func);
+      }
+
       static Renderer* Create(Window* window);
 
     protected:
       static Renderer* (*CreateFunc)(Window* window);
 
       static std::vector<std::function<void()>> s_CleanupQueue;
+      static std::vector<std::function<void()>> s_InstantCleanupQueue;
+
+      // uint32_t m_CurrentFrame = 0;
    };
 }
