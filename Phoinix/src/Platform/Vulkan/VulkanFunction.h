@@ -7,11 +7,11 @@
 
 namespace Phoinix::Graphics::Vulkan
 {
-   void MakeDefault()
-   {
-      Phoinix::VulkanDescriptorSet::MakeDefault();
-      Phoinix::VulkanRenderer::MakeDefault();
-      Phoinix::VulkanUniformBuffer::MakeDefault();
-      Phoinix::VulkanImage::MakeDefault();
-   }
+  void MakeDefault()
+  {
+    Phoinix::VulkanDescriptorSet::MakeDefault();
+    Phoinix::VulkanRenderer::MakeDefault();
+    Phoinix::VulkanUniformBuffer::MakeDefault();
+    Phoinix::VulkanImage::MakeDefault();
+  }
 }

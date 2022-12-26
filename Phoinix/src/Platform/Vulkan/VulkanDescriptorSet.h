@@ -6,20 +6,20 @@
 
 namespace Phoinix
 {
-   class VulkanDescriptorSet : public DescriptorSet
-   {
-    public:
-      VulkanDescriptorSet();
-      virtual ~VulkanDescriptorSet();
+  class VulkanDescriptorSet : public DescriptorSet
+  {
+  public:
+    VulkanDescriptorSet();
+    virtual ~VulkanDescriptorSet();
 
-      VkDescriptorSetLayout* GetDescriptorSetLayout() { return &m_DescriptorSetLayout; }
+    VkDescriptorSetLayout* GetDescriptorSetLayout() { return &m_DescriptorSetLayout; }
 
-      static void MakeDefault();
+    static void MakeDefault();
 
-    protected:
-      static DescriptorSet* CreateFuncVulkan();
+  protected:
+    static DescriptorSet* CreateFuncVulkan();
 
-    private:
-      VkDescriptorSetLayout m_DescriptorSetLayout;
-   };
+  private:
+    VkDescriptorSetLayout m_DescriptorSetLayout;
+  };
 }

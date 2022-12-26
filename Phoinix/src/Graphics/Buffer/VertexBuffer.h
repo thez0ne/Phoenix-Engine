@@ -6,17 +6,17 @@
 
 namespace Phoinix
 {
-   class VertexBuffer
-   {
-    public:
-      VertexBuffer(VulkanDevice& device, std::vector<Vertex> vertices);
-      ~VertexBuffer();
+  class VertexBuffer
+  {
+  public:
+    VertexBuffer(VulkanDevice& device, std::vector<Vertex> vertices);
+    ~VertexBuffer();
 
-      void Bind(VkCommandBuffer commandBuffer);
+    void Bind(VkCommandBuffer commandBuffer);
 
-    private:
-      VkBuffer m_VertexBuffer;
-      VkDeviceMemory m_VertexBufferMemory;
-      void* m_Data;
-   };
+  private:
+    VkBuffer m_VertexBuffer;
+    VkDeviceMemory m_VertexBufferMemory;
+    void* m_Data;
+  };
 }

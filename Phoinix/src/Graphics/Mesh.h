@@ -8,21 +8,21 @@
 
 namespace Phoinix
 {
-   class Mesh
-   {
-    public:
-      // Mesh();
-      Mesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices);
-      Mesh(const Mesh& mesh);
+  class Mesh
+  {
+  public:
+    // Mesh();
+    Mesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices);
+    Mesh(const Mesh& mesh);
 
-      virtual ~Mesh();
+    virtual ~Mesh();
 
-    private:
-      // VertexBuffer m_VertexBuffer;
-      // IndexBuffer m_IndexBuffer;
-      // TODO add material
+  private:
+    // VertexBuffer m_VertexBuffer;
+    // IndexBuffer m_IndexBuffer;
+    // TODO add material
 
-      std::vector<Vertex> m_Vertices;
-      std::vector<uint32_t> m_Indices;
-   };
+    std::vector<Vertex> m_Vertices;
+    std::vector<uint32_t> m_Indices;
+  };
 }

@@ -10,47 +10,47 @@
 
 namespace Phoinix
 {
-   class Application
-   {
-    public:
-      Application();
-      virtual ~Application();
+  class Application
+  {
+  public:
+    Application();
+    virtual ~Application();
 
-      static void Init();
-      void Run();
+    static void Init();
+    void Run();
 
-      void OnEvent(Event& e);
+    void OnEvent(Event& e);
 
-      void AddLayer(Layer* layer);
-      void AddOverlay(Layer* layer);
-      void RemoveLayer(Layer* layer);
+    void AddLayer(Layer* layer);
+    void AddOverlay(Layer* layer);
+    void RemoveLayer(Layer* layer);
 
-      inline Window& GetWindow() { return *window; }
-      Renderer& GetRenderer() { return *renderer; }
-      static Application* GetInstance() { return instance; }
+    inline Window& GetWindow() { return *window; }
+    Renderer& GetRenderer() { return *renderer; }
+    static Application* GetInstance() { return instance; }
 
-      void WithRendering(bool status) { shouldRender = status; }
+    void WithRendering(bool status) { shouldRender = status; }
 
-    private:
-      static Application* _instance;
-      LayerStack layerStack;
+  private:
+    static Application* _instance;
+    LayerStack layerStack;
 
-      ImGuiLayer* _ImGuiLayer;
+    ImGuiLayer* _ImGuiLayer;
 
-      Window* window;
-      Renderer* renderer;
-      bool isRunning = true;
+    Window* window;
+    Renderer* renderer;
+    bool isRunning = true;
 
-      static Application* instance;
+    static Application* instance;
 
-      bool shouldRender = true;
+    bool shouldRender = true;
 
-    private:
-      bool OnClose(WindowCloseEvent& e);
+  private:
+    bool OnClose(WindowCloseEvent& e);
 
-    protected:
-      void ShouldShowImGuiDemo(bool status) { _ImGuiLayer->ShouldShowDemoWindow(status); }
-   };
+  protected:
+    void ShouldShowImGuiDemo(bool status) { _ImGuiLayer->ShouldShowDemoWindow(status); }
+  };
 
-   Application* CreateApp();
+  Application* CreateApp();
 }

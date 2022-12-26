@@ -5,15 +5,15 @@
 
 namespace Phoinix
 {
-   class DescriptorSet
-   {
-    public:
-      DescriptorSet() = default;
-      virtual ~DescriptorSet() = default;
+  class DescriptorSet
+  {
+  public:
+    DescriptorSet() = default;
+    virtual ~DescriptorSet() = default;
 
-      static DescriptorSet* Create();
+    static DescriptorSet* Create();
 
-    protected:
-      static DescriptorSet* (*CreateFunc)();
-   };
+  protected:
+    static DescriptorSet* (*CreateFunc)();
+  };
 }

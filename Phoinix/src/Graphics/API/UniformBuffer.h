@@ -6,18 +6,18 @@
 
 namespace Phoinix
 {
-   class UniformBuffer
-   {
-    public:
-      virtual ~UniformBuffer() = default;
+  class UniformBuffer
+  {
+  public:
+    virtual ~UniformBuffer() = default;
 
-      virtual void Update(uint32_t) = 0;
+    virtual void Update(uint32_t) = 0;
 
-      static UniformBuffer* Create();
-      static UniformBuffer* Create(const UniformBufferObject& data);
+    static UniformBuffer* Create();
+    static UniformBuffer* Create(const UniformBufferObject& data);
 
-    protected:
-      static UniformBuffer* (*CreateFunc)();
-      static UniformBuffer* (*CreateDataFunc)(const UniformBufferObject& data);
-   };
+  protected:
+    static UniformBuffer* (*CreateFunc)();
+    static UniformBuffer* (*CreateDataFunc)(const UniformBufferObject& data);
+  };
 }

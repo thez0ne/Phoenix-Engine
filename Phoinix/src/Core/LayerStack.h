@@ -7,25 +7,25 @@
 
 namespace Phoinix
 {
-   typedef std::vector<Layer*> LayerVector;
-   typedef std::vector<Layer*>::iterator LayerIterator;
+  typedef std::vector<Layer*> LayerVector;
+  typedef std::vector<Layer*>::iterator LayerIterator;
 
-   class LayerStack
-   {
-    public:
-      LayerStack();
-      ~LayerStack();
+  class LayerStack
+  {
+  public:
+    LayerStack();
+    ~LayerStack();
 
-      void PushLayer(Layer* layer);
-      void PushOverlay(Layer* layer);
-      void PopLayer(Layer* layer);
+    void PushLayer(Layer* layer);
+    void PushOverlay(Layer* layer);
+    void PopLayer(Layer* layer);
 
-      LayerIterator begin() { return stack.begin(); }
-      LayerIterator end() { return stack.end(); }
+    LayerIterator begin() { return stack.begin(); }
+    LayerIterator end() { return stack.end(); }
 
-    private:
-      LayerVector stack;
-      LayerIterator currentLayer;
-      unsigned int currentLayerIndex = 0;
-   };
+  private:
+    LayerVector stack;
+    LayerIterator currentLayer;
+    unsigned int currentLayerIndex = 0;
+  };
 }

@@ -5,16 +5,16 @@
 
 #ifdef PHOINIX_WINDOWS
 
-   // #define _DEBUG
-   #ifdef _DEBUG
-      #define _CRTDBG_MAP_ALLOC
-      #include <crtdbg.h>
-      #include <stdlib.h>
-   #endif
+  // #define _DEBUG
+  #ifdef _DEBUG
+    #define _CRTDBG_MAP_ALLOC
+    #include <crtdbg.h>
+    #include <stdlib.h>
+  #endif
 
-   #ifdef _DEBUG
-      #define new new (_NORMAL_BLOCK, __FILE__, __LINE__)
-   #endif
+  #ifdef _DEBUG
+    #define new new (_NORMAL_BLOCK, __FILE__, __LINE__)
+  #endif
 
 #endif
 
@@ -23,17 +23,17 @@ extern Phoinix::Application* Phoinix::CreateApp();
 int main(int argc, char** argv)
 {
 #ifdef PHOINIX_WINDOWS
-   _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+  _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
-   Phoinix::Log::Init();
+  Phoinix::Log::Init();
 
-   ENGINE_INFO("Welcome to the Motherland!");
+  ENGINE_INFO("Welcome to the Motherland!");
 
-   auto app = Phoinix::CreateApp();
-   app->Run();
-   delete app;
+  auto app = Phoinix::CreateApp();
+  app->Run();
+  delete app;
 
-   Phoinix::Log::Shutdown();
+  Phoinix::Log::Shutdown();
 
-   return 0;
+  return 0;
 }

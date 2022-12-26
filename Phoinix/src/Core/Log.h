@@ -6,21 +6,21 @@
 
 namespace Phoinix
 {
-   class Log
-   {
-    public:
-      static void Init();
-      static void Shutdown();
-      static void SetInfo();
-      static void SetTrace();
+  class Log
+  {
+  public:
+    static void Init();
+    static void Shutdown();
+    static void SetInfo();
+    static void SetTrace();
 
-      static std::shared_ptr<spdlog::logger>& GetEngineLog() { return m_EngineLogger; }
-      static std::shared_ptr<spdlog::logger>& GetAppLog() { return m_AppLogger; }
+    static std::shared_ptr<spdlog::logger>& GetEngineLog() { return m_EngineLogger; }
+    static std::shared_ptr<spdlog::logger>& GetAppLog() { return m_AppLogger; }
 
-    private:
-      static std::shared_ptr<spdlog::logger> m_EngineLogger;
-      static std::shared_ptr<spdlog::logger> m_AppLogger;
-   };
+  private:
+    static std::shared_ptr<spdlog::logger> m_EngineLogger;
+    static std::shared_ptr<spdlog::logger> m_AppLogger;
+  };
 }
 
 #define ENGINE_TRACE(...) Phoinix::Log::GetEngineLog()->trace(__VA_ARGS__)

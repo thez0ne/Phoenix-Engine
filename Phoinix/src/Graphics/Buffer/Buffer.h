@@ -10,21 +10,21 @@
 
 namespace Phoinix
 {
-   // TODO move to file?
-   struct UniformBufferObject
-   {
-      alignas(16) glm::mat4 model;
-      alignas(16) glm::mat4 view;
-      alignas(16) glm::mat4 projection;
-   };
+  // TODO move to file?
+  struct UniformBufferObject
+  {
+    alignas(16) glm::mat4 model;
+    alignas(16) glm::mat4 view;
+    alignas(16) glm::mat4 projection;
+  };
 
-   uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+  uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 
-   void CreateBuffer(VkDeviceSize size,
-                     VkBufferUsageFlags usage,
-                     VkMemoryPropertyFlags properties,
-                     VkBuffer& buffer,
-                     VkDeviceMemory& bufferMemory);
+  void CreateBuffer(VkDeviceSize size,
+                    VkBufferUsageFlags usage,
+                    VkMemoryPropertyFlags properties,
+                    VkBuffer& buffer,
+                    VkDeviceMemory& bufferMemory);
 
-   void CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
+  void CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 }

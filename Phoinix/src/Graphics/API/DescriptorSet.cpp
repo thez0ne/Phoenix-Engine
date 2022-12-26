@@ -2,11 +2,11 @@
 
 namespace Phoinix
 {
-   DescriptorSet* (*DescriptorSet::CreateFunc)() = nullptr;
+  DescriptorSet* (*DescriptorSet::CreateFunc)() = nullptr;
 
-   DescriptorSet* DescriptorSet::Create()
-   {
-      PHOINIX_ASSERT(CreateFunc, "No Descriptor Set create function exists");
-      return CreateFunc();
-   }
+  DescriptorSet* DescriptorSet::Create()
+  {
+    PHOINIX_ASSERT(CreateFunc, "No Descriptor Set create function exists");
+    return CreateFunc();
+  }
 }

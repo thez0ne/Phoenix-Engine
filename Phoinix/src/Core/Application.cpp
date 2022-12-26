@@ -5,97 +5,97 @@
 
 namespace Phoinix
 {
-   Application* Application::instance = nullptr;
+  Application* Application::instance = nullptr;
 
-   Application::Application() : layerStack()
-   {
-      PHOINIX_ASSERT(
-         !instance,
-         "Application should be a singleton!"); // TODO can i move this into a base singleton class?
+  Application::Application() : layerStack()
+  {
+    PHOINIX_ASSERT(
+      !instance,
+      "Application should be a singleton!"); // TODO can i move this into a base singleton class?
 
-      instance = this;
-      window = Window::Create();
-      window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
+    instance = this;
+    window = Window::Create();
+    window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 
-      Graphics::Vulkan::MakeDefault(); // TODO can prob be moved elsewhere to allow for switching
-                                       // APIs
-      renderer = Renderer::Create(window);
+    Graphics::Vulkan::MakeDefault(); // TODO can prob be moved elsewhere to allow for switching
+                                     // APIs
+    renderer = Renderer::Create(window);
 
-      _ImGuiLayer = new ImGuiLayer();
-      AddOverlay(_ImGuiLayer);
-   }
+    _ImGuiLayer = new ImGuiLayer();
+    AddOverlay(_ImGuiLayer);
+  }
 
-   Application::~Application()
-   {
-      RemoveLayer(_ImGuiLayer);
-      delete window;
-      delete renderer;
-   }
+  Application::~Application()
+  {
+    RemoveLayer(_ImGuiLayer);
+    delete window;
+    delete renderer;
+  }
 
-   void Application::Run()
-   {
-      ENGINE_INFO("Application is starting up");
+  void Application::Run()
+  {
+    ENGINE_INFO("Application is starting up");
 
-      while (isRunning)
+    while (isRunning)
+    {
+      window->Update();
+
+      for (Layer* layer : layerStack)
+        layer->OnUpdate();
+
+      renderer->BeginRender();
+
+      _ImGuiLayer->ImGuiInitFrame();
+      for (Layer* layer : layerStack)
       {
-         window->Update();
-
-         for (Layer* layer : layerStack)
-            layer->OnUpdate();
-
-         renderer->BeginRender();
-
-         _ImGuiLayer->ImGuiInitFrame();
-         for (Layer* layer : layerStack)
-         {
-            layer->OnImGUIUpdate();
-         }
-         if (shouldRender)
-            renderer->Render();
-         _ImGuiLayer->ImGuiRenderFrame();
-
-         // renderer->DrawFrame();
-
-         renderer->EndRender();
+        layer->OnImGUIUpdate();
       }
-      // TODO make sure command buffer is emptied and cleaned up before exiting
-      // renderer->EndRender();
-      ENGINE_INFO("Application is closing down");
-   }
+      if (shouldRender)
+        renderer->Render();
+      _ImGuiLayer->ImGuiRenderFrame();
 
-   void Application::OnEvent(Event& e)
-   {
-      EventDispatcher dispatcher(e);
-      dispatcher.dispatch<WindowCloseEvent>(
-         std::bind(&Application::OnClose, this, std::placeholders::_1));
+      // renderer->DrawFrame();
 
-      for (LayerIterator it = layerStack.end(); it != layerStack.begin();)
-      {
-         (*--it)->OnEvent(e);
-         if (e.handled)
-            break;
-      }
-   }
+      renderer->EndRender();
+    }
+    // TODO make sure command buffer is emptied and cleaned up before exiting
+    // renderer->EndRender();
+    ENGINE_INFO("Application is closing down");
+  }
 
-   void Application::AddLayer(Layer* layer)
-   {
-      layerStack.PushLayer(layer);
-   }
+  void Application::OnEvent(Event& e)
+  {
+    EventDispatcher dispatcher(e);
+    dispatcher.dispatch<WindowCloseEvent>(
+      std::bind(&Application::OnClose, this, std::placeholders::_1));
 
-   void Application::AddOverlay(Layer* layer)
-   {
-      layerStack.PushOverlay(layer);
-   }
+    for (LayerIterator it = layerStack.end(); it != layerStack.begin();)
+    {
+      (*--it)->OnEvent(e);
+      if (e.handled)
+        break;
+    }
+  }
 
-   void Application::RemoveLayer(Layer* layer)
-   {
-      layerStack.PopLayer(layer);
-   }
+  void Application::AddLayer(Layer* layer)
+  {
+    layerStack.PushLayer(layer);
+  }
 
-   bool Application::OnClose(WindowCloseEvent& e)
-   {
-      isRunning = false;
-      return true;
-   }
+  void Application::AddOverlay(Layer* layer)
+  {
+    layerStack.PushOverlay(layer);
+  }
+
+  void Application::RemoveLayer(Layer* layer)
+  {
+    layerStack.PopLayer(layer);
+  }
+
+  bool Application::OnClose(WindowCloseEvent& e)
+  {
+    isRunning = false;
+    return true;
+  }
 
 }

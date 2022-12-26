@@ -5,7 +5,7 @@
 
 namespace Phoinix
 {
-   class Model
-   {
-   };
+  class Model
+  {
+  };
 }

@@ -44,15 +44,15 @@ BreakInheritanceList: AfterColon
 BreakStringLiterals: true
 ColumnLimit: 100
 CompactNamespaces: true
-ConstructorInitializerIndentWidth: 3
-ContinuationIndentWidth: 3
+ConstructorInitializerIndentWidth: 2
+ContinuationIndentWidth: 2
 CommentPragmas: '^ PHOINIX pragma:'
 Cpp11BracedListStyle: true
 DerivePointerAlignment: true
 FixNamespaceComments: false
 IndentCaseLabels: true
 IndentPPDirectives: BeforeHash
-IndentWidth: 3
+IndentWidth: 2
 IndentWrappedFunctionNames: false
 NamespaceIndentation: All
 # PackConstructorInitializersStyle: Never
