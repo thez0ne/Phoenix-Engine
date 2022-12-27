@@ -31,6 +31,8 @@ jobs:
             exclude: "./Phoinix/src/ImGui/ImConfig.h"
           - check: "./Raytracer"
             exclude: "" # Nothing to exclude
+          - check: "./Sandbox"
+            exclude: "" # Nothing to exclude
     steps:
       - name: Checkout reposistory and submodules
         uses: actions/checkout@v2
