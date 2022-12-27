@@ -78,7 +78,7 @@ jobs:
       - name: Build
         working-directory: ${{runner.workspace}}/build
         shell: bash
-        run: cmake --build . --config $BUILD_TYPE
+        run: cmake --build . --config $BUILD_TYPE --target Raytracer Sandbox
 
     # TODO setup running tests
     # - name: Test
@@ -117,5 +117,4 @@ jobs:
       - name: Build
         working-directory: ${{runner.workspace}}/build
         shell: bash
-        run: cmake --build . --config $BUILD_TYPE
-
+        run: cmake --build . --config $BUILD_TYPE --target Raytracer Sandbox
