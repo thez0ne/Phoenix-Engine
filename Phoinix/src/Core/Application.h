@@ -3,6 +3,8 @@
 #include "Core.h"
 #include "Events/Event.h"
 #include "Events/ApplicationEvent.h"
+#include "Events/KeyboardEvent.h"
+#include "Events/MouseEvent.h"
 #include "Window.h"
 #include "Graphics/API/Renderer.h"
 #include "LayerStack.h"

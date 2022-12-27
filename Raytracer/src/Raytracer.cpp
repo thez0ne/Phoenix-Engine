@@ -1,6 +1,5 @@
 #include <Phoinix.h>
 
-#include <vulkan/vulkan.h>
 #include <glm/glm.hpp>
 
 class RaytracerLayer : public Phoinix::Layer
@@ -28,6 +27,8 @@ public:
 
   void OnUpdate() override
   {
+    m_RenderTimer.Reset();
+
     // Check if resize is needed
     if (m_FinalImage->GetWidth() == m_ViewportWidth &&
         m_FinalImage->GetHeight() == m_ViewportHeight)
@@ -46,19 +47,39 @@ public:
 
     // "Render"
     m_FinalImage->SetData(m_ImageData);
+
+    m_FrameTime = m_RenderTimer.ElapsedMilliSeconds();
   }
 
   void OnEvent(Phoinix::Event& e) override
   {
     // PRINT("Application handling {}", e);
+    // TODO get file save assigned to keyboard shortcut
   }
 
   void OnImGUIUpdate() override
   {
+    // Main Menu Bar
+    if (ImGui::BeginMainMenuBar())
+    {
+      if (ImGui::BeginMenu("File"))
+      {
+        if (ImGui::MenuItem("Save"))
+        {
+          PRINT("Saving image");
+          m_FinalImage->Save(m_FileName);
+        }
+        ImGui::EndMenu();
+      }
+      ImGui::EndMainMenuBar();
+    }
+
+    // Dockspace
     ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 
+    // Raytracer Viewport
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-    ImGui::Begin("Viewport");
+    ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_NoCollapse);
 
     m_ViewportWidth = ImGui::GetContentRegionAvail().x;
     m_ViewportHeight = ImGui::GetContentRegionAvail().y;
@@ -67,12 +88,27 @@ public:
 
     ImGui::End();
     ImGui::PopStyleVar();
+
+    // Settings & Stats
+    ImGui::Begin("Settings");
+
+    ImGui::Text("Frame Time: %.2f ms", m_FrameTime);
+
+    ImGui::Separator();
+
+    ImGui::InputText("filepath", &m_FileName);
+
+    ImGui::End();
   }
 
 private:
   Phoinix::Image* m_FinalImage;
   uint32_t* m_ImageData;
   uint32_t m_ViewportWidth = 0, m_ViewportHeight = 0;
+
+  std::string m_FileName = "output";
+  Phoinix::Utils::Timer m_RenderTimer{};
+  float m_FrameTime;
 };
 
 class Raytracer : public Phoinix::Application
@@ -90,6 +126,6 @@ public:
 Phoinix::Application* Phoinix::CreateApp()
 {
   auto app = new Raytracer();
-  // app->WithRendering(false);
+  app->WithRendering(false);
   return app;
 }
