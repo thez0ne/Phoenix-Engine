@@ -57,6 +57,8 @@ namespace Phoinix
     VkDeviceMemory m_StagingBufferMemory;
     size_t m_AlignedSize;
 
+    void* m_Data;
+
     void Release();
     void AllocateMemory(uint64_t size);
   };

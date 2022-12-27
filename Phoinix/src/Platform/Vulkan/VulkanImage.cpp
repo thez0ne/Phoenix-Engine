@@ -1,5 +1,7 @@
 #include "VulkanImage.h"
 
+#include <stb_image_write.h>
+
 // TODO temp
 #include "Core/Application.h"
 #include "Graphics/Renderer/VulkanRenderer.h"
@@ -62,11 +64,9 @@ namespace Phoinix
 
     // Upload to Buffer
     {
-      void* myData;
+      vkMapMemory(VulkanDevice::Device(), m_StagingBufferMemory, 0, m_AlignedSize, 0, &m_Data);
 
-      vkMapMemory(VulkanDevice::Device(), m_StagingBufferMemory, 0, m_AlignedSize, 0, &myData);
-
-      memcpy(myData, data, upload_size);
+      memcpy(m_Data, data, upload_size);
       VkMappedMemoryRange range[1] = {};
       range[0].sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
       range[0].memory = m_StagingBufferMemory;
@@ -174,8 +174,7 @@ namespace Phoinix
 
   void VulkanImage::Save(const std::string& filepath)
   {
-    // TODO
-    ENGINE_ERR("NOT IMPLEMENTED");
+    stbi_write_png(filepath.c_str(), m_Width, m_Height, 4, m_Data, 0);
   }
 
   void VulkanImage::Release()

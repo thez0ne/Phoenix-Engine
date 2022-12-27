@@ -64,7 +64,7 @@ public:
       {
         if (ImGui::MenuItem("Save"))
         {
-          auto finalName = m_FileName.append(".png");
+          auto finalName = m_FileName + ".png";
           PRINT("Saving image with name {}", finalName);
           m_FinalImage->Save(finalName);
         }
