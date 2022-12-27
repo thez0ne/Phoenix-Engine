@@ -172,6 +172,12 @@ namespace Phoinix
     AllocateMemory(m_Width * m_Height * BytesPerPixel(m_Format));
   }
 
+  void VulkanImage::Save(const std::string& filepath)
+  {
+    // TODO
+    ENGINE_ERR("NOT IMPLEMENTED");
+  }
+
   void VulkanImage::Release()
   {
     VulkanRenderer::RegisterCleanup([this]() {

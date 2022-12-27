@@ -38,6 +38,7 @@ namespace Phoinix
 
     virtual void* GetDescriptorSet() override { return m_DescriptorSet; }
     virtual void Resize(uint32_t width, uint32_t height) override;
+    virtual void Save(const std::string& filepath) override;
 
     static void MakeDefault();
 

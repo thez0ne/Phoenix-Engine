@@ -37,7 +37,8 @@ namespace Phoinix
     virtual void SetData(const void* data) = 0;
     virtual void ImGuiBind() = 0;
     virtual void* GetDescriptorSet() = 0;
-    virtual void Resize(uint32_t, uint32_t) = 0;
+    virtual void Resize(uint32_t width, uint32_t height) = 0;
+    virtual void Save(const std::string& filepath) = 0;
 
     [[nodiscard]] uint32_t GetWidth() const { return m_Width; }
     [[nodiscard]] uint32_t GetHeight() const { return m_Height; }
