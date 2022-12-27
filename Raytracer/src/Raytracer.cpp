@@ -12,8 +12,7 @@ public:
     m_ImageData = new uint32_t[m_ViewportWidth * m_ViewportHeight];
     for (size_t i = 0; i < m_ViewportWidth * m_ViewportHeight; i++)
     {
-      auto color = glm::vec4(1.0f, .0f, .0f, 1.0f);
-      m_ImageData[i] = Phoinix::Image::VecToRgba(color);
+      m_ImageData[i] = Phoinix::Image::VecToRgba(m_BackgroundColour);
     }
     m_FinalImage =
       Phoinix::Image::Create(m_ViewportWidth, m_ViewportHeight, Phoinix::Format::RGBA, m_ImageData);
@@ -30,19 +29,18 @@ public:
     m_RenderTimer.Reset();
 
     // Check if resize is needed
-    if (m_FinalImage->GetWidth() == m_ViewportWidth &&
-        m_FinalImage->GetHeight() == m_ViewportHeight)
-      return;
-
-    m_FinalImage->Resize(m_ViewportWidth, m_ViewportHeight);
+    if (m_FinalImage->GetWidth() != m_ViewportWidth ||
+        m_FinalImage->GetHeight() != m_ViewportHeight)
+    {
+      m_FinalImage->Resize(m_ViewportWidth, m_ViewportHeight);
+    }
 
     delete[] m_ImageData;
     m_ImageData = new uint32_t[m_ViewportWidth * m_ViewportHeight];
 
     for (size_t i = 0; i < m_ViewportWidth * m_ViewportHeight; i++)
     {
-      auto color = glm::vec4(1.0f, .0f, .0f, 1.0f);
-      m_ImageData[i] = Phoinix::Image::VecToRgba(color);
+      m_ImageData[i] = Phoinix::Image::VecToRgba(m_BackgroundColour);
     }
 
     // "Render"
@@ -66,8 +64,9 @@ public:
       {
         if (ImGui::MenuItem("Save"))
         {
-          PRINT("Saving image");
-          m_FinalImage->Save(m_FileName);
+          auto finalName = m_FileName.append(".png");
+          PRINT("Saving image with name {}", finalName);
+          m_FinalImage->Save(finalName);
         }
         ImGui::EndMenu();
       }
@@ -96,6 +95,10 @@ public:
 
     ImGui::Separator();
 
+    ImGui::ColorEdit4("Background Colour", (float*)&m_BackgroundColour);
+
+    ImGui::Separator();
+
     ImGui::InputText("filepath", &m_FileName);
 
     ImGui::End();
@@ -109,6 +112,7 @@ private:
   std::string m_FileName = "output";
   Phoinix::Utils::Timer m_RenderTimer{};
   float m_FrameTime;
+  glm::vec4 m_BackgroundColour = glm::vec4(1.0f, .0f, .0f, 1.0f);
 };
 
 class Raytracer : public Phoinix::Application

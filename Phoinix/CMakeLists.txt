@@ -40,6 +40,7 @@ target_link_libraries(Phoinix PUBLIC Vulkan::Vulkan)
 # Dear ImGUI
 add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/external/imgui modules/imgui)
 target_link_libraries(Phoinix PUBLIC imgui)
+add_compile_definitions(IMGUI_USER_CONFIG="${CMAKE_CURRENT_SOURCE_DIR}/src/ImGui/ImConfig.h")
 
 # stb
 target_include_directories(Phoinix PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/external/stb")
