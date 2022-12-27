@@ -41,6 +41,9 @@ target_link_libraries(Phoinix PUBLIC Vulkan::Vulkan)
 add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/external/imgui modules/imgui)
 target_link_libraries(Phoinix PUBLIC imgui)
 
+# stb
+target_include_directories(Phoinix PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/external/stb")
+
 target_include_directories(Phoinix PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
 target_precompile_headers(Phoinix PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src/pch.h")
