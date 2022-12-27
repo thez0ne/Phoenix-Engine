@@ -15,7 +15,7 @@ namespace Phoinix::Utils
   class Timer
   {
   public:
-    Timer() { m_Start = std::chrono::high_resolution_clock::now(); }
+    Timer() { Reset(); }
     ~Timer() = default;
 
     [[nodiscard]] float ElapsedNanoSeconds() const
@@ -38,6 +38,8 @@ namespace Phoinix::Utils
                std::chrono::high_resolution_clock::now() - m_Start)
         .count();
     }
+
+    void Reset() { m_Start = std::chrono::high_resolution_clock::now(); }
 
   private:
     std::chrono::time_point<std::chrono::high_resolution_clock> m_Start;
