@@ -22,46 +22,46 @@ if(WIN32)
 	source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${RAYTRACER_SRC})
 endif()
 
-# # Shader Stuff
-# file(GLOB_RECURSE SHADER_SRC
-#     "src/shaders/*.vert"
-#     "src/shaders/*.frag"
-#     )
+# Shader Stuff
+file(GLOB_RECURSE SHADER_SRC
+    "src/shaders/*.vert"
+    "src/shaders/*.frag"
+    )
 
-# foreach(GLSL ${SHADER_SRC})
-#     get_filename_component(FILE_NAME ${GLSL} NAME)
-#     set(SPIRV "${PROJECT_BINARY_DIR}/shaders/${FILE_NAME}.spv")
-#     add_custom_command(
-#         OUTPUT ${SPIRV}
-#         COMMAND ${CMAKE_COMMAND} -E make_directory "${PROJECT_BINARY_DIR}/shaders/"
-#         COMMAND ${Vulkan_GLSLC_EXECUTABLE} -o ${SPIRV} ${GLSL}
-#         DEPENDS ${GLSL}
-#         COMMENT "Compiling ${FILE_NAME}"
-#     )
-#     list(APPEND SPIRV_BINARY_FILES ${SPIRV})
-# endforeach(GLSL)
+foreach(GLSL ${SHADER_SRC})
+    get_filename_component(FILE_NAME ${GLSL} NAME)
+    set(SPIRV "${PROJECT_BINARY_DIR}/shaders/${FILE_NAME}.spv")
+    add_custom_command(
+        OUTPUT ${SPIRV}
+        COMMAND ${CMAKE_COMMAND} -E make_directory "${PROJECT_BINARY_DIR}/shaders/"
+        COMMAND ${Vulkan_GLSLC_EXECUTABLE} -o ${SPIRV} ${GLSL}
+        DEPENDS ${GLSL}
+        COMMENT "Compiling ${FILE_NAME}"
+    )
+    list(APPEND SPIRV_BINARY_FILES ${SPIRV})
+endforeach(GLSL)
 
-# add_custom_target(
-#     Shaders_App
-#     DEPENDS ${SPIRV_BINARY_FILES}
-#     )
+add_custom_target(
+    Shaders_RT
+    DEPENDS ${SPIRV_BINARY_FILES}
+    )
 
-# add_dependencies(Raytracer Shaders_App)
+add_dependencies(Raytracer Shaders_RT)
 
-# add_custom_command(TARGET Raytracer POST_BUILD
-#     COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:Raytracer>/shaders/"
-#     COMMAND ${CMAKE_COMMAND} -E copy_directory
-#         "${PROJECT_BINARY_DIR}/shaders"
-#         "$<TARGET_FILE_DIR:Raytracer>/shaders"
-#         )
-# if(MSVC)
-#     add_custom_command(TARGET Raytracer POST_BUILD
-#         COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:Phoinix>/shaders/"
-#         COMMAND ${CMAKE_COMMAND} -E copy_directory
-#             "${PROJECT_BINARY_DIR}/shaders"
-#             "$<TARGET_FILE_DIR:Raytracer>/../shaders"
-#             )
-# endif()
+add_custom_command(TARGET Raytracer POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:Raytracer>/shaders/"
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${PROJECT_BINARY_DIR}/shaders"
+        "$<TARGET_FILE_DIR:Raytracer>/shaders"
+        )
+if(MSVC)
+    add_custom_command(TARGET Raytracer POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:Phoinix>/shaders/"
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+            "${PROJECT_BINARY_DIR}/shaders"
+            "$<TARGET_FILE_DIR:Raytracer>/../shaders"
+            )
+endif()
 
 # Setup files in VS
 if(WIN32)
