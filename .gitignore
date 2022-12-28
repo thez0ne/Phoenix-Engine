@@ -1,0 +1,17 @@
+/.vscode
+/.vs
+/[Bb]uild
+
+/build_debug_gcc
+/build_release_gcc
+/build_debug_clang
+/build_release_clang
+/compile_commands.json
+/out
+.gdb_history
+.clangd
+tags
+
+
+# Libraries' Ignores
+# /external
