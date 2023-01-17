@@ -1,50 +1,24 @@
 #include <Phoinix.h>
 
-#include <glm/glm.hpp>
+#include "RayRenderer.h"
 
 class RaytracerLayer : public Phoinix::Layer
 {
 public:
-  RaytracerLayer() : Layer("Sandbox Layer"), m_ViewportWidth(800), m_ViewportHeight(600)
+  RaytracerLayer() : Layer("Sandbox Layer")
   {
     Phoinix::Utils::ScopedTimer creation{"RaytracerLayer constructor"};
     PRINT("Creating Application layer");
-    m_ImageData = new uint32_t[m_ViewportWidth * m_ViewportHeight];
-    for (size_t i = 0; i < m_ViewportWidth * m_ViewportHeight; i++)
-    {
-      m_ImageData[i] = Phoinix::Image::VecToRgba(m_BackgroundColour);
-    }
-    m_FinalImage =
-      Phoinix::Image::Create(m_ViewportWidth, m_ViewportHeight, Phoinix::Format::RGBA, m_ImageData);
   }
 
-  ~RaytracerLayer()
-  {
-    delete m_FinalImage;
-    delete[] m_ImageData;
-  }
+  ~RaytracerLayer() {}
 
   void OnUpdate() override
   {
     m_RenderTimer.Reset();
 
-    // Check if resize is needed
-    if (m_FinalImage->GetWidth() != m_ViewportWidth ||
-        m_FinalImage->GetHeight() != m_ViewportHeight)
-    {
-      m_FinalImage->Resize(m_ViewportWidth, m_ViewportHeight);
-    }
-
-    delete[] m_ImageData;
-    m_ImageData = new uint32_t[m_ViewportWidth * m_ViewportHeight];
-
-    for (size_t i = 0; i < m_ViewportWidth * m_ViewportHeight; i++)
-    {
-      m_ImageData[i] = Phoinix::Image::VecToRgba(m_BackgroundColour);
-    }
-
-    // "Render"
-    m_FinalImage->SetData(m_ImageData);
+    renderer.Resize();
+    renderer.Render();
 
     m_FrameTime = m_RenderTimer.ElapsedMilliSeconds();
   }
@@ -66,7 +40,8 @@ public:
         {
           auto finalName = m_FileName + ".png";
           PRINT("Saving image with name {}", finalName);
-          m_FinalImage->Save(finalName);
+          renderer.SaveImage(finalName);
+          PRINT("Saving complete");
         }
         ImGui::EndMenu();
       }
@@ -80,10 +55,7 @@ public:
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
     ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_NoCollapse);
 
-    m_ViewportWidth = ImGui::GetContentRegionAvail().x;
-    m_ViewportHeight = ImGui::GetContentRegionAvail().y;
-
-    m_FinalImage->ImGuiBind();
+    renderer.OnImGuiUpdate();
 
     ImGui::End();
     ImGui::PopStyleVar();
@@ -95,7 +67,7 @@ public:
 
     ImGui::Separator();
 
-    ImGui::ColorEdit4("Background Colour", (float*)&m_BackgroundColour);
+    renderer.OnBackgroundColourUpdate();
 
     ImGui::Separator();
 
@@ -105,14 +77,11 @@ public:
   }
 
 private:
-  Phoinix::Image* m_FinalImage;
-  uint32_t* m_ImageData;
-  uint32_t m_ViewportWidth = 0, m_ViewportHeight = 0;
+  Raytracing::RayRenderer renderer;
 
   std::string m_FileName = "output";
   Phoinix::Utils::Timer m_RenderTimer{};
   float m_FrameTime;
-  glm::vec4 m_BackgroundColour = glm::vec4(1.0f, .0f, .0f, 1.0f);
 };
 
 class Raytracer : public Phoinix::Application
