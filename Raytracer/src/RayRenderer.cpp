@@ -1,5 +1,7 @@
 #include "RayRenderer.h"
 
+#include "glm/gtc/type_ptr.hpp"
+
 namespace Raytracing
 {
   RayRenderer::RayRenderer() : m_ViewportWidth(800), m_ViewportHeight(600)
@@ -29,6 +31,7 @@ namespace Raytracing
                                     (float)y / (float)m_FinalImage->GetHeight()};
         remappedCoords = remappedCoords * 2.0f - 1.0f;
         auto colour = PixelColour(remappedCoords);
+        colour = glm::clamp(colour, glm::vec4(0.f), glm::vec4(1.f));
         m_ImageData[x + y * m_ViewportWidth] = Phoinix::Image::VecToRgba(colour);
       }
     }
@@ -63,7 +66,7 @@ namespace Raytracing
 
   void RayRenderer::OnBackgroundColourUpdate()
   {
-    ImGui::ColorEdit4("Background Colour", (float*)&m_BackgroundColour);
+    ImGui::ColorEdit4("Background Colour", glm::value_ptr(m_BackgroundColour));
   }
 
   glm::vec4 RayRenderer::PixelColour(glm::vec2 coords)
@@ -78,8 +81,23 @@ namespace Raytracing
     auto c = dot(ray.origin - m_SpherePos, ray.origin - m_SpherePos) - m_Radius * m_Radius;
 
     auto discriminant = b * b - 4.0f * a * c;
+
+    // hits the sphere
     if (discriminant >= 0)
-      return m_SphereColour;
+    {
+      float t1 = (-b - glm::sqrt(discriminant)) / (2.0f * a);
+      float t2 = (-b + glm::sqrt(discriminant)) / (2.0f * a);
+
+      // origin + dir * t -> coord of hit
+      glm::vec3 h1 = ray.origin + ray.dir * t1;
+      glm::vec3 h2 = ray.origin + ray.dir * t2;
+
+      glm::vec3 normal = glm::normalize(h1 - m_SpherePos);
+
+      float lightIntensity = glm::dot(normal, h1 - m_LightPos);
+
+      return m_SphereColour * lightIntensity;
+    }
 
     return m_BackgroundColour;
   }

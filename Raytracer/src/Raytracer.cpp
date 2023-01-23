@@ -1,6 +1,7 @@
 #include <Phoinix.h>
 
 #include "RayRenderer.h"
+#include "glm/gtc/type_ptr.hpp"
 
 class RaytracerLayer : public Phoinix::Layer
 {
@@ -59,6 +60,13 @@ public:
 
     ImGui::End();
     ImGui::PopStyleVar();
+
+    // Editor
+    ImGui::Begin("Editor");
+
+    ImGui::DragFloat3("Light Position", glm::value_ptr(renderer.m_LightPos));
+
+    ImGui::End();
 
     // Settings & Stats
     ImGui::Begin("Settings");

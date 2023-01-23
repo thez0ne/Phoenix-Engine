@@ -38,5 +38,9 @@ namespace Raytracing
     float m_Radius = 0.5f;
     glm::vec3 m_SpherePos = glm::vec3(.0f, 0.f, -1.f);
     glm::vec4 m_SphereColour = glm::vec4(1.f, 0.f, 0.f, 1.0f);
+
+  public:
+    // Light coming from
+    glm::vec3 m_LightPos = glm::vec3(-1.f, -1.f, -2.f);
   };
 }
