@@ -12,6 +12,6 @@ namespace Raytracing
     glm::vec4 colour;
 
     float t;
-    float hitDistance = 999999999; // TODO infinity?
+    float hitDistance = std::numeric_limits<double>::infinity();
   };
 }
