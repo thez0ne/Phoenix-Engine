@@ -1,7 +1,8 @@
 #include <Phoinix.h>
 
 #include "RayRenderer.h"
-#include "glm/gtc/type_ptr.hpp"
+#include "Scene.h"
+#include "Objects/Sphere.h"
 
 class RaytracerLayer : public Phoinix::Layer
 {
@@ -10,16 +11,25 @@ public:
   {
     Phoinix::Utils::ScopedTimer creation{"RaytracerLayer constructor"};
     PRINT("Creating Application layer");
+
+    m_Scene.AddToScene(
+      new Raytracing::Sphere(glm::vec3(.0f, .0f, -1.f), 0.5f, glm::vec4(1.f, 0.f, 0.f, 1.f)));
+    m_Scene.AddToScene(
+      new Raytracing::Sphere(glm::vec3(1.0f, .0f, -2.f), 1.f, glm::vec4(0.f, 1.f, 0.f, 1.f)));
+
+    // debug sphere for light
+    // m_Scene.AddToScene(
+    //   new Raytracing::Sphere(glm::vec3(-1.f, -1.f, -2.f), .2f, glm::vec4(1.f, 1.f, 1.f, 1.f)));
   }
 
-  ~RaytracerLayer() {}
+  ~RaytracerLayer() = default;
 
   void OnUpdate() override
   {
     m_RenderTimer.Reset();
 
-    renderer.Resize();
-    renderer.Render();
+    m_Renderer.Resize();
+    m_Renderer.Render(m_Scene);
 
     m_FrameTime = m_RenderTimer.ElapsedMilliSeconds();
   }
@@ -41,8 +51,18 @@ public:
         {
           auto finalName = m_FileName + ".png";
           PRINT("Saving image with name {}", finalName);
-          renderer.SaveImage(finalName);
+          m_Renderer.SaveImage(finalName);
           PRINT("Saving complete");
+        }
+        ImGui::EndMenu();
+      }
+
+      if (ImGui::BeginMenu("Scene"))
+      {
+        if (ImGui::MenuItem("Add"))
+        {
+          // TODO make this a dropdown with supported shapes
+          // TODO add shape to scene
         }
         ImGui::EndMenu();
       }
@@ -56,17 +76,10 @@ public:
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
     ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_NoCollapse);
 
-    renderer.OnImGuiUpdate();
+    m_Renderer.OnImGuiUpdate();
 
     ImGui::End();
     ImGui::PopStyleVar();
-
-    // Editor
-    ImGui::Begin("Editor");
-
-    ImGui::DragFloat3("Light Position", glm::value_ptr(renderer.m_LightPos));
-
-    ImGui::End();
 
     // Settings & Stats
     ImGui::Begin("Settings");
@@ -75,7 +88,12 @@ public:
 
     ImGui::Separator();
 
-    renderer.OnBackgroundColourUpdate();
+    // TODO cant change this, eventually move into the camera
+    m_Renderer.OnBackgroundColourUpdate();
+
+    ImGui::Separator();
+
+    m_Scene.RenderHierarchy();
 
     ImGui::Separator();
 
@@ -85,7 +103,8 @@ public:
   }
 
 private:
-  Raytracing::RayRenderer renderer;
+  Raytracing::RayRenderer m_Renderer;
+  Raytracing::Scene m_Scene;
 
   std::string m_FileName = "output";
   Phoinix::Utils::Timer m_RenderTimer{};

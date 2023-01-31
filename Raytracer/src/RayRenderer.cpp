@@ -21,7 +21,7 @@ namespace Raytracing
     delete[] m_ImageData;
   }
 
-  void RayRenderer::Render()
+  void RayRenderer::Render(const Scene& scene)
   {
     for (size_t y = 0; y < m_ViewportHeight; y++)
     {
@@ -30,7 +30,7 @@ namespace Raytracing
         glm::vec2 remappedCoords = {(float)x / (float)m_FinalImage->GetWidth(),
                                     (float)y / (float)m_FinalImage->GetHeight()};
         remappedCoords = remappedCoords * 2.0f - 1.0f;
-        auto colour = PixelColour(remappedCoords);
+        auto colour = PixelColour(remappedCoords, scene);
         colour = glm::clamp(colour, glm::vec4(0.f), glm::vec4(1.f));
         m_ImageData[x + y * m_ViewportWidth] = Phoinix::Image::VecToRgba(colour);
       }
@@ -69,38 +69,13 @@ namespace Raytracing
     ImGui::ColorEdit4("Background Colour", glm::value_ptr(m_BackgroundColour));
   }
 
-  glm::vec4 RayRenderer::PixelColour(glm::vec2 coords)
+  glm::vec4 RayRenderer::PixelColour(glm::vec2 coords, const Scene& scene)
   {
     // TODO currently doesnt handle aspect ratio
     Ray ray;
     ray.origin = m_CameraCenter;
     ray.dir = glm::normalize(glm::vec3(coords.x, coords.y, -1.f));
 
-    auto a = glm::dot(ray.dir, ray.dir);
-    auto b = 2.0 * dot(ray.origin - m_SpherePos, ray.dir);
-    auto c = dot(ray.origin - m_SpherePos, ray.origin - m_SpherePos) - m_Radius * m_Radius;
-
-    auto discriminant = b * b - 4.0f * a * c;
-
-    // hits the sphere
-    if (discriminant >= 0)
-    {
-      float t1 = (-b - glm::sqrt(discriminant)) / (2.0f * a);
-      float t2 = (-b + glm::sqrt(discriminant)) / (2.0f * a);
-
-      // origin + dir * t -> coord of hit
-      glm::vec3 h1 = ray.origin + ray.dir * t1;
-      glm::vec3 h2 = ray.origin + ray.dir * t2;
-
-      glm::vec3 normal = glm::normalize(h1 - m_SpherePos);
-
-      float lightIntensity = glm::dot(normal, h1 - m_LightPos);
-
-      return m_SphereColour * lightIntensity;
-    }
-
-    return m_BackgroundColour;
+    return scene.ShootRay(ray);
   }
-
-  void RayRenderer::TraceRay(const Ray& ray) {}
 }
