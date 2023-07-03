@@ -1,13 +1,13 @@
-#include <Phoinix.h>
+#include <Phoenix.h>
 
 #include <glm/glm.hpp>
 
-class SandboxLayer : public Phoinix::Layer
+class SandboxLayer : public Phoenix::Layer
 {
 public:
   SandboxLayer() : Layer("Sandbox Layer")
   {
-    Phoinix::Utils::ScopedTimer creation{"SandboxLayer constructor"};
+    Phoenix::Utils::ScopedTimer creation{"SandboxLayer constructor"};
     PRINT("Creating Application layer");
   }
 
@@ -15,7 +15,7 @@ public:
 
   void OnUpdate() override {}
 
-  void OnEvent(Phoinix::Event& e) override
+  void OnEvent(Phoenix::Event& e) override
   {
     // PRINT("Application handling {}", e);
   }
@@ -28,7 +28,7 @@ public:
   }
 };
 
-class Sandbox : public Phoinix::Application
+class Sandbox : public Phoenix::Application
 {
 public:
   Sandbox() : Application() { AddLayer(new SandboxLayer()); }
@@ -36,7 +36,7 @@ public:
   virtual ~Sandbox() = default;
 };
 
-Phoinix::Application* Phoinix::CreateApp()
+Phoenix::Application* Phoenix::CreateApp()
 {
   auto app = new Sandbox();
   return app;

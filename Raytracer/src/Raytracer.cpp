@@ -1,15 +1,15 @@
-#include <Phoinix.h>
+#include <Phoenix.h>
 
 #include "RayRenderer.h"
 #include "Scene.h"
 #include "Objects/Sphere.h"
 
-class RaytracerLayer : public Phoinix::Layer
+class RaytracerLayer : public Phoenix::Layer
 {
 public:
   RaytracerLayer() : Layer("Sandbox Layer")
   {
-    Phoinix::Utils::ScopedTimer creation{"RaytracerLayer constructor"};
+    Phoenix::Utils::ScopedTimer creation{"RaytracerLayer constructor"};
     PRINT("Creating Application layer");
 
     m_Scene.AddToScene(
@@ -34,7 +34,7 @@ public:
     m_FrameTime = m_RenderTimer.ElapsedMilliSeconds();
   }
 
-  void OnEvent(Phoinix::Event& e) override
+  void OnEvent(Phoenix::Event& e) override
   {
     // PRINT("Application handling {}", e);
     // TODO get file save assigned to keyboard shortcut
@@ -107,11 +107,11 @@ private:
   Raytracing::Scene m_Scene;
 
   std::string m_FileName = "output";
-  Phoinix::Utils::Timer m_RenderTimer{};
+  Phoenix::Utils::Timer m_RenderTimer{};
   float m_FrameTime;
 };
 
-class Raytracer : public Phoinix::Application
+class Raytracer : public Phoenix::Application
 {
 public:
   Raytracer() : Application()
@@ -123,7 +123,7 @@ public:
   virtual ~Raytracer() = default;
 };
 
-Phoinix::Application* Phoinix::CreateApp()
+Phoenix::Application* Phoenix::CreateApp()
 {
   auto app = new Raytracer();
   app->WithRendering(false);

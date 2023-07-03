@@ -9,10 +9,10 @@ namespace Raytracing
     m_ImageData = new uint32_t[m_ViewportWidth * m_ViewportHeight];
     for (size_t i = 0; i < m_ViewportWidth * m_ViewportHeight; i++)
     {
-      m_ImageData[i] = Phoinix::Image::VecToRgba(m_BackgroundColour);
+      m_ImageData[i] = Phoenix::Image::VecToRgba(m_BackgroundColour);
     }
     m_FinalImage =
-      Phoinix::Image::Create(m_ViewportWidth, m_ViewportHeight, Phoinix::Format::RGBA, m_ImageData);
+      Phoenix::Image::Create(m_ViewportWidth, m_ViewportHeight, Phoenix::Format::RGBA, m_ImageData);
   }
 
   RayRenderer::~RayRenderer()
@@ -32,7 +32,7 @@ namespace Raytracing
         remappedCoords = remappedCoords * 2.0f - 1.0f;
         auto colour = PixelColour(remappedCoords, scene);
         colour = glm::clamp(colour, glm::vec4(0.f), glm::vec4(1.f));
-        m_ImageData[x + y * m_ViewportWidth] = Phoinix::Image::VecToRgba(colour);
+        m_ImageData[x + y * m_ViewportWidth] = Phoenix::Image::VecToRgba(colour);
       }
     }
 

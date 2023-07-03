@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Phoinix/Image.h>
+#include <Phoenix/Image.h>
 #include <glm/glm.hpp>
 
 #include "Ray.h"
@@ -23,7 +23,7 @@ namespace Raytracing
     void OnBackgroundColourUpdate();
 
   private:
-    Phoinix::Image* m_FinalImage;
+    Phoenix::Image* m_FinalImage;
     uint32_t* m_ImageData;
     uint32_t m_ViewportWidth, m_ViewportHeight;
 
