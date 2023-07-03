@@ -3,7 +3,7 @@
 ![Linux Build](https://github.com/thez0ne/Phoenix-Engine/workflows/Phoenix_Build/badge.svg)
 <!-- ![Windows Build](https://github.com/thez0ne/Phoenix-Engine/workflows/Phoenix_Windows/badge.svg) -->
 
-## Building a game engine from scratch uusing Vulkan
+## Building a game engine from scratch using Vulkan
 
 ---
 
@@ -43,5 +43,5 @@ These libraries are setup as submodules within this repo
 - GLM - Mathematics
 - spdlog - Logging Library
 - Dear ImGUI - UI library to be used in development
-- (NEED TO FIND AN IMAGE LOADING SOLUTION)
+- stb - Image Loading and Generating
 - (NEED TO FIND AN MODEL LOADING SOLUTION)
