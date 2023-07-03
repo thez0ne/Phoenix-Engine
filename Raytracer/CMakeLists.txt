@@ -1,5 +1,5 @@
 if (WIN32)
-    add_compile_definitions(PHOINIX_WINDOWS)
+    add_compile_definitions(PHOENIX_WINDOWS)
 endif()
 
 file(GLOB_RECURSE Raytracer_CPP "src/*.cpp")
@@ -14,7 +14,7 @@ add_executable(
     ${Raytracer_SHADER}
     )
 
-target_link_libraries(Raytracer PUBLIC Phoinix)
+target_link_libraries(Raytracer PUBLIC Phoenix)
 
 
 if(WIN32)
@@ -56,7 +56,7 @@ add_custom_command(TARGET Raytracer POST_BUILD
         )
 if(MSVC)
     add_custom_command(TARGET Raytracer POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:Phoinix>/shaders/"
+        COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:Phoenix>/shaders/"
         COMMAND ${CMAKE_COMMAND} -E copy_directory
             "${PROJECT_BINARY_DIR}/shaders"
             "$<TARGET_FILE_DIR:Raytracer>/../shaders"

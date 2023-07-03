@@ -46,7 +46,7 @@ ColumnLimit: 100
 CompactNamespaces: true
 ConstructorInitializerIndentWidth: 2
 ContinuationIndentWidth: 2
-CommentPragmas: "^ PHOINIX pragma:"
+CommentPragmas: "^ PHOENIX pragma:"
 Cpp11BracedListStyle: true
 DerivePointerAlignment: true
 FixNamespaceComments: false

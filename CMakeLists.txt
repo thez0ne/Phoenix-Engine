@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.18)
-project( Project_Phoinix VERSION 0.0.0 )
+project( Project_Phoenix VERSION 0.0.0 )
 set(CMAKE_CXX_STANDARD 20)
 
 if (WIN32)
@@ -12,7 +12,7 @@ endif()
 
 # Add sub-directories
 # Engine Library
-add_subdirectory(Phoinix)
+add_subdirectory(Phoenix)
 # Main Executable
 add_subdirectory(Raytracer)
 add_subdirectory(Sandbox)

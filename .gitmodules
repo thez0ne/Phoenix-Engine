@@ -1,15 +1,15 @@
-[submodule "Phoinix/external/imgui"]
-	path = Phoinix/external/imgui
+[submodule "Phoenix/external/imgui"]
+	path = Phoenix/external/imgui
 	url = https://github.com/neoJINXD/imgui.git
-[submodule "Phoinix/external/glfw"]
-	path = Phoinix/external/glfw
+[submodule "Phoenix/external/glfw"]
+	path = Phoenix/external/glfw
 	url = https://github.com/glfw/glfw.git
-[submodule "Phoinix/external/glm"]
-	path = Phoinix/external/glm
+[submodule "Phoenix/external/glm"]
+	path = Phoenix/external/glm
 	url = https://github.com/g-truc/glm.git
-[submodule "Phoinix/external/spdlog"]
-	path = Phoinix/external/spdlog
+[submodule "Phoenix/external/spdlog"]
+	path = Phoenix/external/spdlog
 	url = https://github.com/gabime/spdlog.git
-[submodule "Phoinix/external/stb"]
-	path = Phoinix/external/stb
+[submodule "Phoenix/external/stb"]
+	path = Phoenix/external/stb
 	url = https://github.com/nothings/stb.git
