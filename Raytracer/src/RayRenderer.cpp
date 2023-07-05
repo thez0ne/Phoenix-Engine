@@ -1,7 +1,5 @@
 #include "RayRenderer.h"
 
-#include "glm/gtc/type_ptr.hpp"
-
 namespace Raytracing
 {
   RayRenderer::RayRenderer() : m_ViewportWidth(800), m_ViewportHeight(600)
