@@ -17,6 +17,9 @@ public:
     m_Scene.AddToScene(
       new Raytracing::Sphere(glm::vec3(1.0f, .0f, -2.f), 1.f, glm::vec4(0.f, 1.f, 0.f, 1.f)));
 
+    m_Scene.AddCameraToScene(
+      new Raytracing::Camera(glm::vec3(0.f, 0.f, 2.f), glm::vec4(.3f, .2f, .5f, 1.0f)));
+
     // debug sphere for light
     // m_Scene.AddToScene(
     //   new Raytracing::Sphere(glm::vec3(-1.f, -1.f, -2.f), .2f, glm::vec4(1.f, 1.f, 1.f, 1.f)));
@@ -85,11 +88,6 @@ public:
     ImGui::Begin("Settings");
 
     ImGui::Text("Frame Time: %.2f ms", m_FrameTime);
-
-    ImGui::Separator();
-
-    // TODO cant change this, eventually move into the camera
-    m_Renderer.OnBackgroundColourUpdate();
 
     ImGui::Separator();
 

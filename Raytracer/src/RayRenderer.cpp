@@ -9,7 +9,7 @@ namespace Raytracing
     m_ImageData = new uint32_t[m_ViewportWidth * m_ViewportHeight];
     for (size_t i = 0; i < m_ViewportWidth * m_ViewportHeight; i++)
     {
-      m_ImageData[i] = Phoenix::Image::VecToRgba(m_BackgroundColour);
+      m_ImageData[i] = Phoenix::Image::VecToRgba(glm::vec4(.1f, .4f, .1f, 1.f));
     }
     m_FinalImage =
       Phoenix::Image::Create(m_ViewportWidth, m_ViewportHeight, Phoenix::Format::RGBA, m_ImageData);
@@ -64,16 +64,11 @@ namespace Raytracing
     m_FinalImage->ImGuiBind();
   }
 
-  void RayRenderer::OnBackgroundColourUpdate()
-  {
-    ImGui::ColorEdit4("Background Colour", glm::value_ptr(m_BackgroundColour));
-  }
-
   glm::vec4 RayRenderer::PixelColour(glm::vec2 coords, const Scene& scene)
   {
     // TODO currently doesnt handle aspect ratio
     Ray ray;
-    ray.origin = m_CameraCenter;
+    ray.origin = scene.GetCamera()->GetPosition();
     ray.dir = glm::normalize(glm::vec3(coords.x, coords.y, -1.f));
 
     return scene.ShootRay(ray);

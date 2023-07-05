@@ -14,7 +14,9 @@ namespace Raytracing
     void CameraSettings();
 
     [[nodiscard]] glm::vec3 GetPosition() const { return m_Position; }
+    [[nodiscard]] void SetPosition(glm::vec3 pos) { m_Position = pos; }
     [[nodiscard]] glm::vec4 GetBackgroundColour() const { return m_BackgroundColour; }
+    [[nodiscard]] void SetBackgroundColour(glm::vec4 colour) { m_BackgroundColour = colour; }
 
   private:
     glm::vec3 m_Position;

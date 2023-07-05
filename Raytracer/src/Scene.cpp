@@ -18,6 +18,8 @@ namespace Raytracing
     {
       delete obj;
     }
+
+    delete m_Camera;
   }
 
   glm::vec4 Scene::ShootRay(const Ray& ray) const
@@ -43,7 +45,7 @@ namespace Raytracing
     }
     if (!hasHit)
     {
-      return glm::vec4(0.3f);
+      return m_Camera->GetBackgroundColour();
     }
 
     float lightIntensity = glm::dot(m_LightPos - closestHit.position, closestHit.normal);
@@ -55,6 +57,11 @@ namespace Raytracing
     m_Objects.push_back(object);
   }
 
+  void Scene::AddCameraToScene(Camera* camera)
+  {
+    m_Camera = camera;
+  }
+
   void Scene::RenderHierarchy()
   {
     ImGui::Begin("Hierarchy");
@@ -62,6 +69,11 @@ namespace Raytracing
 
     ImGui::Separator();
 
+    m_Camera->CameraSettings();
+
+    ImGui::Separator();
+
+    ImGui::Text("Objects");
     ImGui::DragFloat3("Light Position", glm::value_ptr(m_LightPos));
 
     ImGui::End();
