@@ -1,5 +1,7 @@
 #include "RayRenderer.h"
 
+#include <random>
+
 namespace Raytracing
 {
   RayRenderer::RayRenderer() : m_ViewportWidth(800), m_ViewportHeight(600)
@@ -66,9 +68,32 @@ namespace Raytracing
   {
     // TODO currently doesnt handle aspect ratio
     Ray ray;
-    ray.origin = scene.GetCamera()->GetPosition();
-    ray.dir = glm::normalize(glm::vec3(coords.x, coords.y, -1.f));
 
-    return scene.ShootRay(ray);
+    glm::vec4 color(0.f);
+
+    ray.origin = scene.GetCamera()->GetPosition();
+    if (scene.GetCamera()->GetAntiAliasing())
+    {
+      std::random_device rd;
+      std::mt19937 gen(rd());
+      std::uniform_real_distribution<double> dist(0.0, 0.001);
+      ray.dir = glm::normalize(glm::vec3(coords.x + dist(gen), coords.y + dist(gen), -1.f));
+      for (int i = 0; i < 25; i++)
+      {
+        // return scene.ShootRay(ray);
+        color += scene.ShootRay(ray);
+      }
+    }
+    else
+    {
+      ray.dir = glm::normalize(glm::vec3(coords.x, coords.y, -1.f));
+      color += scene.ShootRay(ray);
+    }
+
+    if (scene.GetCamera()->GetAntiAliasing())
+    {
+      return color / 25.f;
+    }
+    return color;
   }
 }
