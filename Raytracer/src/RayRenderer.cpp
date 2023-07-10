@@ -1,6 +1,7 @@
 #include "RayRenderer.h"
 
-#include <random>
+// #include <random>
+#include "Utilities/Random.h"
 
 namespace Raytracing
 {
@@ -68,35 +69,26 @@ namespace Raytracing
   {
     // TODO currently doesnt handle aspect ratio
     Ray ray;
-
-    glm::vec4 color(0.f);
-
-    // TODO cleanup this code
-
     ray.origin = scene.GetCamera()->GetPosition();
-    if (scene.GetCamera()->GetAntiAliasing())
+
+    if (!scene.GetCamera()->GetAntiAliasing())
     {
-      // TODO move this somewhere else, may help with performance
-      std::random_device rd;
-      std::mt19937 gen(rd());
-      std::uniform_real_distribution<double> dist(0.0, 0.001);
-      ray.dir = glm::normalize(glm::vec3(coords.x + dist(gen), coords.y + dist(gen), -1.f));
-      for (int i = 0; i < 25; i++)
-      {
-        // return scene.ShootRay(ray);
-        color += scene.ShootRay(ray);
-      }
-    }
-    else
-    {
+      // no AA
       ray.dir = glm::normalize(glm::vec3(coords.x, coords.y, -1.f));
+      return scene.ShootRay(ray);
+    }
+
+    // with AA
+    glm::vec4 color(0.f);
+    auto AAIntensity = scene.GetCamera()->GetAntiAliasingAmount();
+
+    ray.dir = glm::normalize(glm::vec3(coords.x + Random::RandomDoubleRange(0.0, 0.001),
+                                       coords.y + Random::RandomDoubleRange(0.0, 0.001),
+                                       -1.f));
+    for (int i = 0; i < AAIntensity; i++)
+    {
       color += scene.ShootRay(ray);
     }
-
-    if (scene.GetCamera()->GetAntiAliasing())
-    {
-      return color / 25.f;
-    }
-    return color;
+    return color / AAIntensity;
   }
 }
