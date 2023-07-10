@@ -71,9 +71,12 @@ namespace Raytracing
 
     glm::vec4 color(0.f);
 
+    // TODO cleanup this code
+
     ray.origin = scene.GetCamera()->GetPosition();
     if (scene.GetCamera()->GetAntiAliasing())
     {
+      // TODO move this somewhere else, may help with performance
       std::random_device rd;
       std::mt19937 gen(rd());
       std::uniform_real_distribution<double> dist(0.0, 0.001);
