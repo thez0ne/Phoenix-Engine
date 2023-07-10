@@ -14,10 +14,18 @@ namespace Raytracing
     void CameraSettings();
 
     [[nodiscard]] glm::vec3 GetPosition() const { return m_Position; }
+    [[nodiscard]] void SetPosition(glm::vec3 pos) { m_Position = pos; }
     [[nodiscard]] glm::vec4 GetBackgroundColour() const { return m_BackgroundColour; }
+    [[nodiscard]] void SetBackgroundColour(glm::vec4 colour) { m_BackgroundColour = colour; }
+    [[nodiscard]] bool GetAntiAliasing() const { return m_AntiAliasing; }
+    [[nodiscard]] float GetAntiAliasingAmount() const { return m_AntiAliasingAmount; }
+    [[nodiscard]] void SetAntiAliasing(bool aa) { m_AntiAliasing = aa; }
 
   private:
     glm::vec3 m_Position;
     glm::vec4 m_BackgroundColour;
+
+    bool m_AntiAliasing = false;
+    float m_AntiAliasingAmount = 100;
   };
 }

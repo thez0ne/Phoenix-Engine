@@ -1,6 +1,7 @@
 #include "RayRenderer.h"
 
-#include "glm/gtc/type_ptr.hpp"
+// #include <random>
+#include "Utilities/Random.h"
 
 namespace Raytracing
 {
@@ -9,7 +10,7 @@ namespace Raytracing
     m_ImageData = new uint32_t[m_ViewportWidth * m_ViewportHeight];
     for (size_t i = 0; i < m_ViewportWidth * m_ViewportHeight; i++)
     {
-      m_ImageData[i] = Phoenix::Image::VecToRgba(m_BackgroundColour);
+      m_ImageData[i] = Phoenix::Image::VecToRgba(glm::vec4(.1f, .4f, .1f, 1.f));
     }
     m_FinalImage =
       Phoenix::Image::Create(m_ViewportWidth, m_ViewportHeight, Phoenix::Format::RGBA, m_ImageData);
@@ -64,18 +65,30 @@ namespace Raytracing
     m_FinalImage->ImGuiBind();
   }
 
-  void RayRenderer::OnBackgroundColourUpdate()
-  {
-    ImGui::ColorEdit4("Background Colour", glm::value_ptr(m_BackgroundColour));
-  }
-
   glm::vec4 RayRenderer::PixelColour(glm::vec2 coords, const Scene& scene)
   {
     // TODO currently doesnt handle aspect ratio
     Ray ray;
-    ray.origin = m_CameraCenter;
-    ray.dir = glm::normalize(glm::vec3(coords.x, coords.y, -1.f));
+    ray.origin = scene.GetCamera()->GetPosition();
 
-    return scene.ShootRay(ray);
+    if (!scene.GetCamera()->GetAntiAliasing())
+    {
+      // no AA
+      ray.dir = glm::normalize(glm::vec3(coords.x, coords.y, -1.f));
+      return scene.ShootRay(ray);
+    }
+
+    // with AA
+    glm::vec4 color(0.f);
+    auto AAIntensity = scene.GetCamera()->GetAntiAliasingAmount();
+
+    ray.dir = glm::normalize(glm::vec3(coords.x + Random::RandomDoubleRange(0.0, 0.001),
+                                       coords.y + Random::RandomDoubleRange(0.0, 0.001),
+                                       -1.f));
+    for (int i = 0; i < AAIntensity; i++)
+    {
+      color += scene.ShootRay(ray);
+    }
+    return color / AAIntensity;
   }
 }
