@@ -1,6 +1,7 @@
 #pragma once
 
 #include <random>
+#include <glm/vec3.hpp>
 
 namespace Raytracing
 {
@@ -9,5 +10,7 @@ namespace Raytracing
   public:
     static void RandomDouble(); // TODO
     static double RandomDoubleRange(double min, double max);
+    static glm::vec3 RandomVector(double min, double max);
+    static glm::vec3 RandomUnitVector();
   };
 }
