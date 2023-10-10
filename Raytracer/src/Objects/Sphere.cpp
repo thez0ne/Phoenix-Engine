@@ -1,5 +1,8 @@
 #include "Sphere.h"
 
+#include <imgui.h>
+#include <glm/gtc/type_ptr.hpp>
+
 namespace Raytracing
 {
   Sphere::Sphere(const glm::vec3& position, float radius, glm::vec4 colour) :
@@ -37,5 +40,15 @@ namespace Raytracing
     result.hitDistance = glm::distance(h1, ray.origin);
 
     return result;
+  }
+
+  void Sphere::RenderOptions(int id)
+  {
+    ImGui::PushID(id);
+    ImGui::Text("Sphere");
+    ImGui::DragFloat3("Position", glm::value_ptr(m_Position), 0.01f);
+    ImGui::ColorEdit4("Colour", glm::value_ptr(m_Colour));
+    ImGui::DragFloat("Radius", &m_Radius, 0.01f);
+    ImGui::PopID();
   }
 }

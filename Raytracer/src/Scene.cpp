@@ -76,6 +76,13 @@ namespace Raytracing
     ImGui::Text("Objects");
     ImGui::DragFloat3("Light Position", glm::value_ptr(m_LightPos));
 
+    int counter = 0;
+    for (Hitable* obj : m_Objects)
+    {
+      ImGui::Separator();
+      obj->RenderOptions(counter++);
+    }
+
     ImGui::End();
   }
 }

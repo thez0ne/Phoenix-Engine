@@ -1,5 +1,5 @@
 #pragma once
-
+#include "pch.h"
 #include "Hitable.h"
 #include <glm/glm.hpp>
 
@@ -14,6 +14,7 @@ namespace Raytracing
     ~Sphere() = default;
 
     virtual std::optional<HitInformation> Hit(const Ray& ray) override;
+    virtual void RenderOptions(int id) override;
 
   private:
     glm::vec3 m_Position;

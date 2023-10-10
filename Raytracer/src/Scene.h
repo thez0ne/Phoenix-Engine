@@ -20,7 +20,6 @@ namespace Raytracing
     void AddCameraToScene(Camera* object);
 
     // TODO add function to remove from scene
-    // TODO add imgui functionality to interact with each shape that exists
 
     void RenderHierarchy();
 
