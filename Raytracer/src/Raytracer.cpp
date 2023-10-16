@@ -62,10 +62,15 @@ public:
 
       if (ImGui::BeginMenu("Scene"))
       {
-        if (ImGui::MenuItem("Add"))
+        if (ImGui::BeginMenu("Add"))
         {
-          // TODO make this a dropdown with supported shapes
-          // TODO add shape to scene
+          if (ImGui::MenuItem("Sphere"))
+          {
+            m_Scene.AddToScene(
+              new Raytracing::Sphere(glm::vec3(.0f, .0f, 0.f), 1.f, glm::vec4(1.f, 1.f, 1.f, 1.f)));
+            ImGui::EndMenu();
+          }
+          // TODO is there a way to dynamically find a list of available shapes??
         }
         ImGui::EndMenu();
       }
