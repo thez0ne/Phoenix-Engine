@@ -26,6 +26,12 @@ namespace Raytracing
     float t1 = (-b - glm::sqrt(discriminant)) / (2.0f * a);
     float t2 = (-b + glm::sqrt(discriminant)) / (2.0f * a);
 
+    // PRINT("We have t1:{} and t2:{}", t1, t2);
+    if (t1 < 0)
+    {
+      return std::nullopt;
+    }
+
     // origin + dir * t -> coord of hit
     glm::vec3 h1 = ray.origin + ray.dir * t1;
     glm::vec3 h2 = ray.origin + ray.dir * t2;
