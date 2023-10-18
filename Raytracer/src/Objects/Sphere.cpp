@@ -5,8 +5,7 @@
 
 namespace Raytracing
 {
-  Sphere::Sphere(const glm::vec3& position, float radius, glm::vec4 colour) :
-    m_Position(position), m_Radius(radius), m_Colour(colour)
+  Sphere::Sphere(const glm::vec3& position, float radius) : m_Position(position), m_Radius(radius)
   {}
 
   std::optional<HitInformation> Sphere::Hit(const Ray& ray)
@@ -41,7 +40,7 @@ namespace Raytracing
     HitInformation result{};
     result.position = h1;
     result.normal = normal;
-    result.colour = m_Colour;
+    result.colour = m_Material.m_Albedo;
     result.t = t1;
     result.hitDistance = glm::distance(h1, ray.origin);
 
@@ -53,8 +52,9 @@ namespace Raytracing
     ImGui::PushID(id);
     ImGui::Text("Sphere");
     ImGui::DragFloat3("Position", glm::value_ptr(m_Position), 0.01f);
-    ImGui::ColorEdit4("Colour", glm::value_ptr(m_Colour));
     ImGui::DragFloat("Radius", &m_Radius, 0.01f);
+    // TODO make this a material drop down for editting
+    m_Material.RenderOptions();
     ImGui::PopID();
   }
 }

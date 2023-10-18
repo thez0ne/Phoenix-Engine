@@ -12,13 +12,21 @@ public:
     Phoenix::Utils::ScopedTimer creation{"RaytracerLayer constructor"};
     PRINT("Creating Application layer");
 
-    m_Scene.AddToScene(
-      new Raytracing::Sphere(glm::vec3(.0f, .0f, -1.f), 0.5f, glm::vec4(1.f, 0.f, 0.f, 1.f)));
-    m_Scene.AddToScene(
-      new Raytracing::Sphere(glm::vec3(1.0f, .0f, -2.f), 1.f, glm::vec4(0.f, 1.f, 0.f, 1.f)));
+    {
+      auto* sphere = new Raytracing::Sphere(glm::vec3(.0f, .0f, -1.f), 1.f);
+      sphere->GetMaterial().m_Albedo = glm::vec4(1.f, 0.f, 0.f, 1.f);
+      m_Scene.AddToScene(sphere);
+    }
+
+    // sphere as floor
+    {
+      auto* sphere = new Raytracing::Sphere(glm::vec3(0.f, -101.f, 0.f), 100.f);
+      sphere->GetMaterial().m_Albedo = glm::vec4(0.f, 0.f, 1.f, 1.f);
+      m_Scene.AddToScene(sphere);
+    }
 
     m_Scene.AddCameraToScene(
-      new Raytracing::Camera(glm::vec3(0.f, 0.f, 2.f), glm::vec4(.3f, .2f, .5f, 1.0f)));
+      new Raytracing::Camera(glm::vec3(0.f, 0.f, 4.f), glm::vec4(.3f, .2f, .5f, 1.0f)));
 
     // debug sphere for light
     // m_Scene.AddToScene(
@@ -66,8 +74,7 @@ public:
         {
           if (ImGui::MenuItem("Sphere"))
           {
-            m_Scene.AddToScene(
-              new Raytracing::Sphere(glm::vec3(.0f, .0f, 0.f), 1.f, glm::vec4(1.f, 1.f, 1.f, 1.f)));
+            m_Scene.AddToScene(new Raytracing::Sphere(glm::vec3(.0f, .0f, 0.f), 1.f));
             ImGui::EndMenu();
           }
           // TODO is there a way to dynamically find a list of available shapes??

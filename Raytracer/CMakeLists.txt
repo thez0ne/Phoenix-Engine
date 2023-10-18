@@ -16,6 +16,8 @@ add_executable(
 
 target_link_libraries(Raytracer PUBLIC Phoenix)
 
+target_include_directories(Raytracer PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
+
 
 if(WIN32)
 	file(GLOB_RECURSE RAYTRACER_SRC RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "*.cpp" "*.h" "*.vert" "*.frag")
