@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <imgui.h>
+#include <misc/cpp/imgui_stdlib.h>
 #include <string>
 
 namespace Raytracing
@@ -13,7 +14,7 @@ namespace Raytracing
     virtual void RenderOptions(int id)
     {
       ImGui::PushID(id);
-      ImGui::Text(name.c_str());
+      ImGui::InputText("Name", &name);
       ImGui::DragFloat("Roughness", &Roughness, 0.001f, 0.f, 1.f);
       ImGui::DragFloat("Metallic", &Metallic, 0.001f, 0.f, 1.f);
       ImGui::ColorEdit3("Albedo", glm::value_ptr(Albedo));

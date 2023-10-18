@@ -77,19 +77,32 @@ namespace Raytracing
     for (Hitable* obj : m_Objects)
     {
       ImGui::Separator();
-      obj->RenderOptions(counter++);
+      obj->RenderOptions(counter++, GetVectorOfMatNames());
     }
 
     ImGui::Separator();
-    ImGui::Text("Materials");
-
-    counter = 0;
-    for (Material* mat : m_Materials)
+    // ImGui::Text("Materials");
+    if (ImGui::CollapsingHeader("Materials"))
     {
-      ImGui::Separator();
-      mat->RenderOptions(counter++);
+      counter = 0;
+      for (Material* mat : m_Materials)
+      {
+        ImGui::Separator();
+        mat->RenderOptions(counter++);
+      }
     }
 
     ImGui::End();
+  }
+
+  std::vector<std::string> Scene::GetVectorOfMatNames() const
+  {
+    std::vector<std::string> matNames;
+    matNames.reserve(m_Materials.size());
+    for (Material* mat : m_Materials)
+    {
+      matNames.push_back(mat->name);
+    }
+    return matNames;
   }
 }

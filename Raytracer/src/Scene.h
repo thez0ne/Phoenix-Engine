@@ -31,5 +31,7 @@ namespace Raytracing
     std::vector<Material*> m_Materials;
     // TODO support a vector of lights
     glm::vec3 m_LightPos = glm::vec3(-3.f, 1.f, 1.f);
+
+    std::vector<std::string> GetVectorOfMatNames() const;
   };
 }

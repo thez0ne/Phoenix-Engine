@@ -47,14 +47,28 @@ namespace Raytracing
     return result;
   }
 
-  void Sphere::RenderOptions(int id)
+  void Sphere::RenderOptions(int id, const std::vector<std::string>& matList)
   {
     ImGui::PushID(id);
     ImGui::Text("Sphere");
     ImGui::DragFloat3("Position", glm::value_ptr(m_Position), 0.01f);
     ImGui::DragFloat("Radius", &m_Radius, 0.01f);
-    // TODO make this a material drop down for editting
-    // m_Material.RenderOptions();
+
+    if (ImGui::BeginCombo("Material", matList[m_MaterialIndex].c_str()))
+    {
+      for (int n = 0; n < matList.size(); n++)
+      {
+        const bool is_selected = (m_MaterialIndex == n);
+        if (ImGui::Selectable(matList[n].c_str(), is_selected))
+          m_MaterialIndex = n;
+
+        // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+        if (is_selected)
+          ImGui::SetItemDefaultFocus();
+      }
+      ImGui::EndCombo();
+    }
+
     ImGui::PopID();
   }
 }

@@ -19,6 +19,7 @@ public:
       mat->name = "Red Smooth";
       mat->Albedo = glm::vec3(1.f, 0.f, 0.f);
       mat->Roughness = 0.f;
+      mat->Metallic = 0.f;
       m_Scene.AddMaterial(mat);
     }
     {
@@ -26,6 +27,15 @@ public:
       mat->name = "Blue Slightly Rough";
       mat->Albedo = glm::vec3(0.f, 0.f, 1.f);
       mat->Roughness = .2f;
+      mat->Metallic = 0.f;
+      m_Scene.AddMaterial(mat);
+    }
+    {
+      auto* mat = new Raytracing::Material();
+      mat->name = "Default Metal";
+      mat->Albedo = glm::vec3(1.f, 1.f, 1.f);
+      mat->Roughness = 0.f;
+      mat->Metallic = 1.f;
       m_Scene.AddMaterial(mat);
     }
 
@@ -33,6 +43,11 @@ public:
     {
       auto* sphere = new Raytracing::Sphere(glm::vec3(.0f, .0f, -1.f), 1.f);
       sphere->SetMaterialIndex(0);
+      m_Scene.AddToScene(sphere);
+    }
+    {
+      auto* sphere = new Raytracing::Sphere(glm::vec3(2.f, .0f, -1.f), 1.f);
+      sphere->SetMaterialIndex(2);
       m_Scene.AddToScene(sphere);
     }
 

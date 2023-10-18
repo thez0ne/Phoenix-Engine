@@ -13,7 +13,7 @@ namespace Raytracing
     ~Sphere() = default;
 
     virtual std::optional<HitInformation> Hit(const Ray& ray) override;
-    virtual void RenderOptions(int id) override;
+    virtual void RenderOptions(int id, const std::vector<std::string>& matList) override;
 
     // [[nodiscard]] Material& GetMaterial() { return m_Material; }
     [[nodiscard]] void SetMaterialIndex(int index) { m_MaterialIndex = index; }
