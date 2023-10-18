@@ -18,11 +18,9 @@ namespace Raytracing
     {
       delete obj;
     }
-
-    delete m_Camera;
   }
 
-  glm::vec4 Scene::ShootRay(const Ray& ray) const
+  HitInformation Scene::ShootRay(const Ray& ray) const
   {
     HitInformation closestHit;
 
@@ -45,11 +43,10 @@ namespace Raytracing
     }
     if (!hasHit)
     {
-      return m_Camera->GetBackgroundColour();
+      closestHit.hitDistance = -1.f;
     }
 
-    float lightIntensity = glm::dot(m_LightPos - closestHit.position, closestHit.normal);
-    return closestHit.colour * lightIntensity;
+    return closestHit;
   }
 
   void Scene::AddToScene(Hitable* object)
@@ -57,19 +54,9 @@ namespace Raytracing
     m_Objects.push_back(object);
   }
 
-  void Scene::AddCameraToScene(Camera* camera)
-  {
-    m_Camera = camera;
-  }
-
   void Scene::RenderHierarchy()
   {
     ImGui::Begin("Hierarchy");
-    // TODO add objects
-
-    ImGui::Separator();
-
-    m_Camera->CameraSettings();
 
     ImGui::Separator();
 

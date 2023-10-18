@@ -25,8 +25,7 @@ public:
       m_Scene.AddToScene(sphere);
     }
 
-    m_Scene.AddCameraToScene(
-      new Raytracing::Camera(glm::vec3(0.f, 0.f, 4.f), glm::vec4(.3f, .2f, .5f, 1.0f)));
+    m_Camera = Raytracing::Camera(glm::vec3(0.f, 0.f, 4.f), glm::vec4(.3f, .2f, .5f, 1.0f));
 
     // debug sphere for light
     // m_Scene.AddToScene(
@@ -40,7 +39,7 @@ public:
     m_RenderTimer.Reset();
 
     m_Renderer.Resize();
-    m_Renderer.Render(m_Scene);
+    m_Renderer.Render(m_Scene, m_Camera);
 
     m_FrameTime = m_RenderTimer.ElapsedMilliSeconds();
   }
@@ -99,6 +98,10 @@ public:
     // Settings & Stats
     ImGui::Begin("Settings");
 
+    m_Camera.CameraSettings();
+
+    ImGui::Separator();
+
     ImGui::Text("Frame Time: %.2f ms", m_FrameTime);
 
     ImGui::Separator();
@@ -115,6 +118,7 @@ public:
 private:
   Raytracing::RayRenderer m_Renderer;
   Raytracing::Scene m_Scene;
+  Raytracing::Camera m_Camera;
 
   std::string m_FileName = "output";
   Phoenix::Utils::Timer m_RenderTimer{};

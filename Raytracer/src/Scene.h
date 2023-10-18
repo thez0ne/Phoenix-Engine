@@ -15,19 +15,16 @@ namespace Raytracing
     Scene(uint16_t numberOfObjects = 5);
     ~Scene();
 
-    [[nodiscard]] glm::vec4 ShootRay(const Ray& ray) const;
+    [[nodiscard]] HitInformation ShootRay(const Ray& ray) const;
     void AddToScene(Hitable* object);
-    void AddCameraToScene(Camera* object);
 
     // TODO add function to remove from scene
 
     void RenderHierarchy();
 
-    // TODO fix proper returning
-    [[nodiscard]] Camera* GetCamera() const { return m_Camera; }
+    [[nodiscard]] const glm::vec3& GetLightPos() const { return m_LightPos; }
 
   private:
-    Camera* m_Camera;
     std::vector<Hitable*> m_Objects;
     // TODO support a vector of lights
     glm::vec3 m_LightPos = glm::vec3(-3.f, 1.f, 1.f);
