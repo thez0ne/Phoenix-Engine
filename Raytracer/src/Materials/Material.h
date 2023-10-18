@@ -11,14 +11,14 @@ namespace Raytracing
   public:
     virtual void RenderOptions()
     {
-      ImGui::DragFloat("Roughness", &m_Roughness, 0.001f, 0.f, 1.f);
-      ImGui::DragFloat("Metallic", &m_Metallic, 0.001f, 0.f, 1.f);
-      ImGui::ColorEdit4("Albedo", glm::value_ptr(m_Albedo));
+      ImGui::DragFloat("Roughness", &Roughness, 0.001f, 0.f, 1.f);
+      ImGui::DragFloat("Metallic", &Metallic, 0.001f, 0.f, 1.f);
+      ImGui::ColorEdit3("Albedo", glm::value_ptr(Albedo));
     };
 
-    glm::vec4 m_Albedo{1.0f};
-    float m_Roughness = 1.f;
-    float m_Metallic = 0.f;
+    glm::vec3 Albedo{1.0f};
+    float Roughness = 1.f;
+    float Metallic = 0.f;
 
   private:
   };

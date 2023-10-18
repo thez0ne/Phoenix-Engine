@@ -94,14 +94,15 @@ namespace Raytracing
       auto lightPos = m_ActiveScene->GetLightPos();
       float lightIntensity = glm::dot(lightPos - hitInfo.position, hitInfo.normal);
 
-      glm::vec3 sphereColor = hitInfo.colour;
+      glm::vec3 sphereColor = hitInfo.material.Albedo;
       sphereColor *= lightIntensity;
       accumulatedColor += sphereColor * multiplier;
 
-      multiplier *= 0.7f;
+      multiplier *= 0.5f;
 
       ray.origin = hitInfo.position + hitInfo.normal * 0.0001f;
-      ray.dir = glm::reflect(ray.dir, hitInfo.normal);
+      ray.dir = glm::reflect(
+        ray.dir, hitInfo.normal + hitInfo.material.Roughness * Random::RandomVector(-0.5, 0.5));
     }
 
     return glm::vec4(accumulatedColor, 1.0f);

@@ -15,14 +15,16 @@ public:
 
     {
       auto* sphere = new Raytracing::Sphere(glm::vec3(.0f, .0f, -1.f), 1.f);
-      sphere->GetMaterial().m_Albedo = glm::vec4(1.f, 0.f, 0.f, 1.f);
+      sphere->GetMaterial().Albedo = glm::vec4(1.f, 0.f, 0.f, 1.f);
+      sphere->GetMaterial().Roughness = 0.f;
       m_Scene.AddToScene(sphere);
     }
 
     // sphere as floor
     {
       auto* sphere = new Raytracing::Sphere(glm::vec3(0.f, -101.f, 0.f), 100.f);
-      sphere->GetMaterial().m_Albedo = glm::vec4(0.f, 0.f, 1.f, 1.f);
+      sphere->GetMaterial().Albedo = glm::vec4(0.f, 0.f, 1.f, 1.f);
+      sphere->GetMaterial().Roughness = 0.2f;
       m_Scene.AddToScene(sphere);
     }
 

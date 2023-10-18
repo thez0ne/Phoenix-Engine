@@ -40,7 +40,7 @@ namespace Raytracing
     HitInformation result{};
     result.position = h1;
     result.normal = normal;
-    result.colour = m_Material.m_Albedo;
+    result.material = m_Material;
     result.t = t1;
     result.hitDistance = glm::distance(h1, ray.origin);
 
