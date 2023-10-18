@@ -95,11 +95,21 @@ namespace Raytracing
       float lightIntensity = glm::dot(lightPos - hitInfo.position, hitInfo.normal);
 
       auto mat = m_ActiveScene->GetMaterial(hitInfo.materialIndex);
-      glm::vec3 sphereColor = mat.Albedo;
+
+      // remapped using newStart + ((newEnd - newStart) / (end - start)) * (input - start)
+      // from 0-1, to 0-0.9
+      auto metallicInfluence = 1 - ((.9f / 1) * mat.Metallic);
+      glm::vec3 sphereColor = mat.Albedo * metallicInfluence;
+
       sphereColor *= lightIntensity;
       accumulatedColor += sphereColor * multiplier;
 
-      multiplier *= 0.5f;
+      // multiplier *= 0.5f;
+      // remapped using newStart + ((newEnd - newStart) / (end - start)) * (input - start)
+      // from 0-1, to 0.5-1
+      // TODO move this to a remap function
+      auto remapped = 0.5f + ((1.f - 0.5f) / 1.f) * mat.Metallic;
+      multiplier *= remapped;
 
       ray.origin = hitInfo.position + hitInfo.normal * 0.0001f;
       ray.dir =

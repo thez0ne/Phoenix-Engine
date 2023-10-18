@@ -33,7 +33,7 @@ public:
     {
       auto* mat = new Raytracing::Material();
       mat->name = "Default Metal";
-      mat->Albedo = glm::vec3(1.f, 1.f, 1.f);
+      mat->Albedo = glm::vec3(.8f, .8f, .8f);
       mat->Roughness = 0.f;
       mat->Metallic = 1.f;
       m_Scene.AddMaterial(mat);
@@ -46,7 +46,7 @@ public:
       m_Scene.AddToScene(sphere);
     }
     {
-      auto* sphere = new Raytracing::Sphere(glm::vec3(2.f, .0f, -1.f), 1.f);
+      auto* sphere = new Raytracing::Sphere(glm::vec3(-2.f, .0f, -1.f), 1.f);
       sphere->SetMaterialIndex(2);
       m_Scene.AddToScene(sphere);
     }
