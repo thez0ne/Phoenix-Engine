@@ -15,12 +15,14 @@ namespace Raytracing
     virtual std::optional<HitInformation> Hit(const Ray& ray) override;
     virtual void RenderOptions(int id) override;
 
-    [[nodiscard]] Material& GetMaterial() { return m_Material; }
+    // [[nodiscard]] Material& GetMaterial() { return m_Material; }
+    [[nodiscard]] void SetMaterialIndex(int index) { m_MaterialIndex = index; }
 
   private:
     glm::vec3 m_Position;
     float m_Radius;
 
-    Material m_Material;
+    // Material m_Material;
+    int m_MaterialIndex;
   };
 }

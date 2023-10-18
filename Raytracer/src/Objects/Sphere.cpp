@@ -40,7 +40,7 @@ namespace Raytracing
     HitInformation result{};
     result.position = h1;
     result.normal = normal;
-    result.material = m_Material;
+    result.materialIndex = m_MaterialIndex;
     result.t = t1;
     result.hitDistance = glm::distance(h1, ray.origin);
 
@@ -54,7 +54,7 @@ namespace Raytracing
     ImGui::DragFloat3("Position", glm::value_ptr(m_Position), 0.01f);
     ImGui::DragFloat("Radius", &m_Radius, 0.01f);
     // TODO make this a material drop down for editting
-    m_Material.RenderOptions();
+    // m_Material.RenderOptions();
     ImGui::PopID();
   }
 }

@@ -6,9 +6,10 @@
 
 namespace Raytracing
 {
-  Scene::Scene(uint16_t numberOfObjects)
+  Scene::Scene(uint16_t numberOfObjects, uint16_t numberOfMats)
   {
     m_Objects.reserve(numberOfObjects);
+    m_Materials.reserve(numberOfMats);
   }
 
   Scene::~Scene()
@@ -17,6 +18,10 @@ namespace Raytracing
     for (Hitable* obj : m_Objects)
     {
       delete obj;
+    }
+    for (Material* mat : m_Materials)
+    {
+      delete mat;
     }
   }
 
@@ -54,6 +59,11 @@ namespace Raytracing
     m_Objects.push_back(object);
   }
 
+  void Scene::AddMaterial(Material* material)
+  {
+    m_Materials.push_back(material);
+  }
+
   void Scene::RenderHierarchy()
   {
     ImGui::Begin("Hierarchy");
@@ -68,6 +78,16 @@ namespace Raytracing
     {
       ImGui::Separator();
       obj->RenderOptions(counter++);
+    }
+
+    ImGui::Separator();
+    ImGui::Text("Materials");
+
+    counter = 0;
+    for (Material* mat : m_Materials)
+    {
+      ImGui::Separator();
+      mat->RenderOptions(counter++);
     }
 
     ImGui::End();

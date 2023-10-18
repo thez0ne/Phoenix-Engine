@@ -14,6 +14,7 @@ namespace Raytracing
     float t;
     float hitDistance = std::numeric_limits<double>::infinity();
 
-    Material material;
+    // Material material;
+    int materialIndex;
   };
 }

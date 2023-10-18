@@ -13,18 +13,33 @@ public:
     Phoenix::Utils::ScopedTimer creation{"RaytracerLayer constructor"};
     PRINT("Creating Application layer");
 
+    // setting up materials
+    {
+      auto* mat = new Raytracing::Material();
+      mat->name = "Red Smooth";
+      mat->Albedo = glm::vec3(1.f, 0.f, 0.f);
+      mat->Roughness = 0.f;
+      m_Scene.AddMaterial(mat);
+    }
+    {
+      auto* mat = new Raytracing::Material();
+      mat->name = "Blue Slightly Rough";
+      mat->Albedo = glm::vec3(0.f, 0.f, 1.f);
+      mat->Roughness = .2f;
+      m_Scene.AddMaterial(mat);
+    }
+
+    // setting up spheres
     {
       auto* sphere = new Raytracing::Sphere(glm::vec3(.0f, .0f, -1.f), 1.f);
-      sphere->GetMaterial().Albedo = glm::vec4(1.f, 0.f, 0.f, 1.f);
-      sphere->GetMaterial().Roughness = 0.f;
+      sphere->SetMaterialIndex(0);
       m_Scene.AddToScene(sphere);
     }
 
     // sphere as floor
     {
       auto* sphere = new Raytracing::Sphere(glm::vec3(0.f, -101.f, 0.f), 100.f);
-      sphere->GetMaterial().Albedo = glm::vec4(0.f, 0.f, 1.f, 1.f);
-      sphere->GetMaterial().Roughness = 0.2f;
+      sphere->SetMaterialIndex(1);
       m_Scene.AddToScene(sphere);
     }
 
