@@ -3,6 +3,7 @@
 #include "RayRenderer.h"
 #include "Scene.h"
 #include "Objects/Sphere.h"
+#include "Utilities/Random.h"
 
 class RaytracerLayer : public Phoenix::Layer
 {
@@ -139,6 +140,7 @@ public:
 
 Phoenix::Application* Phoenix::CreateApp()
 {
+  Raytracing::Random::Init();
   auto app = new Raytracer();
   app->WithRendering(false);
   return app;
