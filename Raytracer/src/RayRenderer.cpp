@@ -138,8 +138,12 @@ namespace Raytracing
       multiplier *= remapped;
 
       ray.origin = hitInfo.position + hitInfo.normal * 0.0001f;
-      ray.dir =
-        glm::reflect(ray.dir, hitInfo.normal + mat.Roughness * Random::RandomVector(-0.5, 0.5));
+
+      auto randomDeflection = Random::RandomVector(-0.5, 0.5);
+      auto isProperDir = glm::dot(randomDeflection, hitInfo.normal) < 0.f;
+      ray.dir = glm::reflect(
+        ray.dir,
+        hitInfo.normal + mat.Roughness * (isProperDir ? randomDeflection : -randomDeflection));
     }
 
     return glm::vec4(accumulatedColor, 1.0f);

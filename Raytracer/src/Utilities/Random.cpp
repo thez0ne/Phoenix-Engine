@@ -32,11 +32,19 @@ namespace Raytracing
     while (true)
     {
       auto v = RandomVector(-1, 1);
-      if (v.length() * v.length() >= 1)
+      if (v.length() * v.length() < 1)
       {
-        continue;
+        return v;
       }
-      return v;
     }
+  }
+
+  glm::vec3 Random::RandomVectorAlongNormal(glm::vec3 normal)
+  {
+    glm::vec3 on_unit_sphere = RandomUnitVector();
+    if (glm::dot(on_unit_sphere, normal) > 0.0) // In the same hemisphere as the normal
+      return on_unit_sphere;
+    else
+      return -on_unit_sphere;
   }
 }
