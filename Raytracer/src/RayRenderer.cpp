@@ -8,6 +8,7 @@ namespace Raytracing
   RayRenderer::RayRenderer() : m_ViewportWidth(800), m_ViewportHeight(600)
   {
     m_ImageData = new uint32_t[m_ViewportWidth * m_ViewportHeight];
+    m_AccumulatedData = new glm::vec4[m_ViewportWidth * m_ViewportHeight];
     for (size_t i = 0; i < m_ViewportWidth * m_ViewportHeight; i++)
     {
       m_ImageData[i] = Phoenix::Image::VecToRgba(glm::vec4(.1f, .4f, .1f, 1.f));
@@ -27,6 +28,11 @@ namespace Raytracing
     m_ActiveScene = &scene;
     m_ActiveCamera = &camera;
 
+    if (m_FrameCount == 1)
+    {
+      memset(m_AccumulatedData, 0, m_ViewportWidth * m_ViewportHeight * sizeof(glm::vec4));
+    }
+
     for (size_t y = 0; y < m_ViewportHeight; y++)
     {
       for (size_t x = 0; x < m_ViewportWidth; x++)
@@ -35,24 +41,44 @@ namespace Raytracing
                                     (float)y / (float)m_FinalImage->GetHeight()};
         remappedCoords = remappedCoords * 2.0f - 1.0f;
         auto colour = PixelColour(remappedCoords);
-        colour = glm::clamp(colour, glm::vec4(0.f), glm::vec4(1.f));
-        m_ImageData[x + y * m_ViewportWidth] = Phoenix::Image::VecToRgba(colour);
+
+        m_AccumulatedData[x + y * m_ViewportWidth] += colour;
+
+        glm::vec4 accumulatedColour = m_AccumulatedData[x + y * m_ViewportWidth];
+        accumulatedColour /= (float)m_FrameCount;
+
+        accumulatedColour = glm::clamp(accumulatedColour, glm::vec4(0.0f), glm::vec4(1.0f));
+        m_ImageData[x + y * m_ViewportWidth] = Phoenix::Image::VecToRgba(accumulatedColour);
       }
     }
 
     m_FinalImage->SetData(m_ImageData);
+
+    if (m_Accumulate)
+    {
+      m_FrameCount++;
+    }
+    else
+    {
+      m_FrameCount = 1;
+    }
   }
 
   void RayRenderer::Resize()
   {
-    if (m_FinalImage->GetWidth() != m_ViewportWidth ||
-        m_FinalImage->GetHeight() != m_ViewportHeight)
+    if (m_FinalImage->GetWidth() == m_ViewportWidth &&
+        m_FinalImage->GetHeight() == m_ViewportHeight)
     {
-      m_FinalImage->Resize(m_ViewportWidth, m_ViewportHeight);
+      return;
     }
+    m_FinalImage->Resize(m_ViewportWidth, m_ViewportHeight);
 
     delete[] m_ImageData;
     m_ImageData = new uint32_t[m_ViewportWidth * m_ViewportHeight];
+
+    delete[] m_AccumulatedData;
+    m_AccumulatedData = new glm::vec4[m_ViewportWidth * m_ViewportHeight];
+    ResetFrameCount();
   }
 
   void RayRenderer::SaveImage(const std::string& fileName)
