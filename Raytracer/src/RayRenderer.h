@@ -16,7 +16,7 @@ namespace Raytracing
     RayRenderer();
     ~RayRenderer();
 
-    void Render(const Scene& scene);
+    void Render(const Scene& scene, const Camera& camera);
     void Resize();
     void SaveImage(const std::string& fileName);
     void OnImGuiUpdate();
@@ -26,6 +26,9 @@ namespace Raytracing
     uint32_t* m_ImageData;
     uint32_t m_ViewportWidth, m_ViewportHeight;
 
-    glm::vec4 PixelColour(glm::vec2 coords, const Scene& scene);
+    const Scene* m_ActiveScene = nullptr;
+    const Camera* m_ActiveCamera = nullptr;
+
+    glm::vec4 PixelColour(glm::vec2 coords);
   };
 }

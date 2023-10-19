@@ -6,9 +6,10 @@
 
 namespace Raytracing
 {
-  Scene::Scene(uint16_t numberOfObjects)
+  Scene::Scene(uint16_t numberOfObjects, uint16_t numberOfMats)
   {
     m_Objects.reserve(numberOfObjects);
+    m_Materials.reserve(numberOfMats);
   }
 
   Scene::~Scene()
@@ -18,11 +19,13 @@ namespace Raytracing
     {
       delete obj;
     }
-
-    delete m_Camera;
+    for (Material* mat : m_Materials)
+    {
+      delete mat;
+    }
   }
 
-  glm::vec4 Scene::ShootRay(const Ray& ray) const
+  HitInformation Scene::ShootRay(const Ray& ray) const
   {
     HitInformation closestHit;
 
@@ -45,11 +48,10 @@ namespace Raytracing
     }
     if (!hasHit)
     {
-      return m_Camera->GetBackgroundColour();
+      closestHit.hitDistance = -1.f;
     }
 
-    float lightIntensity = glm::dot(m_LightPos - closestHit.position, closestHit.normal);
-    return closestHit.colour * lightIntensity;
+    return closestHit;
   }
 
   void Scene::AddToScene(Hitable* object)
@@ -57,25 +59,50 @@ namespace Raytracing
     m_Objects.push_back(object);
   }
 
-  void Scene::AddCameraToScene(Camera* camera)
+  void Scene::AddMaterial(Material* material)
   {
-    m_Camera = camera;
+    m_Materials.push_back(material);
   }
 
   void Scene::RenderHierarchy()
   {
     ImGui::Begin("Hierarchy");
-    // TODO add objects
-
-    ImGui::Separator();
-
-    m_Camera->CameraSettings();
 
     ImGui::Separator();
 
     ImGui::Text("Objects");
     ImGui::DragFloat3("Light Position", glm::value_ptr(m_LightPos));
 
+    int counter = 0;
+    for (Hitable* obj : m_Objects)
+    {
+      ImGui::Separator();
+      obj->RenderOptions(counter++, GetVectorOfMatNames());
+    }
+
+    ImGui::Separator();
+    // ImGui::Text("Materials");
+    if (ImGui::CollapsingHeader("Materials"))
+    {
+      counter = 0;
+      for (Material* mat : m_Materials)
+      {
+        ImGui::Separator();
+        mat->RenderOptions(counter++);
+      }
+    }
+
     ImGui::End();
+  }
+
+  std::vector<std::string> Scene::GetVectorOfMatNames() const
+  {
+    std::vector<std::string> matNames;
+    matNames.reserve(m_Materials.size());
+    for (Material* mat : m_Materials)
+    {
+      matNames.push_back(mat->name);
+    }
+    return matNames;
   }
 }
