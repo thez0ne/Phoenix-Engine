@@ -26,7 +26,7 @@ public:
       auto* mat = new Raytracing::Material();
       mat->name = "Yellow-ish Ground";
       mat->Albedo = glm::vec3(.8f, .8f, 0.f);
-      mat->Roughness = .2f;
+      mat->Roughness = .5f;
       mat->Metallic = 0.f;
       m_Scene.AddMaterial(mat);
     }

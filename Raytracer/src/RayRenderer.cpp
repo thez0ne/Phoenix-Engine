@@ -120,6 +120,9 @@ namespace Raytracing
       auto lightPos = m_ActiveScene->GetLightPos();
       float lightIntensity =
         glm::max(glm::dot(glm::normalize(lightPos - hitInfo.position), hitInfo.normal), 0.f);
+      // temp directional light solution
+      // glm::vec3 lightDir = glm::normalize(glm::vec3(1, -1, -1));
+      // float lightIntensity = glm::max(glm::dot(-lightDir, hitInfo.normal), 0.f);
 
       auto mat = m_ActiveScene->GetMaterial(hitInfo.materialIndex);
 
