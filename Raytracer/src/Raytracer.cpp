@@ -38,6 +38,14 @@ public:
       mat->Metallic = 1.f;
       m_Scene.AddMaterial(mat);
     }
+    {
+      auto* mat = new Raytracing::Material();
+      mat->name = "\"Fuzzy\" Metal";
+      mat->Albedo = glm::vec3(.8f, 0.f, .8f);
+      mat->Roughness = 0.3f;
+      mat->Metallic = 1.f;
+      m_Scene.AddMaterial(mat);
+    }
 
     // setting up spheres
     {
@@ -48,6 +56,11 @@ public:
     {
       auto* sphere = new Raytracing::Sphere(glm::vec3(-2.f, .0f, -1.f), 1.f);
       sphere->SetMaterialIndex(2);
+      m_Scene.AddToScene(sphere);
+    }
+    {
+      auto* sphere = new Raytracing::Sphere(glm::vec3(2.f, .0f, -1.f), 1.f);
+      sphere->SetMaterialIndex(3);
       m_Scene.AddToScene(sphere);
     }
 
