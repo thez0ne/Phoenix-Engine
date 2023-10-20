@@ -145,6 +145,14 @@ public:
 
     ImGui::Separator();
 
+    ImGui::Checkbox("Path Trace", &m_Renderer.GetAccumulateSetting());
+    if (ImGui::Button("Reset Path Tracing Data"))
+    {
+      m_Renderer.ResetFrameCount();
+    }
+
+    ImGui::Separator();
+
     ImGui::InputText("filepath", &m_FileName);
 
     ImGui::End();

@@ -174,6 +174,7 @@ namespace Phoenix
 
   void VulkanImage::Save(const std::string& filepath)
   {
+    stbi_flip_vertically_on_write(true);
     stbi_write_png(filepath.c_str(), m_Width, m_Height, 4, m_Data, 0);
   }
 
