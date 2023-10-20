@@ -22,6 +22,7 @@ namespace Raytracing
   {
     delete m_FinalImage;
     delete[] m_ImageData;
+    delete[] m_AccumulatedData;
   }
 
   void RayRenderer::Render(const Scene& scene, const Camera& camera)
