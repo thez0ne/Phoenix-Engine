@@ -118,7 +118,8 @@ namespace Raytracing
       }
 
       auto lightPos = m_ActiveScene->GetLightPos();
-      float lightIntensity = glm::dot(lightPos - hitInfo.position, hitInfo.normal);
+      float lightIntensity =
+        glm::max(glm::dot(glm::normalize(lightPos - hitInfo.position), hitInfo.normal), 0.f);
 
       auto mat = m_ActiveScene->GetMaterial(hitInfo.materialIndex);
 

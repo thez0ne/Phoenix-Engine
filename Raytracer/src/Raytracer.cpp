@@ -16,16 +16,16 @@ public:
     // setting up materials
     {
       auto* mat = new Raytracing::Material();
-      mat->name = "Red Smooth";
-      mat->Albedo = glm::vec3(1.f, 0.f, 0.f);
-      mat->Roughness = 0.f;
+      mat->name = "Red Rough";
+      mat->Albedo = glm::vec3(.7f, .3f, .3f);
+      mat->Roughness = 0.8f;
       mat->Metallic = 0.f;
       m_Scene.AddMaterial(mat);
     }
     {
       auto* mat = new Raytracing::Material();
-      mat->name = "Blue Slightly Rough";
-      mat->Albedo = glm::vec3(0.f, 0.f, 1.f);
+      mat->name = "Yellow-ish Ground";
+      mat->Albedo = glm::vec3(.8f, .8f, 0.f);
       mat->Roughness = .2f;
       mat->Metallic = 0.f;
       m_Scene.AddMaterial(mat);
@@ -58,7 +58,7 @@ public:
       m_Scene.AddToScene(sphere);
     }
 
-    m_Camera = Raytracing::Camera(glm::vec3(0.f, 0.f, 4.f), glm::vec4(.3f, .2f, .5f, 1.0f));
+    m_Camera = Raytracing::Camera(glm::vec3(0.f, 0.f, 4.f), glm::vec4(.5f, .7f, 1.f, 1.0f));
 
     // debug sphere for light
     // m_Scene.AddToScene(
