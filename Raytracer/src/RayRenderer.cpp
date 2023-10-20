@@ -100,6 +100,7 @@ namespace Raytracing
     // TODO currently doesnt handle aspect ratio
     Ray ray;
     ray.origin = m_ActiveCamera->GetPosition();
+    ray.dir = glm::normalize(glm::vec3(coords.x, coords.y, -1.f));
 
     glm::vec3 accumulatedColor(0.0f);
     float multiplier = 1.0f;
@@ -108,7 +109,14 @@ namespace Raytracing
     const int bounce = 2;
 
     // TODO fix AA
-    ray.dir = glm::normalize(glm::vec3(coords.x, coords.y, -1.f));
+    auto AAAmount = m_ActiveCamera->GetAntiAliasingAmount();
+    if (m_ActiveCamera->GetAntiAliasing())
+    {
+      ray.dir = glm::normalize(glm::vec3(coords.x + Random::RandomFloat() / 1000.f,
+                                         coords.y + Random::RandomFloat() / 1000.f,
+                                         -1.f));
+    }
+
     for (int i = 0; i < bounce; i++)
     {
       HitInformation hitInfo = m_ActiveScene->ShootRay(ray);
@@ -150,25 +158,5 @@ namespace Raytracing
     }
 
     return glm::vec4(accumulatedColor, 1.0f);
-
-    // if (!scene.GetCamera()->GetAntiAliasing())
-    // {
-    //   // no AA
-    //   ray.dir = glm::normalize(glm::vec3(coords.x, coords.y, -1.f));
-    //   return scene.ShootRay(ray);
-    // }
-
-    // // with AA
-    // glm::vec4 color(0.f);
-    // auto AAIntensity = scene.GetCamera()->GetAntiAliasingAmount();
-
-    // ray.dir = glm::normalize(glm::vec3(coords.x + Random::RandomDoubleRange(0.0, 0.001),
-    //                                    coords.y + Random::RandomDoubleRange(0.0, 0.001),
-    //                                    -1.f));
-    // for (int i = 0; i < AAIntensity; i++)
-    // {
-    //   color += scene.ShootRay(ray);
-    // }
-    // return color / AAIntensity;
   }
 }
