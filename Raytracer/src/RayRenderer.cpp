@@ -2,6 +2,7 @@
 
 // #include <random>
 #include "Utilities/Random.h"
+#include "Utilities/Math.h"
 
 namespace Raytracing
 {
@@ -126,21 +127,19 @@ namespace Raytracing
 
       auto mat = m_ActiveScene->GetMaterial(hitInfo.materialIndex);
 
-      // remapped using newStart + ((newEnd - newStart) / (end - start)) * (input - start)
-      // from 0-1, to 0-0.8
-      auto metallicInfluence = 1 - ((.8f / 1) * mat.Metallic);
+      // remapped from 0-1, to 0-0.8
+      auto metallicInfluence = 1 - Math::remap(mat.Metallic, 0.f, 1.f, 0.f, .8f);
       glm::vec3 sphereColor = mat.Albedo * metallicInfluence;
 
       sphereColor *= lightIntensity;
       accumulatedColor += sphereColor * multiplier;
 
       // multiplier *= 0.5f;
-      // remapped using newStart + ((newEnd - newStart) / (end - start)) * (input - start)
-      // from 0-1, to 0.5-1
-      // TODO move this to a remap function
-      auto remapped = 0.5f + ((.5f) / (1)) * (.5f) * mat.Metallic;
+      // remapped from 0-1, to 0-0.5
+      auto remapped = 0.5f + Math::remap(.5f, 0.f, 1.f, 0.f, 0.5f) * mat.Metallic;
       multiplier *= remapped;
 
+      // making sure bouncedray does not collide with the same surface
       ray.origin = hitInfo.position + hitInfo.normal * 0.0001f;
 
       auto randomDeflection = Random::RandomVector(-0.5, 0.5);
