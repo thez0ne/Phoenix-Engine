@@ -16,21 +16,26 @@ namespace Raytracing
     RayRenderer();
     ~RayRenderer();
 
-    void Render(const Scene& scene);
+    void Render(const Scene& scene, const Camera& camera);
     void Resize();
     void SaveImage(const std::string& fileName);
     void OnImGuiUpdate();
-    void OnBackgroundColourUpdate();
+
+    void ResetFrameCount() { m_FrameCount = 1; }
+    [[nodiscard]] bool& GetAccumulateSetting() { return m_Accumulate; }
 
   private:
     Phoenix::Image* m_FinalImage;
     uint32_t* m_ImageData;
     uint32_t m_ViewportWidth, m_ViewportHeight;
 
-    glm::vec4 PixelColour(glm::vec2 coords, const Scene& scene);
+    bool m_Accumulate = true;
+    glm::vec4* m_AccumulatedData = nullptr;
+    int m_FrameCount = 1;
 
-    // Camera stuff
-    glm::vec4 m_BackgroundColour = glm::vec4(.3f, .2f, .5f, 1.0f);
-    glm::vec3 m_CameraCenter = glm::vec3(0.f, 0.f, 2.f);
+    const Scene* m_ActiveScene = nullptr;
+    const Camera* m_ActiveCamera = nullptr;
+
+    glm::vec4 PixelColour(glm::vec2 coords);
   };
 }
