@@ -12,3 +12,5 @@ Instructions on how to run this are the same as [Phoenix Engine](https://github.
 
 - [ ] Better Camera Movement using WASD
 - [ ] Scene Serialization, to load and save scenes to a file
+
+![Sample output of raytracer](output.png)
